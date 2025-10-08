@@ -1,8 +1,5 @@
-using System;
-using System.Collections.Generic;
 using Hortifruti.Domain;
 using Microsoft.EntityFrameworkCore;
-using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
 namespace Hortifruti.Data;
 

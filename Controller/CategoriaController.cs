@@ -12,11 +12,13 @@ public class CategoriaController : ControllerBase
 {
     private readonly ICategoriaService _categoriaService;
 
+    // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
     public CategoriaController(ICategoriaService categoriaService)
     {
         _categoriaService = categoriaService;
     }
 
+    // OPERAÇÕES
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Categoria>>> ObterCategorias()
     {
@@ -32,6 +34,8 @@ public class CategoriaController : ControllerBase
         if (categoria == null) return NotFound();
         return Ok(categoria);
     }
+
+    // get produtos associados a categoria?
 
     [HttpPost]
     public async Task<ActionResult<Categoria>> CriarCategoria(Categoria categoria)
