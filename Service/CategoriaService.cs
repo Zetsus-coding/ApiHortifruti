@@ -11,7 +11,7 @@ public class CategoriaService : ICategoriaService
 
     public CategoriaService(ICategoriaRepository categoriaRepository)
     {
-        _categoriaRepository = categoriaRepository;
+        _categoriaRepository = categoriaRepository; // Inj. dependência
     }
 
     public async Task<IEnumerable<Categoria>> ObterTodasCategoriasAsync()
@@ -22,6 +22,7 @@ public class CategoriaService : ICategoriaService
     public async Task<Categoria?> ObterCategoriaPorIdAsync(int id)
     {
         return await _categoriaRepository.ObterPorIdAsync(id);
+        
     }
 
     public async Task<Categoria> CriarCategoriaAsync(Categoria categoria)

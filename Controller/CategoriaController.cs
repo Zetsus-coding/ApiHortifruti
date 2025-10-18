@@ -35,7 +35,7 @@ public class CategoriaController : ControllerBase
         return Ok(categoria);
     }
 
-    // get produtos associados a categoria?
+    // get produtos associados a categoria (aqui [/categoria/idcategoria/produtos] ou em produtos [/produtos?categoria=x])?
 
     [HttpPost]
     public async Task<ActionResult<Categoria>> CriarCategoria(Categoria categoria)
