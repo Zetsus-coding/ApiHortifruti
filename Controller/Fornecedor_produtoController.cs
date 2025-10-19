@@ -17,7 +17,7 @@ public class Fornecedor_produtoController : ControllerBase
         _fornecedor_produtoService = fornecedor_produtoService;
     }
 
-    // Endpoint de consulta de todos os registro da tabela
+    // Operação de consulta de todos os registro da tabela
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Fornecedor_produto>>> ObterFornecedor_produtos()
     {
@@ -25,7 +25,7 @@ public class Fornecedor_produtoController : ControllerBase
         return Ok(fornecedor_produto);
     }
 
-    // Endpoint de consulta por ID
+    // Operação de consulta por ID
     [HttpGet("{fornecedorId}/{produtoId}")]
     public async Task<ActionResult<Fornecedor_produto>> ObterFornecedor_produto(int fornecedorId, int produtoId)
     {
@@ -35,7 +35,7 @@ public class Fornecedor_produtoController : ControllerBase
         return Ok(fornecedor_produto);
     }
 
-    // Endpoint de criação do registro na tabela
+    // Operação de criação do registro na tabela
     [HttpPost]
     public async Task<ActionResult<Fornecedor_produto>> CriarFornecedor_produto(Fornecedor_produto fornecedor_produto)
     {
@@ -45,7 +45,7 @@ public class Fornecedor_produtoController : ControllerBase
             fornecedor_produtoCriada);
     }
 
-    // Endpoint de alteração de algum registro na tabela
+    // Operação de alteração de algum registro na tabela
     [HttpPut("{fornecedorId}/{produtoId}")] 
     public async Task<IActionResult> AtualizarFornecedor_produto(int fornecedorId, int produtoId, Fornecedor_produto fornecedor_produto)
     {
@@ -55,7 +55,7 @@ public class Fornecedor_produtoController : ControllerBase
         return NoContent();
     }
 
-    // Endpoint de exclusão de algum registro na tabela
+    // Operação de exclusão de algum registro na tabela
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeletarFornecedor_produto(int fornecedorId, int produtoId)
     {
