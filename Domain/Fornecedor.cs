@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Hortifruti.Domain;
 
@@ -19,7 +20,9 @@ public partial class Fornecedor
 
     public DateOnly DataRegistro { get; set; }
 
+    [JsonIgnore]
     public virtual ICollection<Entrada> Entrada { get; set; } = new List<Entrada>();
 
+    [JsonIgnore]
     public virtual ICollection<Fornecedor_produto> FornecedorProdutos { get; set; } = new List<Fornecedor_produto>();
 }
