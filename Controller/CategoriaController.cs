@@ -1,4 +1,3 @@
-using Hortifruti.Data.Repository;
 using Hortifruti.Domain;
 using Hortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;

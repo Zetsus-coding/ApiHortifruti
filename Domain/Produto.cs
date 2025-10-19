@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text.Json.Serialization;
+﻿using System.Text.Json.Serialization;
 
 namespace Hortifruti.Domain;
 
@@ -15,7 +13,7 @@ public partial class Produto
     public string? Nome { get; set; }
 
     public string? Codigo { get; set; }
-
+        
     public string? Descricao { get; set; }
 
     public decimal Preco { get; set; }
@@ -29,8 +27,10 @@ public partial class Produto
     /// </summary>
     public int QuantidadeMaxima { get; set; }
 
+    [JsonIgnore]
     public virtual Categoria? Categoria { get; set; }
 
+    [JsonIgnore]
     public virtual Unidade_medida? UnidadeMedida { get; set; }
 
     [JsonIgnore]
