@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Hortifruti.Domain;
+namespace ApiHortifruti.Domain;
 
 public partial class Unidade_medida
 {

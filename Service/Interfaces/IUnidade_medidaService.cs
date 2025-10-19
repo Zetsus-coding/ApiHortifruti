@@ -1,6 +1,6 @@
-using Hortifruti.Domain;
+using ApiHortifruti.Domain;
 
-namespace Hortifruti.Service.Interfaces;
+namespace ApiHortifruti.Service.Interfaces;
 
 public interface IUnidade_medidaService
 {

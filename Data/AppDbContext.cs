@@ -1,7 +1,7 @@
-using Hortifruti.Domain;
+using ApiHortifruti.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hortifruti.Data;
+namespace ApiHortifruti.Data;
 
 public partial class AppDbContext : DbContext
 {

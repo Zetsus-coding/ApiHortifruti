@@ -1,8 +1,8 @@
-using Hortifruti.Data.Repository.Interfaces;
-using Hortifruti.Domain;
-using Hortifruti.Service.Interfaces;
+using ApiHortifruti.Data.Repository.Interfaces;
+using ApiHortifruti.Domain;
+using ApiHortifruti.Service.Interfaces;
 
-namespace Hortifruti.Service;
+namespace ApiHortifruti.Service;
 
 
 public class CategoriaService : ICategoriaService

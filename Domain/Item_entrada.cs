@@ -1,4 +1,4 @@
-﻿namespace Hortifruti.Domain;
+﻿namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// Não sei como seria o relacionamento. Recebe id de produto (igual a item_saida?

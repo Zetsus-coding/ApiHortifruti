@@ -1,8 +1,8 @@
-using Hortifruti.Data.Repository.Interfaces;
-using Hortifruti.Domain;
+using ApiHortifruti.Data.Repository.Interfaces;
+using ApiHortifruti.Domain;
 using Microsoft.EntityFrameworkCore;
 
-namespace Hortifruti.Data.Repository;
+namespace ApiHortifruti.Data.Repository;
 
 public class Unidade_medidaRepository : IUnidade_medidaRepository
 {

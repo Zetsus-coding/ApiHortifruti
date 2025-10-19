@@ -1,4 +1,4 @@
-﻿namespace Hortifruti.Domain.Enum;
+﻿namespace ApiHortifruti.Domain.Enum;
 
 public enum TipoMovimentacao
 {

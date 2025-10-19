@@ -1,4 +1,4 @@
-﻿namespace Hortifruti.Domain;
+﻿namespace ApiHortifruti.Domain;
 
 public partial class Item_saida
 {

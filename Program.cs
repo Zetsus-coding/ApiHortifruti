@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Hortifruti.Data;
+using ApiHortifruti.Data;
 using Scalar.AspNetCore;
+using ApiHortifruti.Service.Interfaces;
+using ApiHortifruti.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 

@@ -1,4 +1,4 @@
-﻿namespace Hortifruti.Domain;
+﻿namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// Necessário a chave primária id? 

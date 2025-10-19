@@ -1,4 +1,4 @@
-﻿namespace Hortifruti.Domain;
+﻿namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// Talvez mudar a estrutura para conseguir armazenar alterações em nomes (e/ou código) também (não só em valor):

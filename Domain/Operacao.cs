@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Hortifruti.Domain;
+namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// Tabela fixa (&quot;chumbada&quot;) com as operações do banco (CRUD)

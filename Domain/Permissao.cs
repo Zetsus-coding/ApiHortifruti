@@ -1,4 +1,4 @@
-﻿namespace Hortifruti.Domain;
+﻿namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// Tabela associando quais operações em quais módulos certo cargo pode acessar

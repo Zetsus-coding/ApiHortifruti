@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Hortifruti.Domain;
+namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// 1) Necessário adaptar estrutura por conta do keycloak?

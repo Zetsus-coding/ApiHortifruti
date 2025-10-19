@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
-using Hortifruti.Domain;
-using Hortifruti.Data.Repository.Interfaces;
+using ApiHortifruti.Domain;
+using ApiHortifruti.Data.Repository.Interfaces;
 
-namespace Hortifruti.Data.Repository;
+namespace ApiHortifruti.Data.Repository;
 
 public class CategoriaRepository : ICategoriaRepository
 {

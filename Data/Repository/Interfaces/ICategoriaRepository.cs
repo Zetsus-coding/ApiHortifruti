@@ -1,6 +1,6 @@
-using Hortifruti.Domain;
+using ApiHortifruti.Domain;
 
-namespace Hortifruti.Data.Repository.Interfaces;
+namespace ApiHortifruti.Data.Repository.Interfaces;
 
 public interface ICategoriaRepository
 {

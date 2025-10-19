@@ -1,4 +1,4 @@
-﻿namespace Hortifruti.Domain;
+﻿namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// Necessário? Criei mais para registrar o momento que um usuário faz login no sistema, para ter uma ideia

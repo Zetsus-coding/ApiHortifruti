@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Hortifruti.Domain;
+namespace ApiHortifruti.Domain;
 
 /// <summary>
 /// Depende da resposta de produto_fornecedor
