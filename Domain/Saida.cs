@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
 namespace Hortifruti.Domain;
 
@@ -27,7 +26,8 @@ public partial class Saida
 
     public virtual Funcionario Funcionario { get; set; } = null!;
 
-    public virtual ICollection<Item_saida> ItemSaida { get; set; } = new List<Item_saida>();
-
     public virtual Motivo_movimentacao MotivoMovimentacao { get; set; } = null!;
+
+    [JsonIgnore]
+    public virtual ICollection<Item_saida> ItemSaida { get; set; } = new List<Item_saida>();
 }

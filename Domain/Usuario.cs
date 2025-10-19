@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
 namespace Hortifruti.Domain;
 
@@ -24,5 +23,6 @@ public partial class Usuario
 
     public virtual Funcionario Funcionario { get; set; } = null!;
 
+    [JsonIgnore]
     public virtual ICollection<Log_login> LogLogins { get; set; } = new List<Log_login>();
 }

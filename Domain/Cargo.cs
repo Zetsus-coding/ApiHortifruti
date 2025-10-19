@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
 namespace Hortifruti.Domain;
 
@@ -12,8 +11,10 @@ public partial class Cargo
     public string? Descricao { get; set; }
 
     public bool Ativo { get; set; }
-    
-    public virtual ICollection<Funcionario> Funcionarios { get; set; } = new List<Funcionario>();
 
+    [JsonIgnore]
+    public virtual ICollection<Funcionario> Funcionarios { get; set; } = new List<Funcionario>();
+    
+    [JsonIgnore]
     public virtual ICollection<Permissao> Permissaos { get; set; } = new List<Permissao>();
 }

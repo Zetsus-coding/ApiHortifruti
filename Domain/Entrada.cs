@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Text.Json.Serialization;
 
 namespace Hortifruti.Domain;
 
@@ -45,7 +44,8 @@ public partial class Entrada
 
     public virtual Fornecedor Fornecedor { get; set; } = null!;
 
-    public virtual ICollection<Item_entrada> ItemEntrada { get; set; } = new List<Item_entrada>();
-
     public virtual Motivo_movimentacao MotivoMovimentacao { get; set; } = null!;
+
+    [JsonIgnore]
+    public virtual ICollection<Item_entrada> ItemEntrada { get; set; } = new List<Item_entrada>();
 }

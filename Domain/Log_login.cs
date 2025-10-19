@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hortifruti.Domain;
+﻿namespace Hortifruti.Domain;
 
 /// <summary>
 /// Necessário? Criei mais para registrar o momento que um usuário faz login no sistema, para ter uma ideia

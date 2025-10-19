@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hortifruti.Domain;
+﻿namespace Hortifruti.Domain;
 
 public partial class Item_saida
 {

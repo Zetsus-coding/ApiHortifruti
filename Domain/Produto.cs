@@ -27,10 +27,8 @@ public partial class Produto
     /// </summary>
     public int QuantidadeMaxima { get; set; }
 
-    [JsonIgnore]
     public virtual Categoria? Categoria { get; set; }
-
-    [JsonIgnore]
+ 
     public virtual Unidade_medida? UnidadeMedida { get; set; }
 
     [JsonIgnore]

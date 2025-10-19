@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hortifruti.Domain;
+﻿namespace Hortifruti.Domain;
 
 /// <summary>
 /// Não sei como seria o relacionamento. Recebe id de produto (igual a item_saida?

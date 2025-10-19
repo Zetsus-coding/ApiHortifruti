@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hortifruti.Domain;
+﻿namespace Hortifruti.Domain;
 
 /// <summary>
 /// Talvez mudar a estrutura para conseguir armazenar alterações em nomes (e/ou código) também (não só em valor):

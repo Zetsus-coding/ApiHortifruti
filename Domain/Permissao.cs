@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace Hortifruti.Domain;
+﻿namespace Hortifruti.Domain;
 
 /// <summary>
 /// Tabela associando quais operações em quais módulos certo cargo pode acessar
