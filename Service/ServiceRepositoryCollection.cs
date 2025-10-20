@@ -12,7 +12,7 @@ public static class ServiceCollectionExtensions
             .Where(t => t.Name.EndsWith("Repository") && !t.IsInterface)
             .ToList();
 
-        // Passa a lista por um laço de repetição (para cada registro dentro dela) e faz o AddScoped(I+Nome, Nome)      
+        // Passa a lista por um laço de repetição (para cada registro dentro dela) e faz o AddScoped(interfaceType = I+Nome, repo = Nome)       
         foreach (var repo in repositories)
         {
             var interfaceType = repo.GetInterface($"I{repo.Name}");
@@ -25,7 +25,7 @@ public static class ServiceCollectionExtensions
             .Where(t => t.Name.EndsWith("Service") && !t.IsInterface)
             .ToList();
 
-        // Passa a lista por um laço de repetição (para cada registro dentro dela) e faz o AddScoped(I+Nome, Nome)    
+        // Passa a lista por um laço de repetição (para cada registro dentro dela) e faz o AddScoped(interfaceType = I+Nome, repo = Nome)    
         foreach (var service in serviceTypes)
         {
             var interfaceType = service.GetInterface($"I{service.Name}");
