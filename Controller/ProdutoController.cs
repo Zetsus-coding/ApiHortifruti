@@ -1,8 +1,10 @@
+using System.Data;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiHortifruti.Controllers;
+namespace Hortifruti.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,6 +22,12 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutos()
     {
         var produto = await _produtoService.ObterTodasProdutosAsync();
+
+        if (!produto.Any())
+        {
+            throw new DBConcurrencyException("Nenhum produto criado.");
+        }
+
         return Ok(produto);
     }
 
@@ -28,7 +36,10 @@ public class ProdutoController : ControllerBase
     {
         var produto = await _produtoService.ObterProdutoPorIdAsync(id);
 
-        if (produto == null) return NotFound();
+        if (produto == null)
+        {
+            throw new NotFoundExeption("Produto não existe.");
+        }
         return Ok(produto);
     }
 

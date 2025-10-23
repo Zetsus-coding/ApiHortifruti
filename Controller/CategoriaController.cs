@@ -1,8 +1,11 @@
+using System.Data;
+using ApiHortifruti.Data.Repository;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiHortifruti.Controller;
+namespace Hortifruti.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -16,12 +19,17 @@ public class CategoriaController : ControllerBase
     {
         _categoriaService = categoriaService;
     }
-
     // OPERAÇÕES
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Categoria>>> ObterCategorias()
     {
         var categoria = await _categoriaService.ObterTodasCategoriasAsync();
+
+        if (!categoria.Any())
+        {
+            throw new DBConcurrencyException("Nenhuma categoria criada.");
+        }
+        
         return Ok(categoria);
     }
 
@@ -30,11 +38,15 @@ public class CategoriaController : ControllerBase
     {
         var categoria = await _categoriaService.ObterCategoriaPorIdAsync(id);
 
-        if (categoria == null) return NotFound();
+        if (categoria == null) 
+        {
+            throw new NotFoundExeption("Categoria não existe.");
+        }
         return Ok(categoria);
     }
 
     // get produtos associados a categoria (aqui [/categoria/idcategoria/produtos] ou em produtos [/produtos?categoria=x])?
+
 
     [HttpPost]
     public async Task<ActionResult<Categoria>> CriarCategoria(Categoria categoria)

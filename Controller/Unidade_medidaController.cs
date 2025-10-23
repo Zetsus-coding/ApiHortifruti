@@ -1,8 +1,10 @@
+using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using ApiHortifruti.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiHortifruti.Controllers;
+namespace Hortifruti.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,6 +22,12 @@ public class Unidade_medidaController : ControllerBase
     public async Task<ActionResult<IEnumerable<Unidade_medida>>> ObterUnidade_medida()
     {
         var unidade_medida = await _unidade_medidaService.ObterTodosUnidade_medidaAsync();
+
+        if (!unidade_medida.Any())
+        {
+            throw new DBConcurrencyException("Nenhuma unidade de medida criada.");
+        }
+        
         return Ok(unidade_medida);
     }
 
@@ -28,7 +36,12 @@ public class Unidade_medidaController : ControllerBase
     {
         var unidade_medida = await _unidade_medidaService.ObterUnidade_medidaPorIdAsync(id);
 
-        if (unidade_medida == null) return NotFound();
+
+        if (unidade_medida == null)
+        {
+            throw new NotFoundExeption("Unidade de medida não existe.");
+        }
+
         return Ok(unidade_medida);
     }
 
