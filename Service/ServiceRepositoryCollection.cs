@@ -1,4 +1,6 @@
 using System.Reflection;
+using ApiHortifruti.Data.Repository;
+using ApiHortifruti.Data.Repository.Interfaces;
 
 // Adiciona no escopo do as interfaces e os servi�os/repositories que as implementam (baseando nos nomes encontrados no assembly)
 public static class ServiceCollectionExtensions
@@ -6,7 +8,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
     {
         var assembly = Assembly.GetExecutingAssembly();
-        
+
         // Registra repositories. Procura "arquivos" que são do tipo interface e o nome termina com "Repository" e adiciona em uma lista
         var repositories = assembly.GetTypes()
             .Where(t => t.Name.EndsWith("Repository") && !t.IsInterface)
@@ -19,7 +21,7 @@ public static class ServiceCollectionExtensions
             if (interfaceType != null)
                 services.AddScoped(interfaceType, repo);
         }
-        
+
         // Registra services Procura "arquivos" que são do tipo interface e o nome termina com "Service" e adiciona em uma lista
         var serviceTypes = assembly.GetTypes()
             .Where(t => t.Name.EndsWith("Service") && !t.IsInterface)
@@ -32,7 +34,8 @@ public static class ServiceCollectionExtensions
             if (interfaceType != null)
                 services.AddScoped(interfaceType, service);
         }
-        
+
+        services.AddScoped<IUnityOfWork, UnityOfWork>(); // Adiciona o UnityOfWork no escopo
         return services;
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Text.Json.Serialization;
+using ApiHortifruti.Domain.Enum;
 
 namespace ApiHortifruti.Domain;
 
@@ -6,7 +7,7 @@ public partial class Motivo_movimentacao
 {
     public int Id { get; set; }
 
-    public string TipoMovimentacao { get; set; } = null!;
+    public TipoMovimentacaoEnum TipoMovimentacao { get; set; }
 
     public bool Ativo { get; set; }
 

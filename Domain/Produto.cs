@@ -10,22 +10,21 @@ public partial class Produto
 
     public int UnidadeMedidaId { get; set; }
 
-    public string? Nome { get; set; }
+    public string Nome { get; set; }
 
-    public string? Codigo { get; set; }
+    public string Codigo { get; set; }
         
     public string? Descricao { get; set; }
 
     public decimal Preco { get; set; }
 
-    public int QuantidadeAtual { get; set; }
+    public int QuantidadeAtual { get; set; } = 0;
 
     public int QuantidadeMinima { get; set; }
 
     /// <summary>
     /// Talvez alterar quant. máx para permitir NULL?
     /// </summary>
-    public int QuantidadeMaxima { get; set; }
 
     public virtual Categoria? Categoria { get; set; }
  

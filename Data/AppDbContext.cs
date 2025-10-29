@@ -112,9 +112,9 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.MotivoMovimentacaoId)
                 .HasColumnType("int(11)")
                 .HasColumnName("motivo_movimentacao_id");
-            entity.Property(e => e.NotaFiscal)
-                .HasMaxLength(20)
-                .HasColumnName("nota_fiscal");
+            // entity.Property(e => e.NotaFiscal)
+            //     .HasMaxLength(20)
+            //     .HasColumnName("nota_fiscal");
             entity.Property(e => e.NumeroNota)
                 .HasMaxLength(30)
                 .HasColumnName("numero_nota");
@@ -305,6 +305,9 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Quantidade)
                 .HasColumnType("int(11)")
                 .HasColumnName("quantidade");
+            entity.Property(e => e.PrecoUnitario)
+                .HasPrecision(10, 2)
+                .HasColumnName("preco_unitario");
             entity.Property(e => e.Validade)
                 .HasMaxLength(50)
                 .HasColumnName("validade");
@@ -516,10 +519,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.QuantidadeAtual)
                 .HasColumnType("int(11)")
                 .HasColumnName("quantidade_atual");
-            entity.Property(e => e.QuantidadeMaxima)
-                .HasComment("Talvez alterar quant. máx para permitir NULL?")
-                .HasColumnType("int(11)")
-                .HasColumnName("quantidade_maxima");
             entity.Property(e => e.QuantidadeMinima)
                 .HasColumnType("int(11)")
                 .HasColumnName("quantidade_minima");

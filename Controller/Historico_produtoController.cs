@@ -32,26 +32,26 @@ public class Historico_produtoController : ControllerBase
         return Ok(historico_produto);
     }
 
-    [HttpPost]
-    public async Task<ActionResult<Historico_produto>> CriarHistorico_produto(Historico_produto historico_produto)
-    {
-        var produtoCriada = await _historico_produtoService.CriarHistorico_produtoAsync(historico_produto);
-        return CreatedAtAction(nameof(ObterHistorico_produto), new { id = produtoCriada.Id },
-            produtoCriada);
-    }
+    // [HttpPost]
+    // public async Task<ActionResult<Historico_produto>> CriarHistorico_produto(Historico_produto historico_produto)
+    // {
+    //     var produtoCriada = await _historico_produtoService.CriarHistorico_produtoAsync(historico_produto);
+    //     return CreatedAtAction(nameof(ObterHistorico_produto), new { id = produtoCriada.Id },
+    //         produtoCriada);
+    // }
 
-    [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarHistorico_produto(int id, Historico_produto historico_produto)
-    {
-        if (id != historico_produto.Id) return BadRequest();
-        await _historico_produtoService.AtualizarHistorico_produtoAsync(id, historico_produto);
-        return NoContent();
-    }
+    // [HttpPut("{id}")]
+    // public async Task<IActionResult> AtualizarHistorico_produto(int id, Historico_produto historico_produto)
+    // {
+    //     if (id != historico_produto.Id) return BadRequest();
+    //     await _historico_produtoService.AtualizarHistorico_produtoAsync(id, historico_produto);
+    //     return NoContent();
+    // }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarHistorico_produto(int id) 
-    { 
-        await _historico_produtoService.DeletarHistorico_produtoAsync(id); 
-        return NoContent(); 
-    } 
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarHistorico_produto(int id) 
+    // { 
+    //     await _historico_produtoService.DeletarHistorico_produtoAsync(id); 
+    //     return NoContent(); 
+    // } 
 }

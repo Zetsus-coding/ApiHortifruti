@@ -1,5 +1,6 @@
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controllers;
@@ -10,10 +11,12 @@ namespace ApiHortifruti.Controllers;
 public class Unidade_medidaController : ControllerBase
 {
     private readonly IUnidade_medidaService _unidade_medidaService;
+    private readonly IMapper _mapper;
 
-    public Unidade_medidaController(IUnidade_medidaService unidade_medidaService)
+    public Unidade_medidaController(IUnidade_medidaService unidade_medidaService, IMapper mapper)
     {
         _unidade_medidaService = unidade_medidaService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -33,8 +36,10 @@ public class Unidade_medidaController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Unidade_medida>> CriarUnidade_medida(Unidade_medida unidade_medida)
+    public async Task<ActionResult<Unidade_medida>> CriarUnidade_medida(PostUnidade_medidaDTO postUnidade_medidaDTO)
     {
+        var unidade_medida = _mapper.Map<Unidade_medida>(postUnidade_medidaDTO); // Conversão de DTO para entidade
+        
         var unidade_medidaCriado = await _unidade_medidaService.CriarUnidade_medidaAsync(unidade_medida);
         return CreatedAtAction(nameof(ObterCategoria), new { unidade_medidaCriado.Id },
             unidade_medidaCriado);

@@ -23,11 +23,17 @@ public class EntradaRepository : IEntradaRepository
         return await _context.Entrada.FindAsync(id);
     }
 
-    public async Task<Entrada> AdicionarAsync(Entrada entrada)
+    public async Task<Entrada?> ObterPorNumeroNotaAsync(string numeroNota, int fornecedorId)
+    {
+        return await _context.Entrada
+            .FirstOrDefaultAsync(e => e.NumeroNota == numeroNota && e.FornecedorId == fornecedorId);
+    }
+
+    public async Task AdicionarAsync(Entrada entrada)
     {
         _context.Entrada.Add(entrada);
-        await _context.SaveChangesAsync();
-        return entrada;
+        // await _context.SaveChangesAsync();
+        // return entrada;
     }
 
     public async Task AtualizarAsync(Entrada entrada)

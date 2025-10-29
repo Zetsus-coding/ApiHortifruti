@@ -4,45 +4,35 @@ using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
 
-
 public class Item_entradaService : IItem_entradaService
 {
-    private readonly IItem_entradaRepository _item_entradaRepository;
+    private readonly IUnityOfWork _unityOfWork;
 
-    public Item_entradaService(IItem_entradaRepository item_entradaRepository)
+    public Item_entradaService(IUnityOfWork unityOfWork)
     {
-        _item_entradaRepository = item_entradaRepository; // Inj. dependência
+        _unityOfWork = unityOfWork; // Inj. dependência
     }
 
-    public async Task<IEnumerable<Item_entrada>> ObterTodasItem_entradasAsync()
+    public async Task ValidarItensEntradaAsync(int entradaId, IEnumerable<Item_entrada> itens)
     {
-        return await _item_entradaRepository.ObterTodasAsync();
-    }
-
-    public async Task<Item_entrada?> ObterItem_entradaPorIdAsync(int id)
-    {
-        return await _item_entradaRepository.ObterPorIdAsync(id);
+        if (itens == null || !itens.Any()) // Verifica se a "lista" é nula ou vazia
+            throw new InvalidOperationException("É necessário adicionar no mínimo um item à entrada.");
         
-    }
+        if (itens.Any(item => item.Quantidade <= 0)) // Verifica se a quantidade de todos os itens é maior que zero
+            throw new InvalidOperationException("A quantidade de todos os itens deve ser maior que zero");
 
-    public async Task<Item_entrada> CriarItem_entradaAsync(Item_entrada item_entrada)
-    {
-        return await _item_entradaRepository.AdicionarAsync(item_entrada);
-    }
-
-    public async Task AtualizarItem_entradaAsync(int id, Item_entrada item_entrada)
-    {
-        if (id != item_entrada.Id)
+        foreach (var item in itens)
         {
-            // Lançar erro/exceção
-            return;
-        }
-        await _item_entradaRepository.AtualizarAsync(item_entrada);
-    }
+            var produto = await _unityOfWork.Produto.ObterPorIdAsync(item.ProdutoId); // Obtêm o produto baseado no id dentro do item entrada
 
-    public async Task DeletarItem_entradaAsync(int id)
-    {
-        await _item_entradaRepository.DeletarAsync(id);
+            if (produto == null) // Verifica se o produto "existe" (foi retornado)
+                throw new InvalidOperationException($"O produto com ID {item.ProdutoId} não existe."); // Problema de segurança (expor id)?
+
+            produto.QuantidadeAtual += item.Quantidade; // Soma o valor informado em item entrada e adiciona a quantidade atual em produto
+            //await _unityOfWork.Produto.AtualizarAsync(produto); // Faz o PUT no context do EF em produtos [REDUNDATE?]
+        }
+
+        await _unityOfWork.ItensEntrada.AdicionarListaItensEntradaAsync(itens);
     }
 }
 

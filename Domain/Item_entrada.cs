@@ -15,9 +15,11 @@ public partial class Item_entrada
 
     public string? Lote { get; set; }
 
+    public decimal PrecoUnitario { get; set; }
+
     public string? Validade { get; set; }
 
-    public virtual Entrada Entrada { get; set; } = null!;
+    public virtual Entrada? Entrada { get; set; } = null!;
 
-    public virtual Produto Produto { get; set; } = null!;
+    public virtual Produto? Produto { get; set; } = null!;
 }

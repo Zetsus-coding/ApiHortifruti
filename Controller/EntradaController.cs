@@ -1,5 +1,6 @@
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -10,11 +11,13 @@ namespace ApiHortifruti.Controller;
 public class EntradaController : ControllerBase
 {
     private readonly IEntradaService _entradaService;
+    private readonly IMapper _mapper;
 
     // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
-    public EntradaController(IEntradaService entradaService)
+    public EntradaController(IEntradaService entradaService, IMapper mapper)
     {
         _entradaService = entradaService;
+        _mapper = mapper;
     }
 
     // OPERAÇÕES
@@ -37,8 +40,10 @@ public class EntradaController : ControllerBase
     // get produtos associados a entrada (aqui [/entrada/identrada/produtos] ou em produtos [/produtos?entrada=x])?
 
     [HttpPost]
-    public async Task<ActionResult<Entrada>> CriarEntrada(Entrada entrada)
+    public async Task<ActionResult<Entrada>> CriarEntrada(PostEntradaDTO postEntradaDTO)
     {
+        var entrada = _mapper.Map<Entrada>(postEntradaDTO);
+
         var entradaCriada = await _entradaService.CriarEntradaAsync(entrada);
         return CreatedAtAction(nameof(ObterEntrada), new { id = entradaCriada.Id },
             entradaCriada);
