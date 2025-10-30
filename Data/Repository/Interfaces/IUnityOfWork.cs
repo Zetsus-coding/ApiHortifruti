@@ -10,8 +10,5 @@ public interface IUnityOfWork : IDisposable
     IFornecedorRepository Fornecedor { get; }
     IMotivo_movimentacaoRepository MotivoMovimentacao { get; }
 
-    public Task<IDbContextTransaction> BeginTransactionAsync();
     public Task<int> SaveChangesAsync();
-    public Task CommitAsync(IDbContextTransaction transaction);
-    public Task RollbackAsync(IDbContextTransaction transaction);
 }

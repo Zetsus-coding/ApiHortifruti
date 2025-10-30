@@ -29,7 +29,7 @@ public class EntradaService : IEntradaService
 
     public async Task<Entrada> CriarEntradaAsync(Entrada entrada)
     {   
-        using var transaction = await _uow.BeginTransactionAsync();
+        // await using var transaction = _uow.
         try // ?
         {
             var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(entrada.FornecedorId);
@@ -51,13 +51,13 @@ public class EntradaService : IEntradaService
             await _uow.Entrada.AdicionarAsync(entrada); // Adiciona a entrada
             await _item_entradaService.ValidarItensEntradaAsync(entrada.Id, entrada.ItemEntrada); // Valida e cadastra os itens da entrada e chama o serviço para atualizar os produtos
 
-            // await _uow.SaveChangesAsync(); // Salva as mudanças no context
-            await _uow.CommitAsync(transaction); // Salva as mudanças no banco de dados
+            var retorno = await _uow.SaveChangesAsync(); // Salva as mudanças no context
+            System.Console.WriteLine(retorno);
             return entrada;
         }
         catch (Exception exc) // ?
         {
-            await _uow.RollbackAsync(transaction);
+            // await _uow.RollbackAsync(transaction);
             throw new Exception("Erro ao criar a entrada e/ou seus registros subsequentes. MENSAGEM: " + exc.Message);
         }
 

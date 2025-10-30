@@ -6,11 +6,11 @@ namespace ApiHortifruti.Service;
 
 public class Item_entradaService : IItem_entradaService
 {
-    private readonly IUnityOfWork _unityOfWork;
+    private readonly IUnityOfWork _uow;
 
-    public Item_entradaService(IUnityOfWork unityOfWork)
+    public Item_entradaService(IUnityOfWork uow)
     {
-        _unityOfWork = unityOfWork; // Inj. dependência
+        _uow = uow; // Inj. dependência
     }
 
     public async Task ValidarItensEntradaAsync(int entradaId, IEnumerable<Item_entrada> itens)
@@ -21,18 +21,19 @@ public class Item_entradaService : IItem_entradaService
         if (itens.Any(item => item.Quantidade <= 0)) // Verifica se a quantidade de todos os itens é maior que zero
             throw new InvalidOperationException("A quantidade de todos os itens deve ser maior que zero");
 
+        await _uow.ItensEntrada.AdicionarListaItensEntradaAsync(itens); // Adicionar o(s) item_entrada
+
         foreach (var item in itens)
         {
-            var produto = await _unityOfWork.Produto.ObterPorIdAsync(item.ProdutoId); // Obtêm o produto baseado no id dentro do item entrada
+            var produto = await _uow.Produto.ObterPorIdAsync(item.ProdutoId); // Obtêm o produto baseado no id dentro do item entrada
 
             if (produto == null) // Verifica se o produto "existe" (foi retornado)
                 throw new InvalidOperationException($"O produto com ID {item.ProdutoId} não existe."); // Problema de segurança (expor id)?
 
             produto.QuantidadeAtual += item.Quantidade; // Soma o valor informado em item entrada e adiciona a quantidade atual em produto
-            //await _unityOfWork.Produto.AtualizarAsync(produto); // Faz o PUT no context do EF em produtos [REDUNDATE?]
+            await _uow.Produto.AtualizarAsync(produto); // Faz o PUT no context do EF em produtos [REDUNDATE?]
         }
 
-        await _unityOfWork.ItensEntrada.AdicionarListaItensEntradaAsync(itens);
     }
 }
 

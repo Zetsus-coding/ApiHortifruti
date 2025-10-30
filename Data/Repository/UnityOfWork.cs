@@ -30,30 +30,15 @@ public class UnityOfWork : IUnityOfWork
         _context = context ?? throw new ArgumentNullException(nameof(context), "O contexto não pode ser nulo");
     }
 
-    public async Task<IDbContextTransaction> BeginTransactionAsync() // Inicia a transação
-    {
-        return _transaction = await _context.Database.BeginTransactionAsync();
-    }
-
     public async Task<int> SaveChangesAsync() // Salva as mudanças no context
     {
         return await _context.SaveChangesAsync();
     }
 
-    public async Task CommitAsync(IDbContextTransaction transaction) // Confirma a transação
-    {
-        await SaveChangesAsync();
-        await transaction.CommitAsync();
-    }
-
-    public async Task RollbackAsync(IDbContextTransaction transaction) // Desfaz a transação
-    {
-        await transaction.RollbackAsync();
-    }
-
     public void Dispose() // O que fazer aqui (implementação)?
     {
         _context.DisposeAsync();
+        GC.SuppressFinalize(this);
     }
 
 }
