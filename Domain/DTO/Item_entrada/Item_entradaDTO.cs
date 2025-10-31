@@ -11,7 +11,7 @@ public class Item_entradaDTO
 
     [Required(ErrorMessage = "A quantidade não pode ser nula/vazia")]
     [Range(0, 99999999.99, MinimumIsExclusive = true, ErrorMessage = "A quantidade deve ser maior que zero")]
-    public int Quantidade { get; set; }
+    public decimal Quantidade { get; set; }
 
     
     public string? Lote { get; set; }

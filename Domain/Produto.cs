@@ -18,9 +18,9 @@ public partial class Produto
 
     public decimal Preco { get; set; }
 
-    public int QuantidadeAtual { get; set; } = 0;
+    public decimal QuantidadeAtual { get; set; } = 0;
 
-    public int QuantidadeMinima { get; set; }
+    public decimal QuantidadeMinima { get; set; }
 
     /// <summary>
     /// Talvez alterar quant. máx para permitir NULL?

@@ -340,7 +340,7 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("produto_id");
             entity.Property(e => e.Quantidade)
-                .HasColumnType("int(11)")
+                .HasPrecision(10,2)
                 .HasColumnName("quantidade");
             entity.Property(e => e.SaidaId)
                 .HasColumnType("int(11)")
