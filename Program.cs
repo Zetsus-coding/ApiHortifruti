@@ -3,7 +3,7 @@ using ApiHortifruti.Data;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
-using Hortifruti.Middlewares;
+using ApiHortifruti.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 

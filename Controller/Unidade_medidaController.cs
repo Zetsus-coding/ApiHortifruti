@@ -4,7 +4,7 @@ using ApiHortifruti.Service.Interfaces;
 using ApiHortifruti.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Hortifruti.Controllers;
+namespace ApiHortifruti.Controller;
 
 [ApiController]
 [Route("api/[controller]")]

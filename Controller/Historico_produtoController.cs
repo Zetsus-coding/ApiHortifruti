@@ -2,7 +2,7 @@ using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiHortifruti.Controllers;
+namespace ApiHortifruti.Controller;
 
 [ApiController]
 [Route("api/[controller]")]
