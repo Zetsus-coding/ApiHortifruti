@@ -14,7 +14,7 @@ public class ProdutoService : IProdutoService
         _produtoRepository = produtoRepository;
     }
 
-    public async Task<IEnumerable<Produto>> ObterTodasProdutoAsync()
+    public async Task<IEnumerable<Produto>> ObterTodosProdutoAsync()
     {
         return await _produtoRepository.ObterTodasAsync();
     }
