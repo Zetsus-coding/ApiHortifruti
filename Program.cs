@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using ApiHortifruti;
+using ApiHortifruti.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -95,6 +96,7 @@ builder.Services.AddApplicationServices(); // Faz o AddScoped automático do ser
 var app = builder.Build();
 
 app.UseHttpsRedirection();
+app.UseMiddleware(typeof(GlobalExceptionHandlingMiddleware));
 
 app.UseAuthentication(); // Identificação (leitura do token)
 app.UseAuthorization(); // Autorização (utilização do [Authorize])
