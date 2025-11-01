@@ -4,45 +4,45 @@ using ApiHortifruti.Data.Repository.Interfaces;
 
 namespace ApiHortifruti.Data.Repository;
 
-public class Motivo_movimentacaoRepository : IMotivo_movimentacaoRepository
+public class MotivoMovimentacaoRepository : IMotivoMovimentacaoRepository
 {
     private readonly AppDbContext _context;
 
-    public Motivo_movimentacaoRepository(AppDbContext context)
+    public MotivoMovimentacaoRepository(AppDbContext context)
     {
         _context = context;
     }
     
-    public async Task<IEnumerable<Motivo_movimentacao>> ObterTodasAsync()
+    public async Task<IEnumerable<MotivoMovimentacao>> ObterTodasAsync()
     {
-        return await _context.Motivo_movimentacao.ToListAsync();
+        return await _context.MotivoMovimentacao.ToListAsync();
     }
 
-    public async Task<Motivo_movimentacao?> ObterPorIdAsync(int id)
+    public async Task<MotivoMovimentacao?> ObterPorIdAsync(int id)
     {
-        return await _context.Motivo_movimentacao.FindAsync(id);
+        return await _context.MotivoMovimentacao.FindAsync(id);
     }
 
-    public async Task<Motivo_movimentacao> AdicionarAsync(Motivo_movimentacao motivo_movimentacao)
+    public async Task<MotivoMovimentacao> AdicionarAsync(MotivoMovimentacao motivoMovimentacao)
     {
-        _context.Motivo_movimentacao.Add(motivo_movimentacao);
+        _context.MotivoMovimentacao.Add(motivoMovimentacao);
         await _context.SaveChangesAsync();
-        return motivo_movimentacao;
+        return motivoMovimentacao;
     }
 
-    public async Task AtualizarAsync(Motivo_movimentacao motivo_movimentacao)
+    public async Task AtualizarAsync(MotivoMovimentacao motivoMovimentacao)
     {
-        _context.Entry(motivo_movimentacao).State = EntityState.Modified;
+        _context.Entry(motivoMovimentacao).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
     {
-        var motivo_movimentacao = await ObterPorIdAsync(id);
+        var motivoMovimentacao = await ObterPorIdAsync(id);
         
-        if (motivo_movimentacao != null)
+        if (motivoMovimentacao != null)
         {
-            _context.Motivo_movimentacao.Remove(motivo_movimentacao);
+            _context.MotivoMovimentacao.Remove(motivoMovimentacao);
             await _context.SaveChangesAsync();
         }
     }

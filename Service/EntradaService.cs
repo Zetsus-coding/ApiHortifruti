@@ -1,3 +1,4 @@
+using ApiHortifruti.Data.Repository;
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
@@ -7,27 +8,60 @@ namespace ApiHortifruti.Service;
 
 public class EntradaService : IEntradaService
 {
-    private readonly IEntradaRepository _entradaRepository;
+    private readonly IUnityOfWork _uow;
+    private readonly IItemEntradaService _itemEntradaService;
 
-    public EntradaService(IEntradaRepository entradaRepository)
+    public EntradaService(IUnityOfWork uow, IItemEntradaService itemEntradaService)
     {
-        _entradaRepository = entradaRepository; // Inj. dependência
+        _uow = uow; // Inj. dependência
+        _itemEntradaService = itemEntradaService;
     }
 
     public async Task<IEnumerable<Entrada>> ObterTodasEntradasAsync()
     {
-        return await _entradaRepository.ObterTodasAsync();
+        return await _uow.Entrada.ObterTodasAsync();
     }
 
     public async Task<Entrada?> ObterEntradaPorIdAsync(int id)
     {
-        return await _entradaRepository.ObterPorIdAsync(id);
-        
+        return await _uow.Entrada.ObterPorIdAsync(id);
     }
 
     public async Task<Entrada> CriarEntradaAsync(Entrada entrada)
-    {
-        return await _entradaRepository.AdicionarAsync(entrada);
+    {   
+        // await using var transaction = _uow.
+        try // ?
+        {
+            var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(entrada.FornecedorId);
+            var motivo = await _uow.MotivoMovimentacao.ObterPorIdAsync(entrada.MotivoMovimentacaoId);
+            var nota = await _uow.Entrada.ObterPorNumeroNotaAsync(entrada.NumeroNota, entrada.FornecedorId);
+
+            if (fornecedor == null) // Verifica se o fornecedor existe
+                throw new InvalidOperationException("Fornecedor não encontrado no sistema");
+
+            if (motivo == null) // Verifica se o motivo de movimentação existe
+                throw new InvalidOperationException("Motivo de movimentação não encontrado no sistema");
+
+            if (entrada.DataCompra > DateOnly.FromDateTime(DateTime.Now)) // Verifica se a data da compra não é futura
+                throw new InvalidOperationException("A data da compra não pode ser uma data futura");
+
+            if (nota != null) // Verifica se já existe uma entrada com o mesmo número de nota para o fornecedor
+                throw new InvalidOperationException("Já existe um registro com esse número de nota fiscal para o fornecedor informado");
+
+            await _uow.Entrada.AdicionarAsync(entrada); // Adiciona a entrada
+            await _itemEntradaService.ValidarItensEntradaAsync(entrada.Id, entrada.ItemEntrada); // Valida e cadastra os itens da entrada e chama o serviço para atualizar os produtos
+
+            var retorno = await _uow.SaveChangesAsync(); // Salva as mudanças no context
+            System.Console.WriteLine(retorno);
+            return entrada;
+        }
+        catch (Exception exc) // ?
+        {
+            // await _uow.RollbackAsync(transaction);
+            throw new Exception("Erro ao criar a entrada e/ou seus registros subsequentes. MENSAGEM: " + exc.Message);
+        }
+
+        
     }
 
     public async Task AtualizarEntradaAsync(int id, Entrada entrada)
@@ -37,12 +71,12 @@ public class EntradaService : IEntradaService
             // Lançar erro/exceção
             return;
         }
-        await _entradaRepository.AtualizarAsync(entrada);
+        // await _entradaRepository.AtualizarAsync(entrada);
     }
 
     public async Task DeletarEntradaAsync(int id)
     {
-        await _entradaRepository.DeletarAsync(id);
+        // await _entradaRepository.DeletarAsync(id);
     }
 }
 

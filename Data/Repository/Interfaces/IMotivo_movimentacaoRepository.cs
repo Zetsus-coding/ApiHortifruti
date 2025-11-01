@@ -2,11 +2,11 @@ using ApiHortifruti.Domain;
 
 namespace ApiHortifruti.Data.Repository.Interfaces;
 
-public interface IMotivo_movimentacaoRepository
+public interface IMotivoMovimentacaoRepository
 {
-    Task<IEnumerable<Motivo_movimentacao>> ObterTodasAsync();
-    Task<Motivo_movimentacao?> ObterPorIdAsync(int id);
-    Task<Motivo_movimentacao> AdicionarAsync(Motivo_movimentacao motivo_movimentacao);
-    Task AtualizarAsync(Motivo_movimentacao motivo_movimentacao);
+    Task<IEnumerable<MotivoMovimentacao>> ObterTodasAsync();
+    Task<MotivoMovimentacao?> ObterPorIdAsync(int id);
+    Task<MotivoMovimentacao> AdicionarAsync(MotivoMovimentacao motivoMovimentacao);
+    Task AtualizarAsync(MotivoMovimentacao motivoMovimentacao);
     Task DeletarAsync(int id);
 }

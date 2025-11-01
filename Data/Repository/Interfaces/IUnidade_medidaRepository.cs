@@ -2,11 +2,11 @@ using ApiHortifruti.Domain;
 
 namespace ApiHortifruti.Data.Repository.Interfaces;
 
- public interface IUnidade_medidaRepository
+ public interface IUnidadeMedidaRepository
 {
-    Task<IEnumerable<Unidade_medida>> ObterTodasAsync();
-    Task<Unidade_medida?> ObterPorIdAsync(int id);
-    Task<Unidade_medida> AdicionarAsync(Unidade_medida unidade_medida);
-    Task AtualizarAsync(Unidade_medida unidade_medida);
+    Task<IEnumerable<UnidadeMedida>> ObterTodasAsync();
+    Task<UnidadeMedida?> ObterPorIdAsync(int id);
+    Task<UnidadeMedida> AdicionarAsync(UnidadeMedida unidadeMedida);
+    Task AtualizarAsync(UnidadeMedida unidadeMedida);
     Task DeletarAsync(int id);
 }

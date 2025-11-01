@@ -2,6 +2,7 @@ using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -12,10 +13,12 @@ namespace ApiHortifruti.Controller;
 public class FornecedorController : ControllerBase
 {
     private readonly IFornecedorService _fornecedorService;
+    private readonly IMapper _mapper;
 
-    public FornecedorController(IFornecedorService fornecedorService)
+    public FornecedorController(IFornecedorService fornecedorService, IMapper mapper)
     {
         _fornecedorService = fornecedorService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -44,8 +47,10 @@ public class FornecedorController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Fornecedor>> CriarFornecedor(Fornecedor fornecedor)
+    public async Task<ActionResult<Fornecedor>> CriarFornecedor(PostFornecedorDTO postFornecedorDTO)
     {
+        var fornecedor = _mapper.Map<Fornecedor>(postFornecedorDTO); // Conversão de DTO para entidade
+        
         var fornecedorCriado = await _fornecedorService.CriarFornecedorAsync(fornecedor);
         return CreatedAtAction(nameof(ObterCategoria), new { fornecedorCriado.Id },
             fornecedorCriado);

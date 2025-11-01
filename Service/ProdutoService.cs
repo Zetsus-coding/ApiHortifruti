@@ -14,7 +14,7 @@ public class ProdutoService : IProdutoService
         _produtoRepository = produtoRepository;
     }
 
-    public async Task<IEnumerable<Produto>> ObterTodasProdutosAsync()
+    public async Task<IEnumerable<Produto>> ObterTodosProdutoAsync()
     {
         return await _produtoRepository.ObterTodasAsync();
     }
@@ -26,6 +26,7 @@ public class ProdutoService : IProdutoService
 
     public async Task<Produto> CriarProdutoAsync(Produto produto)
     {
+        // TODO: COLOCAR EXCEPTION DE CÓDIGO JÁ EXISTENTE
         return await _produtoRepository.AdicionarAsync(produto);
     }
 

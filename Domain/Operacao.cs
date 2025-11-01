@@ -14,5 +14,5 @@ public partial class Operacao
     public string Descricao { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual ICollection<Permissao> Permissaos { get; set; } = new List<Permissao>();
+    public virtual ICollection<Permissao> Permissao { get; set; } = new List<Permissao>();
 }

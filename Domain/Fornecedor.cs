@@ -22,5 +22,5 @@ public partial class Fornecedor
     public virtual ICollection<Entrada> Entrada { get; set; } = new List<Entrada>();
 
     [JsonIgnore]
-    public virtual ICollection<Fornecedor_produto> FornecedorProdutos { get; set; } = new List<Fornecedor_produto>();
+    public virtual ICollection<FornecedorProduto> FornecedorProduto { get; set; } = new List<FornecedorProduto>();
 }

@@ -4,46 +4,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiHortifruti.Data.Repository;
 
-public class Unidade_medidaRepository : IUnidade_medidaRepository
+public class UnidadeMedidaRepository : IUnidadeMedidaRepository
 {
     private readonly AppDbContext _context;
 
-    public Unidade_medidaRepository(AppDbContext context)
+    public UnidadeMedidaRepository(AppDbContext context)
     {
         _context = context;
     }
 
 
-    public async Task<IEnumerable<Unidade_medida>> ObterTodasAsync()
+    public async Task<IEnumerable<UnidadeMedida>> ObterTodasAsync()
     {
-        return await _context.Unidade_medida.ToListAsync();
+        return await _context.UnidadeMedida.ToListAsync();
     }
 
-    public async Task<Unidade_medida?> ObterPorIdAsync(int id)
+    public async Task<UnidadeMedida?> ObterPorIdAsync(int id)
     {
-        return await _context.Unidade_medida.FindAsync(id);
+        return await _context.UnidadeMedida.FindAsync(id);
     }
 
-    public async Task<Unidade_medida> AdicionarAsync(Unidade_medida unidade_medida)
+    public async Task<UnidadeMedida> AdicionarAsync(UnidadeMedida unidadeMedida)
     {
-        _context.Unidade_medida.Add(unidade_medida);
+        _context.UnidadeMedida.Add(unidadeMedida);
         await _context.SaveChangesAsync();
-        return unidade_medida;
+        return unidadeMedida;
     }
 
-    public async Task AtualizarAsync(Unidade_medida unidade_medida)
+    public async Task AtualizarAsync(UnidadeMedida unidadeMedida)
     {
-        _context.Entry(unidade_medida).State = EntityState.Modified;
+        _context.Entry(unidadeMedida).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
     {
-        var unidade_medida = await ObterPorIdAsync(id);
+        var unidadeMedida = await ObterPorIdAsync(id);
 
-        if (unidade_medida != null)
+        if (unidadeMedida != null)
         {
-            _context.Unidade_medida.Remove(unidade_medida);
+            _context.UnidadeMedida.Remove(unidadeMedida);
             await _context.SaveChangesAsync();
         }
     }

@@ -9,5 +9,5 @@ public partial class Categoria
     public string Nome { get; set; } = null!;
 
     [JsonIgnore] // Evitar referência circular
-    public virtual ICollection<Produto> Produtos { get; set; } = new List<Produto>();
+    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
 }

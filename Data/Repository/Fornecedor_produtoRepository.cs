@@ -4,46 +4,46 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiHortifruti.Data.Repository;
 
-public class Fornecedor_produtoRepository : IFornecedor_produtoRepository
+public class FornecedorProdutoRepository : IFornecedorProdutoRepository
 {
     private readonly AppDbContext _context;
 
-    public Fornecedor_produtoRepository(AppDbContext context)
+    public FornecedorProdutoRepository(AppDbContext context)
     {
         _context = context;
     }
 
 
-    public async Task<IEnumerable<Fornecedor_produto>> ObterTodasAsync()
+    public async Task<IEnumerable<FornecedorProduto>> ObterTodasAsync()
     {
-        return await _context.Fornecedor_produto.ToListAsync();
+        return await _context.FornecedorProduto.ToListAsync();
     }
 
-    public async Task<Fornecedor_produto?> ObterPorIdAsync(int fornecedorId, int produtoId)
+    public async Task<FornecedorProduto?> ObterPorIdAsync(int fornecedorId, int produtoId)
     {
-        return await _context.Fornecedor_produto.FindAsync(fornecedorId, produtoId);
+        return await _context.FornecedorProduto.FindAsync(fornecedorId, produtoId);
     }
 
-    public async Task<Fornecedor_produto> AdicionarAsync(Fornecedor_produto fornecedor_produto)
+    public async Task<FornecedorProduto> AdicionarAsync(FornecedorProduto fornecedorProduto)
     {
-        _context.Fornecedor_produto.Add(fornecedor_produto);
+        _context.FornecedorProduto.Add(fornecedorProduto);
         await _context.SaveChangesAsync();
-        return fornecedor_produto;
+        return fornecedorProduto;
     }
 
-    public async Task AtualizarAsync(Fornecedor_produto fornecedor_produto)
+    public async Task AtualizarAsync(FornecedorProduto fornecedorProduto)
     {
-        _context.Entry(fornecedor_produto).State = EntityState.Modified;
+        _context.Entry(fornecedorProduto).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int fornecedorId, int produtoId)
     {
-        var fornecedor_produto = await ObterPorIdAsync(fornecedorId, produtoId);
+        var fornecedorProduto = await ObterPorIdAsync(fornecedorId, produtoId);
 
-        if (fornecedor_produto != null)
+        if (fornecedorProduto != null)
         {
-            _context.Fornecedor_produto.Remove(fornecedor_produto);
+            _context.FornecedorProduto.Remove(fornecedorProduto);
             await _context.SaveChangesAsync();
         }
     }

@@ -4,7 +4,7 @@ namespace ApiHortifruti.Service.Interfaces;
 
 public interface IUsuarioService
 {
-    Task<IEnumerable<Usuario>> ObterTodasUsuariosAsync();
+    Task<IEnumerable<Usuario>> ObterTodasUsuarioAsync();
     Task<Usuario?> ObterUsuarioPorIdAsync(int id);
     Task<Usuario> CriarUsuarioAsync(Usuario usuario);
     Task AtualizarUsuarioAsync(int id, Usuario usuario);

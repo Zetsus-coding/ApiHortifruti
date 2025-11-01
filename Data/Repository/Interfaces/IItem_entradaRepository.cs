@@ -2,11 +2,11 @@ using ApiHortifruti.Domain;
 
 namespace ApiHortifruti.Data.Repository.Interfaces;
 
-public interface IItem_entradaRepository
+public interface IItemEntradaRepository
 {
-    Task<IEnumerable<Item_entrada>> ObterTodasAsync();
-    Task<Item_entrada?> ObterPorIdAsync(int id);
-    Task<Item_entrada> AdicionarAsync(Item_entrada item_entrada);
-    Task AtualizarAsync(Item_entrada item_entrada);
-    Task DeletarAsync(int id);
+    Task AdicionarListaItensEntradaAsync(IEnumerable<ItemEntrada> itens); // Adicionar no context a lista de itens (ou item se só tiver 1 item na list)
+    // RESERVADO PARA OUTROS MÉTODOS (GET?) #1(?)
+    // RESERVADO PARA OUTROS MÉTODOS (GET?) #2(?)
+    // RESERVADO PARA OUTROS MÉTODOS (GET?) #3(?)
+    // PUT E DELETE = QUESTIONÁVEIS
 }

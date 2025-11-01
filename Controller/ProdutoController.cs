@@ -2,6 +2,7 @@ using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -12,16 +13,18 @@ namespace ApiHortifruti.Controller;
 public class ProdutoController : ControllerBase
 {
     private readonly IProdutoService _produtoService;
+    private readonly IMapper _mapper;
 
-    public ProdutoController(IProdutoService produtoService)
+    public ProdutoController(IProdutoService produtoService, IMapper mapper)
     {
         _produtoService = produtoService;
+        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutos()
+    public async Task<ActionResult<IEnumerable<Produto>>> ObterProduto()
     {
-        var produto = await _produtoService.ObterTodasProdutosAsync();
+        var produto = await _produtoService.ObterTodosProdutoAsync();
 
         if (!produto.Any())
         {
@@ -44,8 +47,10 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Produto>> CriarProduto(Produto produto)
+    public async Task<ActionResult<Produto>> CriarProduto(PostProdutoDTO postProdutoDTO)
     {
+        var produto = _mapper.Map<Produto>(postProdutoDTO); // Conversão de DTO para entidade
+
         var produtoCriada = await _produtoService.CriarProdutoAsync(produto);
         return CreatedAtAction(nameof(ObterProduto), new { id = produtoCriada.Id },
             produtoCriada);

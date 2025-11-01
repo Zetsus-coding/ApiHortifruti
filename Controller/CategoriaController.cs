@@ -2,6 +2,7 @@ using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -12,11 +13,13 @@ namespace ApiHortifruti.Controller;
 public class CategoriaController : ControllerBase
 {
     private readonly ICategoriaService _categoriaService;
+    private readonly IMapper _mapper;
 
     // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
-    public CategoriaController(ICategoriaService categoriaService)
+    public CategoriaController(ICategoriaService categoriaService, IMapper mapper)
     {
         _categoriaService = categoriaService;
+        _mapper = mapper;
     }
     // OPERAÇÕES
     [HttpGet]
@@ -48,8 +51,10 @@ public class CategoriaController : ControllerBase
 
 
     [HttpPost]
-    public async Task<ActionResult<Categoria>> CriarCategoria(Categoria categoria)
+    public async Task<ActionResult<Categoria>> CriarCategoria(PostCategoriaDTO postCategoriaDTO)
     {
+        var categoria = _mapper.Map<Categoria>(postCategoriaDTO); // Conversão de DTO para entidade
+
         var categoriaCriada = await _categoriaService.CriarCategoriaAsync(categoria);
         return CreatedAtAction(nameof(ObterCategoria), new { id = categoriaCriada.Id },
             categoriaCriada);

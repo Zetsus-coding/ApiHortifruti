@@ -32,8 +32,7 @@ public class ProdutoRepository : IProdutoRepository
 
     public async Task AtualizarAsync(Produto produto)
     {
-        _context.Entry(produto).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+       _context.Entry(produto).State = EntityState.Modified;
     }
 
     public async Task DeletarAsync(int id)

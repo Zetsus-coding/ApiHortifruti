@@ -1,7 +1,10 @@
+using System;
+using System.Collections.Generic;
 using ApiHortifruti.Domain;
 using Microsoft.EntityFrameworkCore;
+using Pomelo.EntityFrameworkCore.MySql.Scaffolding.Internal;
 
-namespace ApiHortifruti.Data;
+namespace ApiHortifruti;
 
 public partial class AppDbContext : DbContext
 {
@@ -22,21 +25,19 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Fornecedor> Fornecedor { get; set; }
 
-    public virtual DbSet<Fornecedor_produto> Fornecedor_produto { get; set; }
+    public virtual DbSet<FornecedorProduto> FornecedorProduto { get; set; }
 
     public virtual DbSet<Funcionario> Funcionario { get; set; }
 
-    public virtual DbSet<Historico_produto> Historico_produto { get; set; }
+    public virtual DbSet<HistoricoProduto> HistoricoProduto { get; set; }
 
-    public virtual DbSet<Item_entrada> Item_entrada { get; set; }
+    public virtual DbSet<ItemEntrada> ItemEntrada { get; set; }
 
-    public virtual DbSet<Item_saida> Item_saida { get; set; }
+    public virtual DbSet<ItemSaida> ItemSaida { get; set; }
 
-    public virtual DbSet<Log_login> Log_login { get; set; }
+    public virtual DbSet<Modulo> Modulos { get; set; }
 
-    public virtual DbSet<Modulo> Modulo { get; set; }
-
-    public virtual DbSet<Motivo_movimentacao> Motivo_movimentacao { get; set; }
+    public virtual DbSet<MotivoMovimentacao> MotivoMovimentacao { get; set; }
 
     public virtual DbSet<Operacao> Operacao { get; set; }
 
@@ -48,9 +49,12 @@ public partial class AppDbContext : DbContext
 
     public virtual DbSet<Token> Token { get; set; }
 
-    public virtual DbSet<Unidade_medida> Unidade_medida { get; set; }
+    public virtual DbSet<UnidadeMedida> UnidadeMedida { get; set; }
 
     public virtual DbSet<Usuario> Usuario { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseMySql("name=ConnectionStrings:DefaultConnection", Microsoft.EntityFrameworkCore.ServerVersion.Parse("11.7.2-mariadb"));
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -112,9 +116,6 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.MotivoMovimentacaoId)
                 .HasColumnType("int(11)")
                 .HasColumnName("motivo_movimentacao_id");
-            entity.Property(e => e.NotaFiscal)
-                .HasMaxLength(20)
-                .HasColumnName("nota_fiscal");
             entity.Property(e => e.NumeroNota)
                 .HasMaxLength(30)
                 .HasColumnName("numero_nota");
@@ -160,13 +161,13 @@ public partial class AppDbContext : DbContext
                 .HasColumnName("telefone_extra");
         });
 
-        modelBuilder.Entity<Fornecedor_produto>(entity =>
+        modelBuilder.Entity<FornecedorProduto>(entity =>
         {
             entity.HasKey(e => new { e.FornecedorId, e.ProdutoId })
                 .HasName("PRIMARY")
                 .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0 });
 
-            entity.ToTable("fornecedor_produto", tb => tb.HasComment("Necessário a chave primária id? "));
+            entity.ToTable("fornecedor_produto");
 
             entity.HasIndex(e => e.FornecedorId, "fk_fornecedor_has_produto_fornecedor_idx");
 
@@ -186,12 +187,12 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("disponibilidade");
 
-            entity.HasOne(d => d.Fornecedor).WithMany(p => p.FornecedorProdutos)
+            entity.HasOne(d => d.Fornecedor).WithMany(p => p.FornecedorProduto)
                 .HasForeignKey(d => d.FornecedorId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_fornecedor_has_produto_fornecedor");
 
-            entity.HasOne(d => d.Produto).WithMany(p => p.FornecedorProdutos)
+            entity.HasOne(d => d.Produto).WithMany(p => p.FornecedorProduto)
                 .HasForeignKey(d => d.ProdutoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_fornecedor_has_produto_produto1");
@@ -239,13 +240,13 @@ public partial class AppDbContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("telefone_extra");
 
-            entity.HasOne(d => d.Cargo).WithMany(p => p.Funcionarios)
+            entity.HasOne(d => d.Cargo).WithMany(p => p.Funcionario)
                 .HasForeignKey(d => d.CargoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_funcionario_cargo1");
         });
 
-        modelBuilder.Entity<Historico_produto>(entity =>
+        modelBuilder.Entity<HistoricoProduto>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -269,18 +270,18 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("produto_id");
 
-            entity.HasOne(d => d.Funcionario).WithMany(p => p.HistoricoProdutos)
+            entity.HasOne(d => d.Funcionario).WithMany(p => p.HistoricoProduto)
                 .HasForeignKey(d => d.FuncionarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_historico_produto_funcionario1");
 
-            entity.HasOne(d => d.Produto).WithMany(p => p.HistoricoProdutos)
+            entity.HasOne(d => d.Produto).WithMany(p => p.HistoricoProduto)
                 .HasForeignKey(d => d.ProdutoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_historico_produto_produto1");
         });
 
-        modelBuilder.Entity<Item_entrada>(entity =>
+        modelBuilder.Entity<ItemEntrada>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -299,11 +300,14 @@ public partial class AppDbContext : DbContext
             entity.Property(e => e.Lote)
                 .HasMaxLength(50)
                 .HasColumnName("lote");
+            entity.Property(e => e.PrecoUnitario)
+                .HasPrecision(10, 2)
+                .HasColumnName("preco_unitario");
             entity.Property(e => e.ProdutoId)
                 .HasColumnType("int(11)")
                 .HasColumnName("produto_id");
             entity.Property(e => e.Quantidade)
-                .HasColumnType("int(11)")
+                .HasPrecision(10, 2)
                 .HasColumnName("quantidade");
             entity.Property(e => e.Validade)
                 .HasMaxLength(50)
@@ -320,7 +324,7 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("fk_item_entrada_produto1");
         });
 
-        modelBuilder.Entity<Item_saida>(entity =>
+        modelBuilder.Entity<ItemSaida>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -357,33 +361,6 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("fk_itens_saida_saida1");
         });
 
-        modelBuilder.Entity<Log_login>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
-
-            entity.ToTable("log_login", tb => tb.HasComment("Necessário? Criei mais para registrar o momento que um usuário faz login no sistema, para ter uma ideia"));
-
-            entity.HasIndex(e => e.UsuarioId, "fk_log_login_usuario1_idx");
-
-            entity.Property(e => e.Id)
-                .HasColumnType("int(11)")
-                .HasColumnName("id");
-            entity.Property(e => e.DataHora)
-                .HasColumnType("datetime")
-                .HasColumnName("data_hora");
-            entity.Property(e => e.Tipo)
-                .HasColumnType("enum('entrada','saida')")
-                .HasColumnName("tipo");
-            entity.Property(e => e.UsuarioId)
-                .HasColumnType("int(11)")
-                .HasColumnName("usuario_id");
-
-            entity.HasOne(d => d.Usuario).WithMany(p => p.LogLogins)
-                .HasForeignKey(d => d.UsuarioId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_log_login_usuario1");
-        });
-
         modelBuilder.Entity<Modulo>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
@@ -404,7 +381,7 @@ public partial class AppDbContext : DbContext
                 .HasColumnName("nome");
         });
 
-        modelBuilder.Entity<Motivo_movimentacao>(entity =>
+        modelBuilder.Entity<MotivoMovimentacao>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -440,7 +417,9 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<Permissao>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PRIMARY");
+            entity.HasKey(e => new { e.CargoId, e.ModuloId, e.OperacoesId })
+                .HasName("PRIMARY")
+                .HasAnnotation("MySql:IndexPrefixLength", new[] { 0, 0, 0 });
 
             entity.ToTable("permissao", tb => tb.HasComment("Tabela associando quais operações em quais módulos certo cargo pode acessar\n\nex: Cargo 1 pode acessar módulo de Funcionários e fazer qualquer tipo de operação\n\ncargo_id | modulo_id | operacao_id\n\n     1	      3	         1\n     1	      3	         2\n     1	      3	         3\n     1	      3	         4"));
 
@@ -450,9 +429,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasIndex(e => e.OperacoesId, "fk_permissoes_operacoes1_idx");
 
-            entity.Property(e => e.Id)
-                .HasColumnType("int(11)")
-                .HasColumnName("id");
             entity.Property(e => e.CargoId)
                 .HasColumnType("int(11)")
                 .HasColumnName("cargo_id");
@@ -467,17 +443,17 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("tinyint(4)")
                 .HasColumnName("permitido");
 
-            entity.HasOne(d => d.Cargo).WithMany(p => p.Permissaos)
+            entity.HasOne(d => d.Cargo).WithMany(p => p.Permissao)
                 .HasForeignKey(d => d.CargoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_permissoes_cargo1");
 
-            entity.HasOne(d => d.Modulo).WithMany(p => p.Permissaos)
+            entity.HasOne(d => d.Modulo).WithMany(p => p.Permissao)
                 .HasForeignKey(d => d.ModuloId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_permissoes_modulo1");
 
-            entity.HasOne(d => d.Operacoes).WithMany(p => p.Permissaos)
+            entity.HasOne(d => d.Operacoes).WithMany(p => p.Permissao)
                 .HasForeignKey(d => d.OperacoesId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_permissoes_operacoes1");
@@ -514,25 +490,21 @@ public partial class AppDbContext : DbContext
                 .HasPrecision(10, 2)
                 .HasColumnName("preco");
             entity.Property(e => e.QuantidadeAtual)
-                .HasColumnType("int(11)")
+                .HasPrecision(10, 2)
                 .HasColumnName("quantidade_atual");
-            entity.Property(e => e.QuantidadeMaxima)
-                .HasComment("Talvez alterar quant. máx para permitir NULL?")
-                .HasColumnType("int(11)")
-                .HasColumnName("quantidade_maxima");
             entity.Property(e => e.QuantidadeMinima)
-                .HasColumnType("int(11)")
+                .HasPrecision(10, 2)
                 .HasColumnName("quantidade_minima");
             entity.Property(e => e.UnidadeMedidaId)
                 .HasColumnType("int(11)")
                 .HasColumnName("unidade_medida_id");
 
-            entity.HasOne(d => d.Categoria).WithMany(p => p.Produtos)
+            entity.HasOne(d => d.Categoria).WithMany(p => p.Produto)
                 .HasForeignKey(d => d.CategoriaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_produto_categoria1");
 
-            entity.HasOne(d => d.UnidadeMedida).WithMany(p => p.Produtos)
+            entity.HasOne(d => d.UnidadeMedida).WithMany(p => p.Produto)
                 .HasForeignKey(d => d.UnidadeMedidaId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_produto_unidade_medida1");
@@ -610,13 +582,13 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("enum('usuario','senha')")
                 .HasColumnName("tipo");
 
-            entity.HasOne(d => d.Funcionario).WithMany(p => p.Tokens)
+            entity.HasOne(d => d.Funcionario).WithMany(p => p.Token)
                 .HasForeignKey(d => d.FuncionarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_token_funcionario1");
         });
 
-        modelBuilder.Entity<Unidade_medida>(entity =>
+        modelBuilder.Entity<UnidadeMedida>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
@@ -658,7 +630,7 @@ public partial class AppDbContext : DbContext
                 .IsFixedLength()
                 .HasColumnName("senha");
 
-            entity.HasOne(d => d.Funcionario).WithMany(p => p.Usuarios)
+            entity.HasOne(d => d.Funcionario).WithMany(p => p.Usuario)
                 .HasForeignKey(d => d.FuncionarioId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("fk_usuario_funcionario1");

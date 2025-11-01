@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using ApiHortifruti.Data;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using System.Text.Json.Serialization;
+using ApiHortifruti;
 using ApiHortifruti.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -79,8 +80,18 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddOpenApi(); // Adiciona o OpenApi
 builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
-builder.Services.AddControllers();
-builder.Services.AddApplicationServices(); // Faz o AddScoped automático do services e repositories (e sua respectivas interfaces)
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddControllers()
+    .AddJsonOptions(options =>
+    {
+        // Configura o serializador para usar o nome dos enums em vez do valor númerico
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+        // Evita(?) o loop infinito na serialização de objetos (referências circulares)
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    });
+
+builder.Services.AddApplicationServices(); // Faz o AddScoped automático do services e repositories (e sua respectivas interfaces) -> baseado nos nomes dos arquivos/classes
 
 var app = builder.Build();
 
@@ -98,7 +109,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
     app.MapScalarApiReference(options =>
     {
-        options.Layout = ScalarLayout.Classic;
+        // options.Layout = ScalarLayout.Classic;
         options.Theme = ScalarTheme.Moon;
     });
 }
