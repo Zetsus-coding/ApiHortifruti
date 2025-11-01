@@ -1,8 +1,10 @@
+using System.Data;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
-namespace ApiHortifruti.Controllers;
+namespace ApiHortifruti.Controller;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -20,6 +22,12 @@ public class FornecedorController : ControllerBase
     public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterFornecedor()
     {
         var fornecedor = await _fornecedorService.ObterTodosFornecedoresAsync();
+
+        if (!fornecedor.Any())
+        {
+            throw new DBConcurrencyException("Nenhum fornecedor criado.");
+        }
+
         return Ok(fornecedor);
     }
 
@@ -28,7 +36,10 @@ public class FornecedorController : ControllerBase
     {
         var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id);
 
-        if (fornecedor == null) return NotFound();
+        if (fornecedor == null) 
+        {
+            throw new NotFoundExeption("Fornecedor não existe.");
+        }
         return Ok(fornecedor);
     }
 
