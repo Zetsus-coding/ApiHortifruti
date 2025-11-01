@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain.DTO.CustomAnnotation;
-using ApiHortifruti.Domain.DTO.Item_entradaDTO;
+using ApiHortifruti.Domain.DTO.ItemEntradaDTO;
 
 public class PostEntradaDTO
 {
@@ -32,5 +32,5 @@ public class PostEntradaDTO
     // public string NotaFiscal { get; set; } = null!; // Removido
 
     [Required(ErrorMessage = "É obrigatório adicionar ao menos um item na entrada")]
-    public List<Item_entradaDTO> ItemEntrada { get; set; } = new List<Item_entradaDTO>();
+    public List<ItemEntradaDTO> ItemEntrada { get; set; } = new List<ItemEntradaDTO>();
 }

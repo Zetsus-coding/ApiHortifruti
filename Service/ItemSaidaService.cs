@@ -5,32 +5,32 @@ using ApiHortifruti.Service.Interfaces;
 namespace ApiHortifruti.Service;
 
 
-public class Item_saidaService : IItem_saidaService
+public class ItemSaidaService : IItemSaidaService
 {
     private readonly IItem_saidaRepository _item_saidaRepository;
 
-    public Item_saidaService(IItem_saidaRepository item_saidaRepository)
+    public ItemSaidaService(IItem_saidaRepository item_saidaRepository)
     {
         _item_saidaRepository = item_saidaRepository; // Inj. dependência
     }
 
-    public async Task<IEnumerable<Item_saida>> ObterTodasItem_saidasAsync()
+    public async Task<IEnumerable<ItemSaida>> ObterTodasItem_saidasAsync()
     {
         return await _item_saidaRepository.ObterTodasAsync();
     }
 
-    public async Task<Item_saida?> ObterItem_saidaPorIdAsync(int id)
+    public async Task<ItemSaida?> ObterItem_saidaPorIdAsync(int id)
     {
         return await _item_saidaRepository.ObterPorIdAsync(id);
         
     }
 
-    public async Task<Item_saida> CriarItem_saidaAsync(Item_saida item_saida)
+    public async Task<ItemSaida> CriarItem_saidaAsync(ItemSaida item_saida)
     {
         return await _item_saidaRepository.AdicionarAsync(item_saida);
     }
 
-    public async Task AtualizarItem_saidaAsync(int id, Item_saida item_saida)
+    public async Task AtualizarItem_saidaAsync(int id, ItemSaida item_saida)
     {
         if (id != item_saida.Id)
         {

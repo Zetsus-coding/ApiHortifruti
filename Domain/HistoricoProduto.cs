@@ -7,7 +7,7 @@
 /// valor_alterado
 /// tipo_alteracao (ENUM(&quot;Valor&quot;,&quot;Nome&quot;,&quot;Codigo&quot;))
 /// </summary>
-public partial class Historico_produto
+public partial class HistoricoProduto
 {
     public int Id { get; set; }
 

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-public class PostUnidade_medidaDTO
+public class PostUnidadeMedidaDTO
 {
     [Required(ErrorMessage = "O nome da unidade de medida é obrigatório")]
     [StringLength(50, ErrorMessage = "O nome da unidade de medida não pode exceder 50 caracteres")]

@@ -13,24 +13,24 @@ public class Item_saidaRepository : IItem_saidaRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<Item_saida>> ObterTodasAsync()
+    public async Task<IEnumerable<ItemSaida>> ObterTodasAsync()
     {
-        return await _context.Item_saida.ToListAsync();
+        return await _context.ItemSaida.ToListAsync();
     }
 
-    public async Task<Item_saida?> ObterPorIdAsync(int id)
+    public async Task<ItemSaida?> ObterPorIdAsync(int id)
     {
-        return await _context.Item_saida.FindAsync(id);
+        return await _context.ItemSaida.FindAsync(id);
     }
 
-    public async Task<Item_saida> AdicionarAsync(Item_saida item_saida)
+    public async Task<ItemSaida> AdicionarAsync(ItemSaida item_saida)
     {
-        _context.Item_saida.Add(item_saida);
+        _context.ItemSaida.Add(item_saida);
         await _context.SaveChangesAsync();
         return item_saida;
     }
 
-    public async Task AtualizarAsync(Item_saida item_saida)
+    public async Task AtualizarAsync(ItemSaida item_saida)
     {
         _context.Entry(item_saida).State = EntityState.Modified;
         await _context.SaveChangesAsync();
@@ -42,7 +42,7 @@ public class Item_saidaRepository : IItem_saidaRepository
         
         if (item_saida != null)
         {
-            _context.Item_saida.Remove(item_saida);
+            _context.ItemSaida.Remove(item_saida);
             await _context.SaveChangesAsync();
         }
     }

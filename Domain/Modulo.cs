@@ -5,7 +5,7 @@ namespace ApiHortifruti.Domain;
 /// <summary>
 /// Tabela fixa (&quot;chumbada&quot;) com os registros dos módulos do sistema.
 /// 
-/// ex: Produtos, Venda, Relatório, Funcionário etc.
+/// ex: Produto, Venda, Relatório, Funcionário etc.
 /// </summary>
 public partial class Modulo
 {
@@ -18,5 +18,5 @@ public partial class Modulo
     public bool Ativo { get; set; }
 
     [JsonIgnore]
-    public virtual ICollection<Permissao> Permissaos { get; set; } = new List<Permissao>();
+    public virtual ICollection<Permissao> Permissao { get; set; } = new List<Permissao>();
 }

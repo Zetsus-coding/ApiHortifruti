@@ -1,6 +1,6 @@
 ﻿namespace ApiHortifruti.Domain;
 
-public partial class Item_saida
+public partial class ItemSaida
 {
     public int Id { get; set; }
 

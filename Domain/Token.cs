@@ -1,4 +1,4 @@
-﻿namespace ApiHortifruti.Domain;
+namespace ApiHortifruti.Domain;
 
 public partial class Token
 {

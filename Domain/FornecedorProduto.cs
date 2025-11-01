@@ -4,7 +4,7 @@
 /// Necessário a chave primária id? 
 /// </summary>
 
-public partial class Fornecedor_produto
+public partial class FornecedorProduto
 {
     public int FornecedorId { get; set; }
 

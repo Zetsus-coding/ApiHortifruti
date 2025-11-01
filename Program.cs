@@ -1,9 +1,9 @@
 using Microsoft.EntityFrameworkCore;
-using ApiHortifruti.Data;
 using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
+using ApiHortifruti;
 
 var builder = WebApplication.CreateBuilder(args);
 

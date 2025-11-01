@@ -3,7 +3,7 @@ using ApiHortifruti.Domain.Enum;
 
 namespace ApiHortifruti.Domain;
 
-public partial class Motivo_movimentacao
+public partial class MotivoMovimentacao
 {
     public int Id { get; set; }
 

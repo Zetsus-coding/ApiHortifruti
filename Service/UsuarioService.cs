@@ -13,7 +13,7 @@ public class UsuarioService : IUsuarioService
         _usuarioRepository = usuarioRepository; // Inj. dependência
     }
 
-    public async Task<IEnumerable<Usuario>> ObterTodasUsuariosAsync()
+    public async Task<IEnumerable<Usuario>> ObterTodasUsuarioAsync()
     {
         return await _usuarioRepository.ObterTodasAsync();
     }

@@ -20,8 +20,8 @@ public partial class Entrada
 
     public virtual Fornecedor? Fornecedor { get; set; } = null!;
 
-    public virtual Motivo_movimentacao? MotivoMovimentacao { get; set; } = null!;
+    public virtual MotivoMovimentacao? MotivoMovimentacao { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual ICollection<Item_entrada> ItemEntrada { get; set; } = new List<Item_entrada>();
+    public virtual ICollection<ItemEntrada> ItemEntrada { get; set; } = new List<ItemEntrada>();
 }

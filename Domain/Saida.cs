@@ -26,8 +26,8 @@ public partial class Saida
 
     public virtual Funcionario Funcionario { get; set; } = null!;
 
-    public virtual Motivo_movimentacao MotivoMovimentacao { get; set; } = null!;
+    public virtual MotivoMovimentacao MotivoMovimentacao { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual ICollection<Item_saida> ItemSaida { get; set; } = new List<Item_saida>();
+    public virtual ICollection<ItemSaida> ItemSaida { get; set; } = new List<ItemSaida>();
 }

@@ -4,16 +4,16 @@ using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
 
-public class Item_entradaService : IItem_entradaService
+public class ItemEntradaService : IItemEntradaService
 {
     private readonly IUnityOfWork _uow;
 
-    public Item_entradaService(IUnityOfWork uow)
+    public ItemEntradaService(IUnityOfWork uow)
     {
         _uow = uow; // Inj. dependência
     }
 
-    public async Task ValidarItensEntradaAsync(int entradaId, IEnumerable<Item_entrada> itens)
+    public async Task ValidarItensEntradaAsync(int entradaId, IEnumerable<ItemEntrada> itens)
     {
         if (itens == null || !itens.Any()) // Verifica se a "lista" é nula ou vazia
             throw new InvalidOperationException("É necessário adicionar no mínimo um item à entrada.");
@@ -21,7 +21,7 @@ public class Item_entradaService : IItem_entradaService
         if (itens.Any(item => item.Quantidade <= 0)) // Verifica se a quantidade de todos os itens é maior que zero
             throw new InvalidOperationException("A quantidade de todos os itens deve ser maior que zero");
 
-        await _uow.ItensEntrada.AdicionarListaItensEntradaAsync(itens); // Adicionar o(s) item_entrada
+        await _uow.ItensEntrada.AdicionarListaItensEntradaAsync(itens); // Adicionar o(s) itemEntrada
 
         foreach (var item in itens)
         {

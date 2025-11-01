@@ -1,10 +1,10 @@
 namespace ApiHortifruti.Domain.DTO.Profiles;
 using AutoMapper;
 
-public class Unidade_medidaProfile : Profile
+public class UnidadeMedidaProfile : Profile
 {
-    public Unidade_medidaProfile()
+    public UnidadeMedidaProfile()
     {
-        CreateMap<PostUnidade_medidaDTO, Unidade_medida>().ReverseMap();
+        CreateMap<PostUnidadeMedidaDTO, UnidadeMedida>().ReverseMap();
     }
 }

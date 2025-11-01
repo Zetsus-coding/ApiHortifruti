@@ -2,7 +2,7 @@
 
 namespace ApiHortifruti.Domain;
 
-public partial class Unidade_medida
+public partial class UnidadeMedida
 {
     public int Id { get; set; }
 
@@ -11,5 +11,5 @@ public partial class Unidade_medida
     public string Abreviacao { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual ICollection<Produto> Produtos { get; set; } = new List<Produto>();
+    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
 }

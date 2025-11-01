@@ -1,9 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain.DTO.CustomAnnotation;
 
-namespace ApiHortifruti.Domain.DTO.Item_entradaDTO;
+namespace ApiHortifruti.Domain.DTO.ItemEntradaDTO;
 
-public class Item_entradaDTO
+public class ItemEntradaDTO
 {
     [Required(ErrorMessage = "O ID do produto é obrigatório no item da entrada")]
     public int ProdutoId { get; set; }

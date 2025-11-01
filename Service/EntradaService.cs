@@ -9,12 +9,12 @@ namespace ApiHortifruti.Service;
 public class EntradaService : IEntradaService
 {
     private readonly IUnityOfWork _uow;
-    private readonly IItem_entradaService _item_entradaService;
+    private readonly IItemEntradaService _itemEntradaService;
 
-    public EntradaService(IUnityOfWork uow, IItem_entradaService item_entradaService)
+    public EntradaService(IUnityOfWork uow, IItemEntradaService itemEntradaService)
     {
         _uow = uow; // Inj. dependência
-        _item_entradaService = item_entradaService;
+        _itemEntradaService = itemEntradaService;
     }
 
     public async Task<IEnumerable<Entrada>> ObterTodasEntradasAsync()
@@ -49,7 +49,7 @@ public class EntradaService : IEntradaService
                 throw new InvalidOperationException("Já existe um registro com esse número de nota fiscal para o fornecedor informado");
 
             await _uow.Entrada.AdicionarAsync(entrada); // Adiciona a entrada
-            await _item_entradaService.ValidarItensEntradaAsync(entrada.Id, entrada.ItemEntrada); // Valida e cadastra os itens da entrada e chama o serviço para atualizar os produtos
+            await _itemEntradaService.ValidarItensEntradaAsync(entrada.Id, entrada.ItemEntrada); // Valida e cadastra os itens da entrada e chama o serviço para atualizar os produtos
 
             var retorno = await _uow.SaveChangesAsync(); // Salva as mudanças no context
             System.Console.WriteLine(retorno);

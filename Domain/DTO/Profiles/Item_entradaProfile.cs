@@ -1,13 +1,13 @@
 namespace ApiHortifruti.Domain.DTO.Profiles;
 
-using ApiHortifruti.Domain.DTO.Item_entradaDTO;
+using ApiHortifruti.Domain.DTO.ItemEntradaDTO;
 
 using AutoMapper;
 
-public class Item_entradaProfile : Profile
+public class ItemEntradaProfile : Profile
 {
-    public Item_entradaProfile()
+    public ItemEntradaProfile()
     {
-        CreateMap<Item_entradaDTO, Item_entrada>().ReverseMap();
+        CreateMap<ItemEntradaDTO, ItemEntrada>().ReverseMap();
     }
 }

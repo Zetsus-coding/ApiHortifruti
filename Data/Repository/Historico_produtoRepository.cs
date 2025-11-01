@@ -4,45 +4,45 @@ using Microsoft.EntityFrameworkCore;
 
 namespace ApiHortifruti.Data.Repository;
 
-public class Historico_produtoRepository : IHistorico_produtoRepository
+public class HistoricoProdutoRepository : IHistoricoProdutoRepository
 {
     private readonly AppDbContext _context;
 
-    public Historico_produtoRepository(AppDbContext context)
+    public HistoricoProdutoRepository(AppDbContext context)
     {
         _context = context;
     }
     
-    public async Task<IEnumerable<Historico_produto>> ObterTodasAsync()
+    public async Task<IEnumerable<HistoricoProduto>> ObterTodasAsync()
     {
-        return await _context.Historico_produto.ToListAsync();
+        return await _context.HistoricoProduto.ToListAsync();
     }
 
-    public async Task<Historico_produto?> ObterPorIdAsync(int id)
+    public async Task<HistoricoProduto?> ObterPorIdAsync(int id)
     {
-        return await _context.Historico_produto.FindAsync(id);
+        return await _context.HistoricoProduto.FindAsync(id);
     }
 
-    public async Task<Historico_produto> AdicionarAsync(Historico_produto historico_produto)
+    public async Task<HistoricoProduto> AdicionarAsync(HistoricoProduto historicoProduto)
     {
-        _context.Historico_produto.Add(historico_produto);
+        _context.HistoricoProduto.Add(historicoProduto);
         await _context.SaveChangesAsync();
-        return historico_produto;
+        return historicoProduto;
     }
 
-    public async Task AtualizarAsync(Historico_produto historico_produto)
+    public async Task AtualizarAsync(HistoricoProduto historicoProduto)
     {
-        _context.Entry(historico_produto).State = EntityState.Modified;
+        _context.Entry(historicoProduto).State = EntityState.Modified;
         await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
     {
-        var historico_produto = await ObterPorIdAsync(id);
+        var historicoProduto = await ObterPorIdAsync(id);
         
-        if (historico_produto != null)
+        if (historicoProduto != null)
         {
-            _context.Historico_produto.Remove(historico_produto);
+            _context.HistoricoProduto.Remove(historicoProduto);
             await _context.SaveChangesAsync();
         }
     }

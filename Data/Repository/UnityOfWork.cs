@@ -10,18 +10,18 @@ public class UnityOfWork : IUnityOfWork
 
     // Propriedades dos repositórios
     private IEntradaRepository _entradaRepository;
-    private IItem_entradaRepository _item_entradaRepository;
+    private IItemEntradaRepository _itemEntradaRepository;
     private IProdutoRepository _produtoRepository;
     private IFornecedorRepository _fornecedorRepository;
-    private IMotivo_movimentacaoRepository _motivo_movimentacaoRepository;
+    private IMotivoMovimentacaoRepository _motivoMovimentacaoRepository;
 
 
     // Inicializador das propriedades ('lazy')
     public IEntradaRepository Entrada { get => _entradaRepository ??= new EntradaRepository(_context); }
-    public IItem_entradaRepository ItensEntrada { get => _item_entradaRepository ??= new Item_entradaRepository(_context); }
+    public IItemEntradaRepository ItensEntrada { get => _itemEntradaRepository ??= new ItemEntradaRepository(_context); }
     public IProdutoRepository Produto { get => _produtoRepository ??= new ProdutoRepository(_context); }
     public IFornecedorRepository Fornecedor { get => _fornecedorRepository ??= new FornecedorRepository(_context); }
-    public IMotivo_movimentacaoRepository MotivoMovimentacao { get => _motivo_movimentacaoRepository ??= new Motivo_movimentacaoRepository(_context); }
+    public IMotivoMovimentacaoRepository MotivoMovimentacao { get => _motivoMovimentacaoRepository ??= new MotivoMovimentacaoRepository(_context); }
 
     // Construtor
 
