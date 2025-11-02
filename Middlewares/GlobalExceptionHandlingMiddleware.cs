@@ -24,7 +24,7 @@ public class GlobalExceptionHandlingMiddleware
         {
             await HandleExeptionAsync(context, ex);
         }
-        
+
     }
 
     private static Task HandleExeptionAsync(HttpContext context, Exception exception)
@@ -50,14 +50,15 @@ public class GlobalExceptionHandlingMiddleware
         //necessita personalizar a exceção BadRequest no front para cada funcionalidade que depende de outra...
         else
         {
-            mensagem = exception.Message;
-            status = HttpStatusCode.BadRequest;
-            stackTrace = exception.StackTrace;
+            // Tratar a exceção genérica como Erro Interno do Servidor (500)
+            mensagem = "Ocorreu um erro inesperado. Tente novamente mais tarde."; // Mensagem mais segura para o cliente
+            status = HttpStatusCode.InternalServerError; // 500 para erros não tratados
+            stackTrace = exception.StackTrace; // Incluir para log/debug, mas não no ambiente de produção
         }
 
         var result = JsonSerializer.Serialize(new { status, mensagem, stackTrace });
         context.Response.ContentType = "application/json";
-        context.Response.StatusCode = (int) status;
+        context.Response.StatusCode = (int)status;
         return context.Response.WriteAsync(result);
     }
 }

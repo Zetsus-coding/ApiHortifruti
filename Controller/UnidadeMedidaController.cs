@@ -1,4 +1,6 @@
+using System.Data;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +25,11 @@ public class UnidadeMedidaController : ControllerBase
     public async Task<ActionResult<IEnumerable<UnidadeMedida>>> ObterTodosUnidadeMedida()
     {
         var getAllUnidadeMedida = await _unidadeMedidaService.ObterTodosUnidadeMedidaAsync();
+        
+        
+        if (!getAllUnidadeMedida.Any())
+            throw new DBConcurrencyException("Nenhuma unidade de medida criada.");
+        
         return Ok(getAllUnidadeMedida);
     }
 
@@ -31,7 +38,9 @@ public class UnidadeMedidaController : ControllerBase
     {
         var getIdUnidadeMedida = await _unidadeMedidaService.ObterUnidadeMedidaPorIdAsync(id);
 
-        if (getIdUnidadeMedida == null) return NotFound();
+        if (getIdUnidadeMedida == null)
+            throw new NotFoundExeption("Unidade de medida não existe.");
+        
         return Ok(getIdUnidadeMedida);
     }
 
