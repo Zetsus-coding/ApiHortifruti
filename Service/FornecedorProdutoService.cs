@@ -14,9 +14,9 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         _fornecedorProdutoRepository = fornecedorProdutoRepository;
     }
 
-    public async Task<IEnumerable<FornecedorProduto>> ObterTodasFornecedorProdutosAsync()
+    public async Task<IEnumerable<FornecedorProduto>> ObterTodosFornecedorProdutosAsync()
     {
-        return await _fornecedorProdutoRepository.ObterTodasAsync();
+        return await _fornecedorProdutoRepository.ObterTodosAsync();
     }
 
     public async Task<FornecedorProduto?> ObterFornecedorProdutoPorIdAsync(int fornecedorId, int produtoId)

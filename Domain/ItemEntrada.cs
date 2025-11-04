@@ -1,7 +1,7 @@
 ﻿namespace ApiHortifruti.Domain;
 
 /// <summary>
-/// Não sei como seria o relacionamento. Recebe id de produto (igual a item_saida?
+/// Não sei como seria o relacionamento. Recebe id de produto (igual a itemSaida?
 /// </summary>
 public partial class ItemEntrada
 {

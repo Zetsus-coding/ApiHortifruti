@@ -15,7 +15,7 @@ public class ItemEntradaRepository : IItemEntradaRepository
     }
 
     // Métodos da interface
-    public async Task AdicionarListaItensEntradaAsync(IEnumerable<ItemEntrada> itens)
+    public async Task AdicionarItensEntradaAsync(IEnumerable<ItemEntrada> itens)
     {
        await _context.ItemEntrada.AddRangeAsync(itens); // Adiciona no context a "lista" de itens (ou item se só tiver 1 item na list)
     }

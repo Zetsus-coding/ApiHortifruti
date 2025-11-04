@@ -14,9 +14,9 @@ public class HistoricoProdutoService : IHistoricoProdutoService
         _historicoProdutoRepository = historicoProdutoRepository;
     }
 
-    public async Task<IEnumerable<HistoricoProduto>> ObterTodasHistoricoProdutosAsync()
+    public async Task<IEnumerable<HistoricoProduto>> ObterTodosHistoricoProdutosAsync()
     {
-        return await _historicoProdutoRepository.ObterTodasAsync();
+        return await _historicoProdutoRepository.ObterTodosAsync();
     }
 
     public async Task<HistoricoProduto?> ObterHistoricoProdutoPorIdAsync(int id)

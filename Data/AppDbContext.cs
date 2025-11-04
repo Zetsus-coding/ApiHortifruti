@@ -285,7 +285,7 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("item_entrada", tb => tb.HasComment("Não sei como seria o relacionamento. Recebe id de produto (igual a item_saida?"));
+            entity.ToTable("item_entrada", tb => tb.HasComment("Não sei como seria o relacionamento. Recebe id de produto (igual a itemSaida?"));
 
             entity.HasIndex(e => e.EntradaId, "fk_item_entrada_entrada1_idx");
 
@@ -328,7 +328,7 @@ public partial class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id).HasName("PRIMARY");
 
-            entity.ToTable("item_saida");
+            entity.ToTable("itemSaida");
 
             entity.HasIndex(e => e.ProdutoId, "fk_itens_saida_produto1_idx");
 

@@ -25,7 +25,7 @@ public class CategoriaController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Categoria>>> ObterCategorias()
     {
-        var categoria = await _categoriaService.ObterTodasCategoriasAsync();
+        var categoria = await _categoriaService.ObterTodosCategoriasAsync();
 
         if (!categoria.Any())
         {

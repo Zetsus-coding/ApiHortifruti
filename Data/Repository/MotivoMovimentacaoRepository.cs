@@ -13,7 +13,7 @@ public class MotivoMovimentacaoRepository : IMotivoMovimentacaoRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<MotivoMovimentacao>> ObterTodasAsync()
+    public async Task<IEnumerable<MotivoMovimentacao>> ObterTodosAsync()
     {
         return await _context.MotivoMovimentacao.ToListAsync();
     }

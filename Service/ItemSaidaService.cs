@@ -7,42 +7,42 @@ namespace ApiHortifruti.Service;
 
 public class ItemSaidaService : IItemSaidaService
 {
-    private readonly IItem_saidaRepository _item_saidaRepository;
+    private readonly IItemSaidaRepository _itemSaidaRepository;
 
-    public ItemSaidaService(IItem_saidaRepository item_saidaRepository)
+    public ItemSaidaService(IItemSaidaRepository itemSaidaRepository)
     {
-        _item_saidaRepository = item_saidaRepository; // Inj. dependência
+        _itemSaidaRepository = itemSaidaRepository; // Inj. dependência
     }
 
-    public async Task<IEnumerable<ItemSaida>> ObterTodasItem_saidasAsync()
+    public async Task<IEnumerable<ItemSaida>> ObterTodosItemSaidasAsync()
     {
-        return await _item_saidaRepository.ObterTodasAsync();
+        return await _itemSaidaRepository.ObterTodosAsync();
     }
 
-    public async Task<ItemSaida?> ObterItem_saidaPorIdAsync(int id)
+    public async Task<ItemSaida?> ObterItemSaidaPorIdAsync(int id)
     {
-        return await _item_saidaRepository.ObterPorIdAsync(id);
+        return await _itemSaidaRepository.ObterPorIdAsync(id);
         
     }
 
-    public async Task<ItemSaida> CriarItem_saidaAsync(ItemSaida item_saida)
+    public async Task<ItemSaida> CriarItemSaidaAsync(ItemSaida itemSaida)
     {
-        return await _item_saidaRepository.AdicionarAsync(item_saida);
+        return await _itemSaidaRepository.AdicionarAsync(itemSaida);
     }
 
-    public async Task AtualizarItem_saidaAsync(int id, ItemSaida item_saida)
+    public async Task AtualizarItemSaidaAsync(int id, ItemSaida itemSaida)
     {
-        if (id != item_saida.Id)
+        if (id != itemSaida.Id)
         {
             // Lançar erro/exceção
             return;
         }
-        await _item_saidaRepository.AtualizarAsync(item_saida);
+        await _itemSaidaRepository.AtualizarAsync(itemSaida);
     }
 
-    public async Task DeletarItem_saidaAsync(int id)
+    public async Task DeletarItemSaidaAsync(int id)
     {
-        await _item_saidaRepository.DeletarAsync(id);
+        await _itemSaidaRepository.DeletarAsync(id);
     }
 }
 

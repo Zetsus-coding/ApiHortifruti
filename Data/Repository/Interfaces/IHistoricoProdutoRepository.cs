@@ -4,7 +4,7 @@ namespace ApiHortifruti.Data.Repository.Interfaces;
 
 public interface IHistoricoProdutoRepository
 {
-    Task<IEnumerable<HistoricoProduto>> ObterTodasAsync();
+    Task<IEnumerable<HistoricoProduto>> ObterTodosAsync();
     Task<HistoricoProduto?> ObterPorIdAsync(int id);
     Task<HistoricoProduto> AdicionarAsync(HistoricoProduto historicoProduto);
     Task AtualizarAsync(HistoricoProduto historicoProduto);

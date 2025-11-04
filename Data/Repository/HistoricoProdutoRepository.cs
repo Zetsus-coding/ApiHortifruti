@@ -13,7 +13,7 @@ public class HistoricoProdutoRepository : IHistoricoProdutoRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<HistoricoProduto>> ObterTodasAsync()
+    public async Task<IEnumerable<HistoricoProduto>> ObterTodosAsync()
     {
         return await _context.HistoricoProduto.ToListAsync();
     }

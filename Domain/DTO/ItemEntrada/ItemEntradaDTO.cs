@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain.DTO.CustomAnnotation;
 
-namespace ApiHortifruti.Domain.DTO.ItemEntradaDTO;
+namespace ApiHortifruti.Domain.DTO.ItemEntrada;
 
 public class ItemEntradaDTO
 {
@@ -22,7 +22,6 @@ public class ItemEntradaDTO
 
 
     [Required(ErrorMessage = "O preço do produto é obrigatório")] // Deve ser obrigatório?
-    //[RegularExpression(@"^(0|\d{0,16}(\.\d{0,2})?)$", ErrorMessage = "Formato de preço inválido")] // Formato válido
-    [Range(0, 99999999.99, MinimumIsExclusive = true, ErrorMessage = "O preço deve ser maior que zero")] // Valor maior que zero
+    [ValidacaoCampoPreco(ErrorMessage = "Preço do produto inválido")]
     public decimal PrecoUnitario { get; set; }
 }

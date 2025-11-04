@@ -27,8 +27,7 @@ public class PostProdutoDTO
 
 
     [Required(ErrorMessage = "O preço do produto é obrigatório")]
-    //[RegularExpression(@"^\d{1,8}(\.\d{1,2})?$", ErrorMessage = "Formato de preço inválido")] // Formato válido PROBLEMA COM CONVERSÃO DE STRING (JSON) PARA DECIMAL .NET
-    [Range(0, double.MaxValue, MinimumIsExclusive = true, ErrorMessage = "O preço deve ser maior que zero")] // Valor maior que zero
+    [ValidacaoCampoPreco(ErrorMessage = "Preço do produto inválido")]
     public decimal Preco { get; set; }
 
 

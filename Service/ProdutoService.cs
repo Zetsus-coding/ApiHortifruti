@@ -16,7 +16,7 @@ public class ProdutoService : IProdutoService
 
     public async Task<IEnumerable<Produto>> ObterTodosProdutoAsync()
     {
-        return await _produtoRepository.ObterTodasAsync();
+        return await _produtoRepository.ObterTodosAsync();
     }
 
     public async Task<Produto?> ObterProdutoPorIdAsync(int id)

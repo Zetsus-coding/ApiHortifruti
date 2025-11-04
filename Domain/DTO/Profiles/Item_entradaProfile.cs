@@ -1,6 +1,7 @@
 namespace ApiHortifruti.Domain.DTO.Profiles;
 
-using ApiHortifruti.Domain.DTO.ItemEntradaDTO;
+using ApiHortifruti.Domain;
+using ApiHortifruti.Domain.DTO.ItemEntrada;
 
 using AutoMapper;
 

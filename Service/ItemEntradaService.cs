@@ -13,7 +13,7 @@ public class ItemEntradaService : IItemEntradaService
         _uow = uow; // Inj. dependência
     }
 
-    public async Task ValidarItensEntradaAsync(int entradaId, IEnumerable<ItemEntrada> itens)
+    public async Task AdicionarItensEntradaAsync(int entradaId, IEnumerable<ItemEntrada> itens)
     {
         if (itens == null || !itens.Any()) // Verifica se a "lista" é nula ou vazia
             throw new InvalidOperationException("É necessário adicionar no mínimo um item à entrada.");
@@ -21,7 +21,7 @@ public class ItemEntradaService : IItemEntradaService
         if (itens.Any(item => item.Quantidade <= 0)) // Verifica se a quantidade de todos os itens é maior que zero
             throw new InvalidOperationException("A quantidade de todos os itens deve ser maior que zero");
 
-        await _uow.ItensEntrada.AdicionarListaItensEntradaAsync(itens); // Adicionar o(s) itemEntrada
+        await _uow.ItensEntrada.AdicionarItensEntradaAsync(itens); // Adicionar o(s) itemEntrada
 
         foreach (var item in itens)
         {

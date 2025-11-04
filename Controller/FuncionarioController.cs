@@ -17,14 +17,14 @@ public class FuncionarioController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Funcionario>>> ObterFuncionario()
+    public async Task<ActionResult<IEnumerable<Funcionario>>> ObterFuncionarios()
     {
         var funcionario = await _funcionarioService.ObterTodosFuncionarioAsync();
         return Ok(funcionario);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Funcionario>> ObterCategoria(int id)
+    public async Task<ActionResult<Funcionario>> ObteFuncionario(int id)
     {
         var funcionario = await _funcionarioService.ObterFuncionarioPorIdAsync(id);
 
@@ -36,7 +36,7 @@ public class FuncionarioController : ControllerBase
     public async Task<ActionResult<Funcionario>> CriarFuncionario(Funcionario funcionario)
     {
         var funcionarioCriado = await _funcionarioService.CriarFuncionarioAsync(funcionario);
-        return CreatedAtAction(nameof(ObterCategoria), new { funcionarioCriado.Id },
+        return CreatedAtAction(nameof(ObteFuncionario), new { funcionarioCriado.Id },
             funcionarioCriado);
     }
 

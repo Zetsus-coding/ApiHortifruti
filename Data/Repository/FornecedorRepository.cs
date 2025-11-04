@@ -14,7 +14,7 @@ public class FornecedorRepository : IFornecedorRepository
     }
 
 
-    public async Task<IEnumerable<Fornecedor>> ObterTodasAsync()
+    public async Task<IEnumerable<Fornecedor>> ObterTodosAsync()
     {
         return await _context.Fornecedor.ToListAsync();
     }

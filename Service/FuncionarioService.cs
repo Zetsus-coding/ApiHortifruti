@@ -15,7 +15,7 @@ public class FuncionarioService : IFuncionarioService
 
     public async Task<IEnumerable<Funcionario>> ObterTodosFuncionarioAsync()
     {
-        return await _funcionarioRepository.ObterTodasAsync();
+        return await _funcionarioRepository.ObterTodosAsync();
     }
 
     public async Task<Funcionario?> ObterFuncionarioPorIdAsync(int id)
