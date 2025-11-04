@@ -16,7 +16,7 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
 
     public async Task<IEnumerable<MotivoMovimentacao>> ObterTodosMotivoMovimentacaoAsync()
     {
-        return await _motivoMovimentacaoRepository.ObterTodasAsync();
+        return await _motivoMovimentacaoRepository.ObterTodosAsync();
     }
 
     public async Task<MotivoMovimentacao?> ObterMotivoMovimentacaoPorIdAsync(int id)

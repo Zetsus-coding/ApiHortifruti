@@ -21,7 +21,7 @@ public class FornecedorProdutoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterTodosFornecedorProduto()
     {
-        var getAllFornecedorProduto = await _fornecedorProdutoService.ObterTodasFornecedorProdutosAsync();
+        var getAllFornecedorProduto = await _fornecedorProdutoService.ObterTodosFornecedorProdutosAsync();
         return Ok(getAllFornecedorProduto);
     }
 

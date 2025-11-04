@@ -24,7 +24,7 @@ public class EntradaController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Entrada>>> ObterEntradas()
     {
-        var entrada = await _entradaService.ObterTodasEntradasAsync();
+        var entrada = await _entradaService.ObterTodosEntradasAsync();
         return Ok(entrada);
     }
 

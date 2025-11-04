@@ -19,14 +19,14 @@ public class SaidaController : ControllerBase
 
     // OPERAÇÕES
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Saida>>> ObterSaidas()
+    public async Task<ActionResult<IEnumerable<Saida>>> ObterSaidas() // get all
     {
-        var saida = await _saidaService.ObterTodasSaidasAsync();
+        var saida = await _saidaService.ObterTodosSaidasAsync();
         return Ok(saida);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Saida>> ObterSaida(int id)
+    public async Task<ActionResult<Saida>> ObterSaida(int id) // get por id
     {
         var saida = await _saidaService.ObterSaidaPorIdAsync(id);
 

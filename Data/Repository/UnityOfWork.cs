@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ApiHortifruti.Data.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
@@ -35,9 +36,47 @@ public class UnityOfWork : IUnityOfWork
         return await _context.SaveChangesAsync();
     }
 
-    public void Dispose() // O que fazer aqui (implementação)?
+    public async Task<IDbContextTransaction> BeginTransactionAsync()
     {
-        _context.DisposeAsync();
+        if (_transaction == null)
+        {
+            _transaction = await _context.Database.BeginTransactionAsync();
+        }
+        return _transaction;
+    }
+
+    public async Task CommitAsync()
+    {
+        if (_transaction != null)
+        {
+            await _transaction.CommitAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null;
+        }
+    }
+    
+    public async Task RollbackAsync()
+    {
+        if (_transaction != null)
+        {
+            await _transaction.RollbackAsync();
+            await _transaction.DisposeAsync();
+            _transaction = null;
+        }
+    }
+
+    public void Dispose() // Liberar recursos sincronamente
+    {
+        if (_context != null)
+        {
+            _context.Dispose();
+        }
+        GC.SuppressFinalize(this);
+    }
+    
+    public async ValueTask DisposeAsync() // Liberar recursos assincronamente
+    {
+        await _context.DisposeAsync();
         GC.SuppressFinalize(this);
     }
 

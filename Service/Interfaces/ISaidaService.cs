@@ -4,7 +4,7 @@ namespace ApiHortifruti.Service.Interfaces;
 
 public interface ISaidaService
 {
-    Task<IEnumerable<Saida>> ObterTodasSaidasAsync();
+    Task<IEnumerable<Saida>> ObterTodosSaidasAsync();
     Task<Saida?> ObterSaidaPorIdAsync(int id);
     Task<Saida> CriarSaidaAsync(Saida saida);
     Task AtualizarSaidaAsync(int id, Saida saida);

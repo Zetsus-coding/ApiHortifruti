@@ -13,7 +13,7 @@ public class SaidaRepository : ISaidaRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<Saida>> ObterTodasAsync()
+    public async Task<IEnumerable<Saida>> ObterTodosAsync()
     {
         return await _context.Saida.ToListAsync();
     }

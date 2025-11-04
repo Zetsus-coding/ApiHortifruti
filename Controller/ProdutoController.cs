@@ -22,7 +22,7 @@ public class ProdutoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Produto>>> ObterProduto()
+    public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutos()
     {
         var produto = await _produtoService.ObterTodosProdutoAsync();
 

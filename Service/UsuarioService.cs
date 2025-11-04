@@ -13,9 +13,9 @@ public class UsuarioService : IUsuarioService
         _usuarioRepository = usuarioRepository; // Inj. dependência
     }
 
-    public async Task<IEnumerable<Usuario>> ObterTodasUsuarioAsync()
+    public async Task<IEnumerable<Usuario>> ObterTodosUsuarioAsync()
     {
-        return await _usuarioRepository.ObterTodasAsync();
+        return await _usuarioRepository.ObterTodosAsync();
     }
 
     public async Task<Usuario?> ObterUsuarioPorIdAsync(int id)

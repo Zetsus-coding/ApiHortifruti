@@ -22,7 +22,7 @@ public class FornecedorController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterFornecedor()
+    public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterFornecedores()
     {
         var fornecedor = await _fornecedorService.ObterTodosFornecedoresAsync();
 
@@ -35,7 +35,7 @@ public class FornecedorController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Fornecedor>> ObterCategoria(int id)
+    public async Task<ActionResult<Fornecedor>> ObterFornecedor(int id)
     {
         var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id);
 
@@ -52,7 +52,7 @@ public class FornecedorController : ControllerBase
         var fornecedor = _mapper.Map<Fornecedor>(postFornecedorDTO); // Conversão de DTO para entidade
         
         var fornecedorCriado = await _fornecedorService.CriarFornecedorAsync(fornecedor);
-        return CreatedAtAction(nameof(ObterCategoria), new { fornecedorCriado.Id },
+        return CreatedAtAction(nameof(ObterFornecedor), new { fornecedorCriado.Id },
             fornecedorCriado);
     }
 

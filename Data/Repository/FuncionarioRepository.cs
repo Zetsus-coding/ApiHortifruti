@@ -14,7 +14,7 @@ public class FuncionarioRepository : IFuncionarioRepository
     }
 
 
-    public async Task<IEnumerable<Funcionario>> ObterTodasAsync()
+    public async Task<IEnumerable<Funcionario>> ObterTodosAsync()
     {
         return await _context.Funcionario.ToListAsync();
     }

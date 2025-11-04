@@ -13,7 +13,7 @@ public class UsuarioRepository : IUsuarioRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<Usuario>> ObterTodasAsync()
+    public async Task<IEnumerable<Usuario>> ObterTodosAsync()
     {
         return await _context.Usuario.ToListAsync();
     }

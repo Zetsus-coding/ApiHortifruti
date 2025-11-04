@@ -13,7 +13,7 @@ public class ProdutoRepository : IProdutoRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<Produto>> ObterTodasAsync()
+    public async Task<IEnumerable<Produto>> ObterTodosAsync()
     {
         return await _context.Produto.ToListAsync();
     }

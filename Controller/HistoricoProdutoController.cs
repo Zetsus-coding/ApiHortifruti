@@ -19,12 +19,12 @@ public class HistoricoProdutoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterTodosHistoricoProduto()
     {
-        var getAllHistoricoProduto = await _historicoProdutoService.ObterTodasHistoricoProdutosAsync();
+        var getAllHistoricoProduto = await _historicoProdutoService.ObterTodosHistoricoProdutosAsync();
         return Ok(getAllHistoricoProduto);
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProduto(int id)
+    public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProduto(int id) // Faz sentido? Ou deveria ser por produto?
     {
         var getIdHistoricoProduto = await _historicoProdutoService.ObterHistoricoProdutoPorIdAsync(id);
 

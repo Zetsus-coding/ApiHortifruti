@@ -14,9 +14,9 @@ public class SaidaService : ISaidaService
         _entradaRepository = entradaRepository; // Inj. dependência
     }
 
-    public async Task<IEnumerable<Saida>> ObterTodasSaidasAsync()
+    public async Task<IEnumerable<Saida>> ObterTodosSaidasAsync()
     {
-        return await _entradaRepository.ObterTodasAsync();
+        return await _entradaRepository.ObterTodosAsync();
     }
 
     public async Task<Saida?> ObterSaidaPorIdAsync(int id)

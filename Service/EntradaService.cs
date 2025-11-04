@@ -17,9 +17,9 @@ public class EntradaService : IEntradaService
         _itemEntradaService = itemEntradaService;
     }
 
-    public async Task<IEnumerable<Entrada>> ObterTodasEntradasAsync()
+    public async Task<IEnumerable<Entrada>> ObterTodosEntradasAsync()
     {
-        return await _uow.Entrada.ObterTodasAsync();
+        return await _uow.Entrada.ObterTodosAsync();
     }
 
     public async Task<Entrada?> ObterEntradaPorIdAsync(int id)
@@ -28,8 +28,9 @@ public class EntradaService : IEntradaService
     }
 
     public async Task<Entrada> CriarEntradaAsync(Entrada entrada)
-    {   
-        // await using var transaction = _uow.
+    {
+        await using var transaction = await _uow.BeginTransactionAsync();
+        
         try // ?
         {
             var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(entrada.FornecedorId);
@@ -49,15 +50,16 @@ public class EntradaService : IEntradaService
                 throw new InvalidOperationException("Já existe um registro com esse número de nota fiscal para o fornecedor informado");
 
             await _uow.Entrada.AdicionarAsync(entrada); // Adiciona a entrada
-            await _itemEntradaService.ValidarItensEntradaAsync(entrada.Id, entrada.ItemEntrada); // Valida e cadastra os itens da entrada e chama o serviço para atualizar os produtos
+            await _itemEntradaService.AdicionarItensEntradaAsync(entrada.Id, entrada.ItemEntrada); // Valida e "cadastra" os itens da entrada e chama o serviço para atualizar os produtos
 
-            var retorno = await _uow.SaveChangesAsync(); // Salva as mudanças no context
-            System.Console.WriteLine(retorno);
+            await _uow.SaveChangesAsync(); // Salva as mudanças no contexto
+            await _uow.CommitAsync(); // Confirma a transação
+
             return entrada;
         }
         catch (Exception exc) // ?
         {
-            // await _uow.RollbackAsync(transaction);
+            await transaction.RollbackAsync();
             throw new Exception("Erro ao criar a entrada e/ou seus registros subsequentes. MENSAGEM: " + exc.Message);
         }
 
@@ -66,16 +68,18 @@ public class EntradaService : IEntradaService
 
     public async Task AtualizarEntradaAsync(int id, Entrada entrada)
     {
-        if (id != entrada.Id)
-        {
-            // Lançar erro/exceção
-            return;
-        }
-        // await _entradaRepository.AtualizarAsync(entrada);
+        throw new NotImplementedException();
+        // if (id != entrada.Id)
+        // {
+        //     // Lançar erro/exceção
+        //     return;
+        // }
+        // // await _entradaRepository.AtualizarAsync(entrada);
     }
 
     public async Task DeletarEntradaAsync(int id)
     {
+        throw new NotImplementedException();
         // await _entradaRepository.DeletarAsync(id);
     }
 }

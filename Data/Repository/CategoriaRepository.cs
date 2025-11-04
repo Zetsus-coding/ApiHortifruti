@@ -13,7 +13,7 @@ public class CategoriaRepository : ICategoriaRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<Categoria>> ObterTodasAsync()
+    public async Task<IEnumerable<Categoria>> ObterTodosAsync()
     {
         return await _context.Categoria.ToListAsync();
     }

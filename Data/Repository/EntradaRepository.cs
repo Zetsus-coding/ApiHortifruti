@@ -13,7 +13,7 @@ public class EntradaRepository : IEntradaRepository
         _context = context;
     }
     
-    public async Task<IEnumerable<Entrada>> ObterTodasAsync()
+    public async Task<IEnumerable<Entrada>> ObterTodosAsync()
     {
         return await _context.Entrada.ToListAsync();
     }
