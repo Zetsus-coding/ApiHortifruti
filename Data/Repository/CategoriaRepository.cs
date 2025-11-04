@@ -36,14 +36,14 @@ public class CategoriaRepository : ICategoriaRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeletarAsync(int id)
-    {
-        var categoria = await ObterPorIdAsync(id);
+    // public async Task DeletarAsync(int id)
+    // {
+    //     var categoria = await ObterPorIdAsync(id);
         
-        if (categoria != null)
-        {
-            _context.Categoria.Remove(categoria);
-            await _context.SaveChangesAsync();
-        }
-    }
+    //     if (categoria != null)
+    //     {
+    //         _context.Categoria.Remove(categoria);
+    //         await _context.SaveChangesAsync();
+    //     }
+    // }
 }

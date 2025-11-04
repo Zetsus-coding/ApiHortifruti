@@ -26,14 +26,17 @@ public class ItemSaidaRepository : IItemSaidaRepository
     public async Task<ItemSaida> AdicionarAsync(ItemSaida itemSaida)
     {
         _context.ItemSaida.Add(itemSaida);
-        await _context.SaveChangesAsync();
         return itemSaida;
+    }
+
+    public async Task AdicionarItensSaidaAsync(IEnumerable<ItemSaida> itens)
+    {
+        await _context.ItemSaida.AddRangeAsync(itens);
     }
 
     public async Task AtualizarAsync(ItemSaida itemSaida)
     {
         _context.Entry(itemSaida).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
@@ -43,7 +46,6 @@ public class ItemSaidaRepository : IItemSaidaRepository
         if (itemSaida != null)
         {
             _context.ItemSaida.Remove(itemSaida);
-            await _context.SaveChangesAsync();
         }
     }
 }

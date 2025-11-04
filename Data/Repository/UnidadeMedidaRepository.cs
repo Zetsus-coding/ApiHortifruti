@@ -37,14 +37,14 @@ public class UnidadeMedidaRepository : IUnidadeMedidaRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task DeletarAsync(int id)
-    {
-        var unidadeMedida = await ObterPorIdAsync(id);
+    // public async Task DeletarAsync(int id)
+    // {
+    //     var unidadeMedida = await ObterPorIdAsync(id);
 
-        if (unidadeMedida != null)
-        {
-            _context.UnidadeMedida.Remove(unidadeMedida);
-            await _context.SaveChangesAsync();
-        }
-    }
+    //     if (unidadeMedida != null)
+    //     {
+    //         _context.UnidadeMedida.Remove(unidadeMedida);
+    //         await _context.SaveChangesAsync();
+    //     }
+    // }
 }

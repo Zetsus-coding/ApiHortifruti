@@ -8,5 +8,6 @@ public interface ICategoriaService
     Task<Categoria?> ObterCategoriaPorIdAsync(int id);
     Task<Categoria> CriarCategoriaAsync(Categoria categoria);
     Task AtualizarCategoriaAsync(int id, Categoria categoria);
-    Task DeletarCategoriaAsync(int id);
+    
+    // Task DeletarCategoriaAsync(int id);
 }

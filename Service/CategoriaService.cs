@@ -17,12 +17,19 @@ public class CategoriaService : ICategoriaService
     public async Task<IEnumerable<Categoria>> ObterTodosCategoriasAsync()
     {
         return await _categoriaRepository.ObterTodosAsync();
+
+        // É preciso exceção caso a lista esteja vazia?
+        // if (!categoria.Any())
+        //     throw new DBConcurrencyException("Nenhuma categoria criada.");
     }
 
     public async Task<Categoria?> ObterCategoriaPorIdAsync(int id)
     {
         return await _categoriaRepository.ObterPorIdAsync(id);
-        
+
+        // É preciso exceção caso o id não exista?
+        // if (categoria == null) 
+        //     throw new NotFoundExeption("Categoria não existe.");
     }
 
     public async Task<Categoria> CriarCategoriaAsync(Categoria categoria)
@@ -34,15 +41,14 @@ public class CategoriaService : ICategoriaService
     {
         if (id != categoria.Id)
         {
-            // Lançar erro/exceção
-            return;
+            throw new ArgumentException("O ID da categoria na URL não corresponde ao ID no corpo da requisição.");
         }
         await _categoriaRepository.AtualizarAsync(categoria);
     }
 
-    public async Task DeletarCategoriaAsync(int id)
-    {
-        await _categoriaRepository.DeletarAsync(id);
-    }
+    // public async Task DeletarCategoriaAsync(int id)
+    // {
+    //     await _categoriaRepository.DeletarAsync(id);
+    // }
 }
 

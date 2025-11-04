@@ -8,5 +8,6 @@ namespace ApiHortifruti.Data.Repository.Interfaces;
     Task<UnidadeMedida?> ObterPorIdAsync(int id);
     Task<UnidadeMedida> AdicionarAsync(UnidadeMedida unidadeMedida);
     Task AtualizarAsync(UnidadeMedida unidadeMedida);
-    Task DeletarAsync(int id);
+    
+    // Task DeletarAsync(int id);
 }

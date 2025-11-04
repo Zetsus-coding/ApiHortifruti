@@ -26,12 +26,6 @@ public class CategoriaController : ControllerBase
     public async Task<ActionResult<IEnumerable<Categoria>>> ObterCategorias()
     {
         var categoria = await _categoriaService.ObterTodosCategoriasAsync();
-
-        if (!categoria.Any())
-        {
-            throw new DBConcurrencyException("Nenhuma categoria criada.");
-        }
-        
         return Ok(categoria);
     }
 
@@ -39,11 +33,6 @@ public class CategoriaController : ControllerBase
     public async Task<ActionResult<Categoria>> ObterCategoria(int id)
     {
         var categoria = await _categoriaService.ObterCategoriaPorIdAsync(id);
-
-        if (categoria == null) 
-        {
-            throw new NotFoundExeption("Categoria não existe.");
-        }
         return Ok(categoria);
     }
 
@@ -68,10 +57,10 @@ public class CategoriaController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarCategoria(int id) 
-    { 
-        await _categoriaService.DeletarCategoriaAsync(id); 
-        return NoContent(); 
-    } 
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarCategoria(int id) 
+    // { 
+    //     await _categoriaService.DeletarCategoriaAsync(id); 
+    //     return NoContent(); 
+    // } 
 }

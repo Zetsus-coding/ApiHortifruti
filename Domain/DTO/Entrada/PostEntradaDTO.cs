@@ -8,15 +8,17 @@ public class PostEntradaDTO
     // QUANTIDADES JÁ FORAM ALTERADAS PARA DECIMAL NO BANCO DE DADOS. QUANTIDADE MÁXIMA FOI REMOVIDA
 
     [Required(ErrorMessage = "Por favor, informe um fornecedor")]
+    [Range(1, int.MaxValue, ErrorMessage = "Por favor, informe um fornecedor válido")]
     public int FornecedorId { get; set; }
 
 
     [Required(ErrorMessage = "Por favor, informe um motivo de movimentação")]
+    [Range(1, int.MaxValue, ErrorMessage = "Por favor, informe um motivo de movimentação válido")]
     public int MotivoMovimentacaoId { get; set; }
 
 
     [Required(ErrorMessage = "O valor da entrada (preço total) é obrigatório")]
-    [ValidacaoCampoPreco(ErrorMessage = "Preço do produto inválido")]
+    [ValidacaoCampoPreco]
     public decimal PrecoTotal { get; set; }
 
 
@@ -27,9 +29,10 @@ public class PostEntradaDTO
 
     [StringLength(30, ErrorMessage = "A descrição do produto não pode exceder 30 caracteres")] // Tamanho máximo?
     public string NumeroNota { get; set; } = null!; // Não pode ser repetida por fornecedor // DEVE SER OBRIGATÓRIO?
-    
+
     // public string NotaFiscal { get; set; } = null!; // Removido
 
-    [Required(ErrorMessage = "É obrigatório adicionar ao menos um item na entrada")]
+    [Required(ErrorMessage = "É obrigatório informar o(s) item(ns) na(da) entrada")]
+    [MinLength(1, ErrorMessage = "É obrigatório informar ao menos um item na entrada")]
     public List<ItemEntradaDTO> ItemEntrada { get; set; } = new List<ItemEntradaDTO>();
 }
