@@ -28,7 +28,7 @@ public class ItemEntradaService : IItemEntradaService
             var produto = await _uow.Produto.ObterPorIdAsync(item.ProdutoId); // Obtêm o produto baseado no id dentro do item entrada
 
             if (produto == null) // Verifica se o produto "existe" (foi retornado)
-                throw new InvalidOperationException($"O produto com ID {item.ProdutoId} não existe."); // Problema de segurança (expor id)?
+                throw new KeyNotFoundException($"O produto com ID {item.ProdutoId} não existe."); // Problema de segurança (expor id)?
 
             produto.QuantidadeAtual += item.Quantidade; // Soma o valor informado em item entrada e adiciona a quantidade atual em produto
             await _uow.Produto.AtualizarAsync(produto); // Faz o PUT no context do EF em produtos [REDUNDATE?]

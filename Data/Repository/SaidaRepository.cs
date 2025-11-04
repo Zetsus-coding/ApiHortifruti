@@ -26,14 +26,12 @@ public class SaidaRepository : ISaidaRepository
     public async Task<Saida> AdicionarAsync(Saida saida)
     {
         _context.Saida.Add(saida);
-        await _context.SaveChangesAsync();
         return saida;
     }
 
     public async Task AtualizarAsync(Saida saida)
     {
         _context.Entry(saida).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
@@ -43,7 +41,6 @@ public class SaidaRepository : ISaidaRepository
         if (saida != null)
         {
             _context.Saida.Remove(saida);
-            await _context.SaveChangesAsync();
         }
     }
 }

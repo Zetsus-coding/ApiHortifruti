@@ -24,23 +24,14 @@ public class UnidadeMedidaController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UnidadeMedida>>> ObterTodosUnidadeMedida()
     {
-        var getAllUnidadeMedida = await _unidadeMedidaService.ObterTodosUnidadeMedidaAsync();
-        
-        
-        if (!getAllUnidadeMedida.Any())
-            throw new DBConcurrencyException("Nenhuma unidade de medida criada.");
-        
+        var getAllUnidadeMedida = await _unidadeMedidaService.ObterTodosUnidadeMedidaAsync();    
         return Ok(getAllUnidadeMedida);
     }
 
     [HttpGet("{id}")]
     public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedida(int id)
     {
-        var getIdUnidadeMedida = await _unidadeMedidaService.ObterUnidadeMedidaPorIdAsync(id);
-
-        if (getIdUnidadeMedida == null)
-            throw new NotFoundExeption("Unidade de medida não existe.");
-        
+        var getIdUnidadeMedida = await _unidadeMedidaService.ObterUnidadeMedidaPorIdAsync(id);       
         return Ok(getIdUnidadeMedida);
     }
 
@@ -62,10 +53,10 @@ public class UnidadeMedidaController : ControllerBase
         return NoContent();
     }
     
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarUnidadeMedida(int id) 
-    { 
-        await _unidadeMedidaService.DeletarUnidadeMedidaAsync(id); 
-        return NoContent(); 
-    }
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarUnidadeMedida(int id) 
+    // { 
+    //     await _unidadeMedidaService.DeletarUnidadeMedidaAsync(id); 
+    //     return NoContent(); 
+    // }
 }

@@ -14,7 +14,5 @@ public class ItemSaidaDTO
     public int Quantidade { get; set; }
 
 
-    [Required(ErrorMessage = "O valor do produto é obrigatório")]
-    [Range(0, 99999999.99, MinimumIsExclusive = true, ErrorMessage = "O preço deve ser maior que zero")] // Valor maior que zero
-    public decimal Valor { get; set; } // É realmente necessário?
+    //public decimal Valor { get; set; } // É realmente necessário?
 }

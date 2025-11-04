@@ -23,6 +23,11 @@ public class ProdutoRepository : IProdutoRepository
         return await _context.Produto.FindAsync(id);
     }
 
+    public async Task<Produto?> ObterPorCodigoAsync(string codigo)
+    {
+        return await _context.Produto.FirstOrDefaultAsync(p => p.Codigo == codigo);
+    }
+
     public async Task<Produto> AdicionarAsync(Produto produto)
     {
         _context.Produto.Add(produto);
@@ -35,14 +40,14 @@ public class ProdutoRepository : IProdutoRepository
        _context.Entry(produto).State = EntityState.Modified;
     }
 
-    public async Task DeletarAsync(int id)
-    {
-        var produto = await ObterPorIdAsync(id);
+    // public async Task DeletarAsync(int id)
+    // {
+    //     var produto = await ObterPorIdAsync(id);
         
-        if (produto != null)
-        {
-            _context.Produto.Remove(produto);
-            await _context.SaveChangesAsync();
-        }
-    }
+    //     if (produto != null)
+    //     {
+    //         _context.Produto.Remove(produto);
+    //         await _context.SaveChangesAsync();
+    //     }
+    // }
 }

@@ -15,6 +15,11 @@ public class UnityOfWork : IUnityOfWork
     private IProdutoRepository _produtoRepository;
     private IFornecedorRepository _fornecedorRepository;
     private IMotivoMovimentacaoRepository _motivoMovimentacaoRepository;
+    private ISaidaRepository _saidaRepository;
+    private IItemSaidaRepository _itemSaidaRepository;
+    private IFuncionarioRepository _funcionarioRepository;
+    private ICategoriaRepository _categoriaRepository;
+    private IUnidadeMedidaRepository _unidadeMedidaRepository;
 
 
     // Inicializador das propriedades ('lazy')
@@ -23,6 +28,11 @@ public class UnityOfWork : IUnityOfWork
     public IProdutoRepository Produto { get => _produtoRepository ??= new ProdutoRepository(_context); }
     public IFornecedorRepository Fornecedor { get => _fornecedorRepository ??= new FornecedorRepository(_context); }
     public IMotivoMovimentacaoRepository MotivoMovimentacao { get => _motivoMovimentacaoRepository ??= new MotivoMovimentacaoRepository(_context); }
+    public ISaidaRepository Saida { get => _saidaRepository ??= new SaidaRepository(_context); }
+    public IItemSaidaRepository ItensSaida { get => _itemSaidaRepository ??= new ItemSaidaRepository(_context); }
+    public IFuncionarioRepository Funcionario { get => _funcionarioRepository ??= new FuncionarioRepository(_context); }
+    public ICategoriaRepository Categoria { get => _categoriaRepository ??= new CategoriaRepository(_context); }
+    public IUnidadeMedidaRepository UnidadeMedida { get => _unidadeMedidaRepository ??= new UnidadeMedidaRepository(_context); }
 
     // Construtor
 

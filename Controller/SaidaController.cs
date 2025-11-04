@@ -1,5 +1,6 @@
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -10,11 +11,13 @@ namespace ApiHortifruti.Controller;
 public class SaidaController : ControllerBase
 {
     private readonly ISaidaService _saidaService;
+    private readonly IMapper _mapper;
 
     // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
-    public SaidaController(ISaidaService saidaService)
+    public SaidaController(ISaidaService saidaService, IMapper mapper)
     {
         _saidaService = saidaService;
+        _mapper = mapper;
     }
 
     // OPERAÇÕES
@@ -37,8 +40,10 @@ public class SaidaController : ControllerBase
     // get produtos associados a saida (aqui [/saida/idsaida/produtos] ou em produtos [/produtos?saida=x])?
 
     [HttpPost]
-    public async Task<ActionResult<Saida>> CriarSaida(Saida saida)
+    public async Task<ActionResult<Saida>> CriarSaida(PostSaidaDTO postSaidaDTO)
     {
+        var saida = _mapper.Map<Saida>(postSaidaDTO);
+
         var saidaCriada = await _saidaService.CriarSaidaAsync(saida);
         return CreatedAtAction(nameof(ObterSaida), new { id = saidaCriada.Id },
             saidaCriada);

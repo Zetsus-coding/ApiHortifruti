@@ -24,13 +24,7 @@ public class ProdutoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutos()
     {
-        var produto = await _produtoService.ObterTodosProdutoAsync();
-
-        if (!produto.Any())
-        {
-            throw new DBConcurrencyException("Nenhum produto criado.");
-        }
-
+        var produto = await _produtoService.ObterTodosProdutoAsync();      
         return Ok(produto);
     }
 
@@ -38,11 +32,6 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<Produto>> ObterProduto(int id)
     {
         var produto = await _produtoService.ObterProdutoPorIdAsync(id);
-
-        if (produto == null)
-        {
-            throw new NotFoundExeption("Produto não existe.");
-        }
         return Ok(produto);
     }
 
@@ -64,10 +53,10 @@ public class ProdutoController : ControllerBase
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarProduto(int id) 
-    { 
-        await _produtoService.DeletarProdutoAsync(id); 
-        return NoContent(); 
-    } 
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarProduto(int id) 
+    // { 
+    //     await _produtoService.DeletarProdutoAsync(id); 
+    //     return NoContent(); 
+    // } 
 }
