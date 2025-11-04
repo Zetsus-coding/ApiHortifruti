@@ -7,42 +7,42 @@ namespace ApiHortifruti.Service;
 
 public class SaidaService : ISaidaService
 {
-    private readonly ISaidaRepository _entradaRepository;
+    private readonly ISaidaRepository _saidaRepository;
 
-    public SaidaService(ISaidaRepository entradaRepository)
+    public SaidaService(ISaidaRepository saidaRepository)
     {
-        _entradaRepository = entradaRepository; // Inj. dependência
+        _saidaRepository = saidaRepository; // Inj. dependência
     }
 
     public async Task<IEnumerable<Saida>> ObterTodosSaidasAsync()
     {
-        return await _entradaRepository.ObterTodosAsync();
+        return await _saidaRepository.ObterTodosAsync();
     }
 
     public async Task<Saida?> ObterSaidaPorIdAsync(int id)
     {
-        return await _entradaRepository.ObterPorIdAsync(id);
+        return await _saidaRepository.ObterPorIdAsync(id);
         
     }
 
-    public async Task<Saida> CriarSaidaAsync(Saida entrada)
+    public async Task<Saida> CriarSaidaAsync(Saida saida)
     {
-        return await _entradaRepository.AdicionarAsync(entrada);
+        return await _saidaRepository.AdicionarAsync(saida);
     }
 
-    public async Task AtualizarSaidaAsync(int id, Saida entrada)
+    public async Task AtualizarSaidaAsync(int id, Saida saida)
     {
-        if (id != entrada.Id)
+        if (id != saida.Id)
         {
             // Lançar erro/exceção
             return;
         }
-        await _entradaRepository.AtualizarAsync(entrada);
+        await _saidaRepository.AtualizarAsync(saida);
     }
 
     public async Task DeletarSaidaAsync(int id)
     {
-        await _entradaRepository.DeletarAsync(id);
+        await _saidaRepository.DeletarAsync(id);
     }
 }
 
