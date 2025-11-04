@@ -51,7 +51,7 @@ public class GlobalExceptionHandlingMiddleware
         else
         {
             // Tratar a exceção genérica como Erro Interno do Servidor (500)
-            mensagem = "Ocorreu um erro inesperado. Tente novamente mais tarde."; // Mensagem mais segura para o cliente
+            mensagem = exception.Message; // Mensagem mais segura para o cliente
             status = HttpStatusCode.InternalServerError; // 500 para erros não tratados
             stackTrace = exception.StackTrace; // Incluir para log/debug, mas não no ambiente de produção
         }

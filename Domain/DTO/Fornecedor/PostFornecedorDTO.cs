@@ -12,7 +12,6 @@ public class PostFornecedorDTO
 
     [Required(ErrorMessage = "O cadastro de pessoa é obrigatório")]
     [StringLength(20, ErrorMessage = "O cadastro de pessoa não pode exceder 20 caracteres")]
-    // Adicionar annotation customizada para validar CPF/CNPJ/OUTROS?
     public string CadastroPessoa { get; set; }
 
 

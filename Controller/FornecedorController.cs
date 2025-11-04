@@ -39,10 +39,6 @@ public class FornecedorController : ControllerBase
     {
         var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id);
 
-        if (fornecedor == null) 
-        {
-            throw new NotFoundExeption("Fornecedor não existe.");
-        }
         return Ok(fornecedor);
     }
 
