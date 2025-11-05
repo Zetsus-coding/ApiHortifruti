@@ -1,10 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
 public class PostFornecedorDTO
-{
-    // ADICIONAR CAMPO DE TIPO DE MEDIDA (UNIDADE OU PESO)? SE FOR UNIDADE IMPEDIR VALORES DECIMAIS ENQUANTO QUE PESO PERMITE INTEIRO E DECIMAL
-    // QUANTIDADES JÁ FORAM ALTERADAS PARA DECIMAL NO BANCO DE DADOS. QUANTIDADE MÁXIMA FOI REMOVIDA
-
+{   
     [Required(ErrorMessage = "O nome fantasia do fornecedor é obrigatório")]
     [StringLength(100, ErrorMessage = "O nome fantasia do fornecedor não pode exceder 100 caracteres")]
     public string NomeFantasia { get; set; }

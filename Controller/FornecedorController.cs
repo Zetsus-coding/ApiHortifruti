@@ -24,13 +24,7 @@ public class FornecedorController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterFornecedores()
     {
-        var fornecedor = await _fornecedorService.ObterTodosFornecedoresAsync();
-
-        if (!fornecedor.Any())
-        {
-            throw new DBConcurrencyException("Nenhum fornecedor criado.");
-        }
-
+        var fornecedor = await _fornecedorService.ObterTodosFornecedoresAsync();    
         return Ok(fornecedor);
     }
 
@@ -60,10 +54,10 @@ public class FornecedorController : ControllerBase
         return NoContent();
     }
     
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarFornecedor(int id) 
-    { 
-        await _fornecedorService.DeletarFornecedorAsync(id); 
-        return NoContent(); 
-    }
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarFornecedor(int id) 
+    // { 
+    //     await _fornecedorService.DeletarFornecedorAsync(id); 
+    //     return NoContent(); 
+    // }
 }

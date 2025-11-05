@@ -8,6 +8,7 @@
 
 # FINISHED
 
-    #1 - Validações em cadastrar produto (post)
-    #2 - Categoria
-    #3 - Unidade de medida
+    #1 - validações em cadastrar produto (post)
+    #2 - categoria
+    #3 - unidade de medida
+    #4 - quantidades já foram alteradas para decimal no banco de dados. quantidade máxima foi removida (fornecedorDTO)
