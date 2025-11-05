@@ -38,33 +38,81 @@ public class ProdutoService : IProdutoService
     }
 
     public async Task<Produto> CriarProdutoAsync(Produto produto)
-    {
-        var categoria = await _uow.Categoria.ObterPorIdAsync(produto.CategoriaId);
-        var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(produto.UnidadeMedidaId);
-        var codigo = await _uow.Produto.ObterPorCodigoAsync(produto.Codigo);
+    {   
+        await _uow.BeginTransactionAsync();
+        try
+        {
+            var categoria = await _uow.Categoria.ObterPorIdAsync(produto.CategoriaId);
+            var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(produto.UnidadeMedidaId);
+            var codigo = await _uow.Produto.ObterPorCodigoAsync(produto.Codigo);
+    
+            if (categoria is null)
+                throw new KeyNotFoundException("A categoria informada não existe.");
+    
+            if (unidadeMedida is null)
+                throw new KeyNotFoundException("A unidade de medida informada não existe.");
+    
+            if (codigo is not null)
+                throw new ArgumentException("Esse código de produto já existe.");
 
-        if (categoria is null)
-            throw new KeyNotFoundException("A categoria informada não existe.");
+            await _uow.Produto.AdicionarAsync(produto);
 
-        if (unidadeMedida is null)
-            throw new KeyNotFoundException("A unidade de medida informada não existe.");
+            // TODO: Preciso criar um registro em histórico de produtos com o preço inicial
+            await _uow.HistoricoProduto.AdicionarAsync(new HistoricoProduto
+            {
+                ProdutoId = produto.Id,
+                PrecoProduto = produto.Preco,
+                DataAlteracao = DateOnly.FromDateTime(DateTime.Now),
+            });
 
-        if (codigo is not null)
-            throw new ArgumentException("Esse código de produto já existe.");
-
-        await _uow.Produto.AdicionarAsync(produto);
-        await _uow.SaveChangesAsync();
-        return produto;
+            await _uow.SaveChangesAsync();
+            await _uow.CommitAsync();
+            return produto;
+        }
+        catch
+        {
+            await _uow.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task AtualizarProdutoAsync(int id, Produto produto)
     {
-        if (id != produto.Id)
+        await _uow.BeginTransactionAsync();
+
+        try
         {
-            throw new ArgumentException("O ID do produto na URL não corresponde ao ID no corpo da requisição.");
+            if (id != produto.Id)
+            {
+                throw new ArgumentException("O ID do produto na URL não corresponde ao ID no corpo da requisição.");
+            }
+    
+            var produtoExistente = await _uow.Produto.ObterPorIdAsync(id);
+            
+            if (produtoExistente is null)
+                throw new KeyNotFoundException("Produto não encontrado.");
+    
+            await _uow.Produto.AtualizarAsync(produto);
+    
+            // TODO: Preciso criar um registro em histórico de produtos com o preço inicial
+            if (produtoExistente.Preco != produto.Preco)
+            {
+                await _uow.HistoricoProduto.AdicionarAsync(new HistoricoProduto
+                {
+                    ProdutoId = produto.Id,
+                    PrecoProduto = produto.Preco,
+                    DataAlteracao = DateOnly.FromDateTime(DateTime.Now),
+                });
+            }
+    
+            await _uow.SaveChangesAsync();
+            await _uow.CommitAsync();
         }
-        await _uow.Produto.AtualizarAsync(produto);
-        await _uow.SaveChangesAsync();
+        catch
+        {
+            await _uow.RollbackAsync();
+            throw;
+        }
     }
 
     // public async Task DeletarProdutoAsync(int id)

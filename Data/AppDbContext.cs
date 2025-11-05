@@ -270,11 +270,6 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("produto_id");
 
-            entity.HasOne(d => d.Funcionario).WithMany(p => p.HistoricoProduto)
-                .HasForeignKey(d => d.FuncionarioId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("fk_historico_produto_funcionario1");
-
             entity.HasOne(d => d.Produto).WithMany(p => p.HistoricoProduto)
                 .HasForeignKey(d => d.ProdutoId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

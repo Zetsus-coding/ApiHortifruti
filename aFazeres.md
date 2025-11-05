@@ -9,3 +9,5 @@
 # FINISHED
 
     #1 - Validações em cadastrar produto (post)
+    #2 - Categoria
+    #3 - Unidade de medida

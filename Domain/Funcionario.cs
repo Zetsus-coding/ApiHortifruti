@@ -30,9 +30,6 @@ public partial class Funcionario
     public virtual Cargo? Cargo { get; set; }
 
     [JsonIgnore]
-    public virtual ICollection<HistoricoProduto> HistoricoProduto { get; set; } = new List<HistoricoProduto>();
-
-    [JsonIgnore]
     public virtual ICollection<Saida> Saida { get; set; } = new List<Saida>();
 
     [JsonIgnore]

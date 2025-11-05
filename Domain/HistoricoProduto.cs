@@ -19,7 +19,5 @@ public partial class HistoricoProduto
 
     public int FuncionarioId { get; set; }
 
-    public virtual Funcionario Funcionario { get; set; } = null!;
-
     public virtual Produto Produto { get; set; } = null!;
 }
