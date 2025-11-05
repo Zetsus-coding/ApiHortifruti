@@ -25,14 +25,17 @@ public class EntradaService : IEntradaService
     public async Task<Entrada?> ObterEntradaPorIdAsync(int id)
     {
         return await _uow.Entrada.ObterPorIdAsync(id);
-        
+
     }
 
     public async Task<Entrada> CriarEntradaAsync(Entrada entrada)
-{
-    var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(entrada.FornecedorId);
-    var motivo = await _uow.MotivoMovimentacao.ObterPorIdAsync(entrada.MotivoMovimentacaoId);
-    var nota = await _uow.Entrada.ObterPorNumeroNotaAsync(entrada.NumeroNota, entrada.FornecedorId);
+    {
+        await _uow.BeginTransactionAsync();
+        try
+        {
+            var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(entrada.FornecedorId);
+            var motivo = await _uow.MotivoMovimentacao.ObterPorIdAsync(entrada.MotivoMovimentacaoId);
+            var nota = await _uow.Entrada.ObterPorNumeroNotaAsync(entrada.NumeroNota, entrada.FornecedorId);
 
             if (fornecedor == null) // Verifica se o fornecedor existe
                 throw new KeyNotFoundException("Fornecedor não encontrado no sistema");
@@ -40,19 +43,26 @@ public class EntradaService : IEntradaService
             if (motivo == null) // Verifica se o motivo de movimentação existe
                 throw new KeyNotFoundException("Motivo de movimentação não encontrado no sistema");
 
-    if (entrada.DataCompra > DateOnly.FromDateTime(DateTime.Now))
-        throw new InvalidOperationException("A data da compra não pode ser uma data futura");
+            if (entrada.DataCompra > DateOnly.FromDateTime(DateTime.Now))
+                throw new InvalidOperationException("A data da compra não pode ser uma data futura");
 
-    if (nota != null)
-        throw new InvalidOperationException("Já existe um registro com esse número de nota fiscal para o fornecedor informado");
+            if (nota != null)
+                throw new InvalidOperationException("Já existe um registro com esse número de nota fiscal para o fornecedor informado");
 
-    await _uow.Entrada.AdicionarAsync(entrada);
-    await _itemEntradaService.AdicionarItensEntradaAsync(entrada.Id, entrada.ItemEntrada);
+            await _uow.Entrada.AdicionarAsync(entrada);
+            await _itemEntradaService.AdicionarItensEntradaAsync(entrada.Id, entrada.ItemEntrada);
 
-    await _uow.SaveChangesAsync();
+            await _uow.SaveChangesAsync();
+            await _uow.CommitAsync();
 
-    return entrada;
-}
+            return entrada;
+        }
+        catch
+        {
+            await _uow.RollbackAsync();
+            throw; // Relança a exceção para ser tratada pelo middleware
+        }
+    }
 
 
     public async Task AtualizarEntradaAsync(int id, Entrada entrada)
@@ -70,4 +80,3 @@ public class EntradaService : IEntradaService
         // await _entradaRepository.DeletarAsync(id);
     }
 }
-

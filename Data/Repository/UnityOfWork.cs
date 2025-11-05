@@ -20,6 +20,7 @@ public class UnityOfWork : IUnityOfWork
     private IFuncionarioRepository _funcionarioRepository;
     private ICategoriaRepository _categoriaRepository;
     private IUnidadeMedidaRepository _unidadeMedidaRepository;
+    private IHistoricoProdutoRepository _historicoProdutoRepository;
 
 
     // Inicializador das propriedades ('lazy')
@@ -33,6 +34,7 @@ public class UnityOfWork : IUnityOfWork
     public IFuncionarioRepository Funcionario { get => _funcionarioRepository ??= new FuncionarioRepository(_context); }
     public ICategoriaRepository Categoria { get => _categoriaRepository ??= new CategoriaRepository(_context); }
     public IUnidadeMedidaRepository UnidadeMedida { get => _unidadeMedidaRepository ??= new UnidadeMedidaRepository(_context); }
+    public IHistoricoProdutoRepository HistoricoProduto { get => _historicoProdutoRepository ??= new HistoricoProdutoRepository(_context); }
 
     // Construtor
 
