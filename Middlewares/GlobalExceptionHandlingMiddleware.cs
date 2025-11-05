@@ -46,8 +46,25 @@ public class GlobalExceptionHandlingMiddleware
             status = HttpStatusCode.NotFound;
             stackTrace = exception.StackTrace;
         }
+        else if (exceptionType == typeof(InvalidOperationException))
+        {
+            mensagem = exception.Message;
+            status = HttpStatusCode.BadRequest;
+            stackTrace = exception.StackTrace;
+        }
+        else if (exceptionType == typeof(KeyNotFoundException))
+        {
+            mensagem = exception.Message;
+            status = HttpStatusCode.NotFound;
+            stackTrace = exception.StackTrace;
+        }
+        else if (exceptionType == typeof(ArgumentException))
+        {
+            mensagem = exception.Message;
+            status = HttpStatusCode.BadRequest;
+            stackTrace = exception.StackTrace;
+        }
 
-        //necessita personalizar a exceção BadRequest no front para cada funcionalidade que depende de outra...
         else
         {
             // Tratar a exceção genérica como Erro Interno do Servidor (500)

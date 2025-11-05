@@ -52,7 +52,7 @@ public class CategoriaController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarCategoria(int id, Categoria categoria)
     {
-        if (id != categoria.Id) return BadRequest();
+        
         await _categoriaService.AtualizarCategoriaAsync(id, categoria);
         return NoContent();
     }

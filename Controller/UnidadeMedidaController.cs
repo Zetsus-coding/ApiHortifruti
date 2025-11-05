@@ -48,7 +48,7 @@ public class UnidadeMedidaController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarUnidadeMedida(int id, UnidadeMedida unidadeMedida)
     {
-        if (id != unidadeMedida.Id) return BadRequest();
+
         await _unidadeMedidaService.AtualizarUnidadeMedidaAsync(id, unidadeMedida);
         return NoContent();
     }
