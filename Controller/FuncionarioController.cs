@@ -1,5 +1,6 @@
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -10,10 +11,12 @@ namespace ApiHortifruti.Controller;
 public class FuncionarioController : ControllerBase
 {
     private readonly IFuncionarioService _funcionarioService;
+    private readonly IMapper _mapper;
 
-    public FuncionarioController(IFuncionarioService funcionarioService)
+    public FuncionarioController(IFuncionarioService funcionarioService, IMapper mapper)
     {
         _funcionarioService = funcionarioService;
+        _mapper = mapper;
     }
 
     [HttpGet]
@@ -33,8 +36,10 @@ public class FuncionarioController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<ActionResult<Funcionario>> CriarFuncionario(Funcionario funcionario)
+    public async Task<ActionResult<Funcionario>> CriarFuncionario(PostFuncionarioDTO postFuncionarioDTO)
     {
+        var funcionario = _mapper.Map<Funcionario>(postFuncionarioDTO); // Conversão de DTO para entidade
+        
         var funcionarioCriado = await _funcionarioService.CriarFuncionarioAsync(funcionario);
         return CreatedAtAction(nameof(ObteFuncionario), new { funcionarioCriado.Id },
             funcionarioCriado);

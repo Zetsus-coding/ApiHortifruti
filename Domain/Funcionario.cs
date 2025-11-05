@@ -25,7 +25,8 @@ public partial class Funcionario
     public string AgenciaBancaria { get; set; } = null!;
 
     public bool Ativo { get; set; }
-
+    
+    [JsonIgnore]
     public virtual Cargo? Cargo { get; set; }
 
     [JsonIgnore]
