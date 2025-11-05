@@ -34,11 +34,11 @@ public class EntradaService : IEntradaService
     var motivo = await _uow.MotivoMovimentacao.ObterPorIdAsync(entrada.MotivoMovimentacaoId);
     var nota = await _uow.Entrada.ObterPorNumeroNotaAsync(entrada.NumeroNota, entrada.FornecedorId);
 
-    if (fornecedor == null)
-        throw new InvalidOperationException("Fornecedor não encontrado no sistema");
+            if (fornecedor == null) // Verifica se o fornecedor existe
+                throw new KeyNotFoundException("Fornecedor não encontrado no sistema");
 
-    if (motivo == null)
-        throw new InvalidOperationException("Motivo de movimentação não encontrado no sistema");
+            if (motivo == null) // Verifica se o motivo de movimentação existe
+                throw new KeyNotFoundException("Motivo de movimentação não encontrado no sistema");
 
     if (entrada.DataCompra > DateOnly.FromDateTime(DateTime.Now))
         throw new InvalidOperationException("A data da compra não pode ser uma data futura");

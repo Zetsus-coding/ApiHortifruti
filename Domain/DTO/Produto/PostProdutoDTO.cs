@@ -6,10 +6,12 @@ public class PostProdutoDTO
     // QUANTIDADES JÁ FORAM ALTERADAS PARA DECIMAL NO BANCO DE DADOS. QUANTIDADE MÁXIMA FOI REMOVIDA
 
     [Required(ErrorMessage = "Por favor, informe uma categoria")]
+    [Range(1, int.MaxValue, ErrorMessage = "Por favor, informe uma categoria válida")]
     public int CategoriaId { get; set; }
 
 
     [Required(ErrorMessage = "Por favor, informe uma unidade de medida")]
+    [Range(1, int.MaxValue, ErrorMessage = "Por favor, informe uma unidade de medida válida")]
     public int UnidadeMedidaId { get; set; }
 
 
@@ -18,7 +20,9 @@ public class PostProdutoDTO
     public string Nome { get; set; }
 
 
+    // UNIQUE
     [Required(ErrorMessage = "O código do produto é obrigatório")]
+    [StringLength(50, ErrorMessage = "A código do produto não pode exceder 50 caracteres")]
     public string Codigo { get; set; }
 
 
@@ -27,14 +31,11 @@ public class PostProdutoDTO
 
 
     [Required(ErrorMessage = "O preço do produto é obrigatório")]
-    [ValidacaoCampoPreco(ErrorMessage = "Preço do produto inválido")]
+    [ValidacaoCampoPreco]
     public decimal Preco { get; set; }
 
 
-    [Range(0, 0, ErrorMessage = "Tentativa de criação do produto com quantidade inicial diferente de zero")] // JÁ QUE SERA MUDADA PARA DECIMAL. USAR STRING NO RANGE?
-    public decimal QuantidadeAtual { get; set; }
-
-
+    [Required(ErrorMessage = "A quantidade mínima do produto é obrigatória")]
     [Range(0, double.MaxValue, ErrorMessage = "A quantidade mínima não pode ser negativa")]
     public decimal QuantidadeMinima { get; set; }
 }

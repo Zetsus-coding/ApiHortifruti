@@ -8,5 +8,6 @@ public interface ICategoriaRepository
     Task<Categoria?> ObterPorIdAsync(int id);
     Task<Categoria> AdicionarAsync(Categoria categoria);
     Task AtualizarAsync(Categoria categoria);
-    Task DeletarAsync(int id);
+    
+    // Task DeletarAsync(int id);
 }
