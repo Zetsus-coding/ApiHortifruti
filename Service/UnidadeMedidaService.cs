@@ -6,16 +6,17 @@ namespace ApiHortifruti.Service;
 
 public class UnidadeMedidaService : IUnidadeMedidaService
 {
-    private readonly IUnidadeMedidaRepository _unidadeMedidaRepository;
+    private readonly IUnityOfWork _uow;
 
-    public UnidadeMedidaService(IUnidadeMedidaRepository unidadeMedidaRepository)
+    // Construtor com injeção de dependência do Unit of Work
+    public UnidadeMedidaService(IUnityOfWork uow)
     {
-        _unidadeMedidaRepository = unidadeMedidaRepository;
+        _uow = uow;
     }
 
     public async Task<IEnumerable<UnidadeMedida>> ObterTodosUnidadeMedidaAsync()
     {
-        return await _unidadeMedidaRepository.ObterTodosAsync();
+        return await _uow.UnidadeMedida.ObterTodosAsync(); // Chamada a camada de repositório (através do Unit of Work) para obter todos
 
         // É preciso exceção caso a lista esteja vazia?
         // if (!getAllUnidadeMedida.Any())
@@ -24,7 +25,7 @@ public class UnidadeMedidaService : IUnidadeMedidaService
 
     public async Task<UnidadeMedida?> ObterUnidadeMedidaPorIdAsync(int id)
     {
-        return await _unidadeMedidaRepository.ObterPorIdAsync(id);
+        return await _uow.UnidadeMedida.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID
 
         // É preciso exceção caso o id não exista?
         // if (getIdUnidadeMedida == null)
@@ -33,7 +34,10 @@ public class UnidadeMedidaService : IUnidadeMedidaService
 
     public async Task<UnidadeMedida> CriarUnidadeMedidaAsync(UnidadeMedida unidadeMedida)
     {
-        return await _unidadeMedidaRepository.AdicionarAsync(unidadeMedida);
+        await _uow.UnidadeMedida.AdicionarAsync(unidadeMedida); // Chamada a camada de repositório (através do Unit of Work) para criar
+        await _uow.SaveChangesAsync();
+
+        return unidadeMedida;
     }
 
     public async Task AtualizarUnidadeMedidaAsync(int id, UnidadeMedida unidadeMedida)
@@ -42,7 +46,9 @@ public class UnidadeMedidaService : IUnidadeMedidaService
         {
             throw new ArgumentException("O ID da unidade de medida na URL não corresponde ao ID no corpo da requisição.");
         }
-        await _unidadeMedidaRepository.AtualizarAsync(unidadeMedida);
+
+        await _uow.UnidadeMedida.AtualizarAsync(unidadeMedida); // Chamada a camada de repositório (através do Unit of Work) para atualizar
+        await _uow.SaveChangesAsync();
     }
 
     // public async Task DeletarUnidadeMedidaAsync(int id)

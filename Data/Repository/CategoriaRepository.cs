@@ -26,14 +26,12 @@ public class CategoriaRepository : ICategoriaRepository
     public async Task<Categoria> AdicionarAsync(Categoria categoria)
     {
         _context.Categoria.Add(categoria);
-        await _context.SaveChangesAsync();
         return categoria;
     }
 
     public async Task AtualizarAsync(Categoria categoria)
     {
         _context.Entry(categoria).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     // public async Task DeletarAsync(int id)

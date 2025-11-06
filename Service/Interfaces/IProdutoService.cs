@@ -2,6 +2,7 @@ using ApiHortifruti.Domain;
 
 namespace ApiHortifruti.Service.Interfaces;
 
+// Interface do serviço de produto
 public interface IProdutoService
 {
     Task<IEnumerable<Produto>> ObterTodosProdutoAsync();
@@ -9,6 +10,6 @@ public interface IProdutoService
     Task<Produto?> ObterPorCodigoAsync(string codigo);
     Task<Produto> CriarProdutoAsync(Produto produto);
     Task AtualizarProdutoAsync(int id, Produto produto);
-    
+
     //Task DeletarProdutoAsync(int id);
 }

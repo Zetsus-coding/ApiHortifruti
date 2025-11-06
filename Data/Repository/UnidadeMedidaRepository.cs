@@ -27,14 +27,12 @@ public class UnidadeMedidaRepository : IUnidadeMedidaRepository
     public async Task<UnidadeMedida> AdicionarAsync(UnidadeMedida unidadeMedida)
     {
         _context.UnidadeMedida.Add(unidadeMedida);
-        await _context.SaveChangesAsync();
-        return unidadeMedida;
+        return unidadeMedida; // redundate?
     }
 
     public async Task AtualizarAsync(UnidadeMedida unidadeMedida)
     {
         _context.Entry(unidadeMedida).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     // public async Task DeletarAsync(int id)

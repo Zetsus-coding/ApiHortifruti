@@ -15,48 +15,54 @@ public class FornecedorController : ControllerBase
     private readonly IFornecedorService _fornecedorService;
     private readonly IMapper _mapper;
 
+    // Construtor com injeção de dependência do serviço e do mapper
     public FornecedorController(IFornecedorService fornecedorService, IMapper mapper)
     {
         _fornecedorService = fornecedorService;
         _mapper = mapper;
     }
 
+    // Consulta de todos os fornecedores
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterFornecedores()
     {
-        var fornecedor = await _fornecedorService.ObterTodosFornecedoresAsync();    
+        var fornecedor = await _fornecedorService.ObterTodosFornecedoresAsync(); // Chamada a camada de serviço para obter todos
         return Ok(fornecedor);
     }
 
+    // Consulta de um fornecedor por ID
     [HttpGet("{id}")]
     public async Task<ActionResult<Fornecedor>> ObterFornecedor(int id)
     {
-        var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id);
+        var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id); // Chamada a camada de serviço para obter por ID
 
         return Ok(fornecedor);
     }
 
+    // Criação de um novo fornecedor
     [HttpPost]
     public async Task<ActionResult<Fornecedor>> CriarFornecedor(PostFornecedorDTO postFornecedorDTO)
     {
         var fornecedor = _mapper.Map<Fornecedor>(postFornecedorDTO); // Conversão de DTO para entidade
-        
-        var fornecedorCriado = await _fornecedorService.CriarFornecedorAsync(fornecedor);
+
+        var fornecedorCriado = await _fornecedorService.CriarFornecedorAsync(fornecedor); // Chamada a camada de serviço para criar
         return CreatedAtAction(nameof(ObterFornecedor), new { fornecedorCriado.Id },
             fornecedorCriado);
     }
 
+    // Atualização de um fornecedor existente
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFornecedor(int id, Fornecedor fornecedor)
     {
-        await _fornecedorService.AtualizarFornecedorAsync(id, fornecedor);
+        await _fornecedorService.AtualizarFornecedorAsync(id, fornecedor); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
     
+    // Exclusão de um fornecedor existente
     // [HttpDelete("{id}")]
     // public async Task<IActionResult> DeletarFornecedor(int id) 
     // { 
-    //     await _fornecedorService.DeletarFornecedorAsync(id); 
+    //     await _fornecedorService.DeletarFornecedorAsync(id); // Chamada a camada de serviço para deletar
     //     return NoContent(); 
     // }
 }
