@@ -7,27 +7,28 @@ namespace ApiHortifruti.Service;
 
 public class MotivoMovimentacaoService : IMotivoMovimentacaoService
 {
-    private readonly IMotivoMovimentacaoRepository _motivoMovimentacaoRepository;
+    private readonly IUnityOfWork _uow;
 
-    public MotivoMovimentacaoService(IMotivoMovimentacaoRepository motivoMovimentacaoRepository)
+    public MotivoMovimentacaoService( IUnityOfWork uow)
     {
-        _motivoMovimentacaoRepository = motivoMovimentacaoRepository; // Inj. dependência
+        
+        _uow = uow;
     }
 
     public async Task<IEnumerable<MotivoMovimentacao>> ObterTodosMotivoMovimentacaoAsync()
     {
-        return await _motivoMovimentacaoRepository.ObterTodosAsync();
+        return await _uow.MotivoMovimentacao.ObterTodosAsync();
     }
 
     public async Task<MotivoMovimentacao?> ObterMotivoMovimentacaoPorIdAsync(int id)
     {
-        return await _motivoMovimentacaoRepository.ObterPorIdAsync(id);
+        return await _uow.MotivoMovimentacao.ObterPorIdAsync(id);
         
     }
 
     public async Task<MotivoMovimentacao> CriarMotivoMovimentacaoAsync(MotivoMovimentacao motivoMovimentacao)
     {
-        return await _motivoMovimentacaoRepository.AdicionarAsync(motivoMovimentacao);
+        return await _uow.MotivoMovimentacao.AdicionarAsync(motivoMovimentacao);
     }
 
     public async Task AtualizarMotivoMovimentacaoAsync(int id, MotivoMovimentacao motivoMovimentacao)
@@ -37,12 +38,12 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
             // Lançar erro/exceção
             return;
         }
-        await _motivoMovimentacaoRepository.AtualizarAsync(motivoMovimentacao);
+        await _uow.MotivoMovimentacao.AtualizarAsync(motivoMovimentacao);
     }
 
     public async Task DeletarMotivoMovimentacaoAsync(int id)
     {
-        await _motivoMovimentacaoRepository.DeletarAsync(id);
+        await _uow.MotivoMovimentacao.DeletarAsync(id);
     }
 }
 
