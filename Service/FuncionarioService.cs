@@ -6,26 +6,45 @@ namespace ApiHortifruti.Service;
 
 public class FuncionarioService : IFuncionarioService
 {
-    private readonly IFuncionarioRepository _funcionarioRepository;
+    private readonly IUnityOfWork _uow;
 
-    public FuncionarioService(IFuncionarioRepository funcionarioRepository)
+    public FuncionarioService(IUnityOfWork uow)
     {
-        _funcionarioRepository = funcionarioRepository;
+        _uow = uow;
     }
 
     public async Task<IEnumerable<Funcionario>> ObterTodosFuncionarioAsync()
     {
-        return await _funcionarioRepository.ObterTodosAsync();
+        return await _uow.Funcionario.ObterTodosAsync();
     }
 
     public async Task<Funcionario?> ObterFuncionarioPorIdAsync(int id)
     {
-        return await _funcionarioRepository.ObterPorIdAsync(id);
+        return await _uow.Funcionario.ObterPorIdAsync(id);
     }
 
     public async Task<Funcionario> CriarFuncionarioAsync(Funcionario funcionario)
     {
-        return await _funcionarioRepository.AdicionarAsync(funcionario);
+
+        await _uow.BeginTransactionAsync();
+        try
+        {
+            var cargo = await _uow.Cargo.ObterPorIdAsync(funcionario.CargoId);
+
+            if (cargo is null)
+                throw new KeyNotFoundException("O cargo informado não existe.");
+
+            await _uow.Funcionario.AdicionarAsync(funcionario);
+            
+            await _uow.SaveChangesAsync();
+            await _uow.CommitAsync();
+            return funcionario;
+        }
+        catch
+        {
+            await _uow.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task AtualizarFuncionarioAsync(int id, Funcionario funcionario)
@@ -35,11 +54,11 @@ public class FuncionarioService : IFuncionarioService
             // Lançar erro/exceção
             return;
         }
-        await _funcionarioRepository.AtualizarAsync(funcionario);
+        await _uow.Funcionario.AtualizarAsync(funcionario);
     }
 
     public async Task DeletarFuncionarioAsync(int id)
     {
-        await _funcionarioRepository.DeletarAsync(id);
+        await _uow.Funcionario.DeletarAsync(id);
     }
 }

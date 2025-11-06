@@ -21,7 +21,7 @@ public class UnityOfWork : IUnityOfWork
     private ICategoriaRepository _categoriaRepository;
     private IUnidadeMedidaRepository _unidadeMedidaRepository;
     private IHistoricoProdutoRepository _historicoProdutoRepository;
-
+    private ICargoRepository _cargoRepository;
 
     // Inicializador das propriedades ('lazy')
     public IEntradaRepository Entrada { get => _entradaRepository ??= new EntradaRepository(_context); }
@@ -35,7 +35,8 @@ public class UnityOfWork : IUnityOfWork
     public ICategoriaRepository Categoria { get => _categoriaRepository ??= new CategoriaRepository(_context); }
     public IUnidadeMedidaRepository UnidadeMedida { get => _unidadeMedidaRepository ??= new UnidadeMedidaRepository(_context); }
     public IHistoricoProdutoRepository HistoricoProduto { get => _historicoProdutoRepository ??= new HistoricoProdutoRepository(_context); }
-
+    public ICargoRepository Cargo { get => _cargoRepository ??= new CargoRepository(_context); }
+    
     // Construtor
 
     public UnityOfWork(AppDbContext context)
