@@ -7,16 +7,17 @@ namespace ApiHortifruti.Service;
 
 public class CategoriaService : ICategoriaService
 {
-    private readonly ICategoriaRepository _categoriaRepository;
+    private readonly IUnityOfWork _uow;
 
-    public CategoriaService(ICategoriaRepository categoriaRepository)
+    // Construtor com injeção de dependência do Unit of Work
+    public CategoriaService(IUnityOfWork uow)
     {
-        _categoriaRepository = categoriaRepository; // Inj. dependência
+        _uow = uow;
     }
 
     public async Task<IEnumerable<Categoria>> ObterTodosCategoriasAsync()
     {
-        return await _categoriaRepository.ObterTodosAsync();
+        return await _uow.Categoria.ObterTodosAsync(); // Chamada a camada de repositório (através do Unit of Work) para obter todos
 
         // É preciso exceção caso a lista esteja vazia?
         // if (!categoria.Any())
@@ -25,7 +26,7 @@ public class CategoriaService : ICategoriaService
 
     public async Task<Categoria?> ObterCategoriaPorIdAsync(int id)
     {
-        return await _categoriaRepository.ObterPorIdAsync(id);
+        return await _uow.Categoria.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID
 
         // É preciso exceção caso o id não exista?
         // if (categoria == null) 
@@ -33,8 +34,11 @@ public class CategoriaService : ICategoriaService
     }
 
     public async Task<Categoria> CriarCategoriaAsync(Categoria categoria)
-    {
-        return await _categoriaRepository.AdicionarAsync(categoria);
+    {  
+        await _uow.Categoria.AdicionarAsync(categoria); // Chamada a camada de repositório (através do Unit of Work) para adicionar
+        await _uow.SaveChangesAsync();
+
+        return categoria;
     }
 
     public async Task AtualizarCategoriaAsync(int id, Categoria categoria)
@@ -43,12 +47,13 @@ public class CategoriaService : ICategoriaService
         {
             throw new ArgumentException("O ID da categoria na URL não corresponde ao ID no corpo da requisição.");
         }
-        await _categoriaRepository.AtualizarAsync(categoria);
+        await _uow.Categoria.AtualizarAsync(categoria); // Chamada a camada de repositório (através do Unit of Work) para atualizar
+        await _uow.SaveChangesAsync();
     }
 
     // public async Task DeletarCategoriaAsync(int id)
     // {
-    //     await _categoriaRepository.DeletarAsync(id);
+    //     await _uow.Categoria.DeletarAsync(id);
     // }
 }
 
