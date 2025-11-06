@@ -1,3 +1,4 @@
+using System.Data;
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
@@ -17,11 +18,14 @@ public class CategoriaService : ICategoriaService
 
     public async Task<IEnumerable<Categoria>> ObterTodosCategoriasAsync()
     {
-        return await _uow.Categoria.ObterTodosAsync(); // Chamada a camada de repositório (através do Unit of Work) para obter todos
-
-        // É preciso exceção caso a lista esteja vazia?
-        // if (!categoria.Any())
-        //     throw new DBConcurrencyException("Nenhuma categoria criada.");
+        try
+        {
+            return await _uow.Categoria.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Categoria?> ObterCategoriaPorIdAsync(int id)
@@ -34,7 +38,7 @@ public class CategoriaService : ICategoriaService
     }
 
     public async Task<Categoria> CriarCategoriaAsync(Categoria categoria)
-    {  
+    {
         await _uow.Categoria.AdicionarAsync(categoria); // Chamada a camada de repositório (através do Unit of Work) para adicionar
         await _uow.SaveChangesAsync();
 

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Data.Repository;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
@@ -30,7 +31,7 @@ public class FornecedorProdutoController : ControllerBase
 
     // Operação de consulta por ID
     [HttpGet("{fornecedorId}/{produtoId}")]
-    public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProduto(int fornecedorId, int produtoId)
+    public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProduto([Range(1, int.MaxValue)]int fornecedorId, [Range(1, int.MaxValue)]int produtoId)
     {
         var getIdFornecedorProduto = await _fornecedorProdutoService.ObterFornecedorProdutoPorIdAsync(fornecedorId, produtoId);
 
@@ -63,7 +64,7 @@ public class FornecedorProdutoController : ControllerBase
 
     // Operação de alteração de algum registro na tabela
     [HttpPut("{fornecedorId}/{produtoId}")] 
-    public async Task<IActionResult> AtualizarFornecedorProduto(int fornecedorId, int produtoId, FornecedorProduto fornecedorProduto)
+    public async Task<IActionResult> AtualizarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId, FornecedorProduto fornecedorProduto)
     {
         if (fornecedorId != fornecedorProduto.FornecedorId || produtoId != fornecedorProduto.ProdutoId) return BadRequest();
 
@@ -73,7 +74,7 @@ public class FornecedorProdutoController : ControllerBase
 
     // Operação de exclusão de algum registro na tabela
     [HttpDelete("{fornecedorId}/{produtoId}")]
-    public async Task<IActionResult> DeletarFornecedorProduto(int fornecedorId, int produtoId)
+    public async Task<IActionResult> DeletarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
     {
         await _fornecedorProdutoService.DeletarFornecedorProdutoAsync(fornecedorId, produtoId);
         return NoContent();

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
@@ -22,6 +23,7 @@ public class CategoriaController : ControllerBase
         _mapper = mapper;
     }
 
+
     // Consulta de todas as categorias
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Categoria>>> ObterCategorias()
@@ -32,7 +34,7 @@ public class CategoriaController : ControllerBase
 
     // Consulta de categoria por id
     [HttpGet("{id}")]
-    public async Task<ActionResult<Categoria>> ObterCategoria(int id)
+    public async Task<ActionResult<Categoria>> ObterCategoria([Range(1, int.MaxValue)]int id)
     {
         var categoria = await _categoriaService.ObterCategoriaPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(categoria);
@@ -53,7 +55,7 @@ public class CategoriaController : ControllerBase
 
     // Atualização de uma categoria existente
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarCategoria(int id, Categoria categoria)
+    public async Task<IActionResult> AtualizarCategoria([Range(1, int.MaxValue)] int id, Categoria categoria)
     {
         await _categoriaService.AtualizarCategoriaAsync(id, categoria); // Chamada a camada de serviço para atualizar
         return NoContent();

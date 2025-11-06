@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
@@ -29,7 +30,7 @@ public class SaidaController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Saida>> ObterSaida(int id) // get por id
+    public async Task<ActionResult<Saida>> ObterSaida([Range(1, int.MaxValue)] int id) // get por id
     {
         var saida = await _saidaService.ObterSaidaPorIdAsync(id);
 
@@ -50,17 +51,17 @@ public class SaidaController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarSaida(int id, Saida saida)
+    public async Task<IActionResult> AtualizarSaida([Range(1, int.MaxValue)] int id, Saida saida)
     {
         if (id != saida.Id) return BadRequest();
         await _saidaService.AtualizarSaidaAsync(id, saida);
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarSaida(int id) 
-    { 
-        await _saidaService.DeletarSaidaAsync(id); 
-        return NoContent(); 
-    } 
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarSaida([Range(1, int.MaxValue)] int id) 
+    // { 
+    //     await _saidaService.DeletarSaidaAsync(id); 
+    //     return NoContent(); 
+    // }
 }

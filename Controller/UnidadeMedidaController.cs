@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
@@ -32,7 +33,7 @@ public class UnidadeMedidaController : ControllerBase
 
     // Consulta uma unidade de medida pelo ID
     [HttpGet("{id}")]
-    public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedida(int id)
+    public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedida([Range(1, int.MaxValue)] int id)
     {
         var getIdUnidadeMedida = await _unidadeMedidaService.ObterUnidadeMedidaPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(getIdUnidadeMedida);
@@ -51,7 +52,7 @@ public class UnidadeMedidaController : ControllerBase
 
     // Atualiza uma unidade de medida existente
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarUnidadeMedida(int id, UnidadeMedida unidadeMedida)
+    public async Task<IActionResult> AtualizarUnidadeMedida([Range(1, int.MaxValue)] int id, UnidadeMedida unidadeMedida)
     {
         await _unidadeMedidaService.AtualizarUnidadeMedidaAsync(id, unidadeMedida); // Chamada a camada de serviço para atualizar
         return NoContent();
@@ -59,7 +60,7 @@ public class UnidadeMedidaController : ControllerBase
     
     // Exclusão de uma unidade de medida existente
     // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarUnidadeMedida(int id) 
+    // public async Task<IActionResult> DeletarUnidadeMedida([Range(1, int.MaxValue)]int id) 
     // { 
     //     await _unidadeMedidaService.DeletarUnidadeMedidaAsync(id); 
     //     return NoContent(); 

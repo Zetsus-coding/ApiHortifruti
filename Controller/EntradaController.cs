@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
@@ -29,7 +30,7 @@ public class EntradaController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Entrada>> ObterEntrada(int id)
+    public async Task<ActionResult<Entrada>> ObterEntrada([Range(1, int.MaxValue)] int id)
     {
         var entrada = await _entradaService.ObterEntradaPorIdAsync(id);
 
@@ -50,16 +51,16 @@ public class EntradaController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarEntrada(int id, Entrada entrada)
+    public async Task<IActionResult> AtualizarEntrada([Range(1, int.MaxValue)] int id, Entrada entrada)
     {
         await _entradaService.AtualizarEntradaAsync(id, entrada);
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarEntrada(int id) 
-    { 
-        await _entradaService.DeletarEntradaAsync(id); 
-        return NoContent(); 
-    } 
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarEntrada([Range(1, int.MaxValue)] int id) 
+    // { 
+    //     await _entradaService.DeletarEntradaAsync(id); 
+    //     return NoContent(); 
+    // } 
 }
