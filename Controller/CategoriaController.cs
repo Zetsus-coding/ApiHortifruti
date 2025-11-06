@@ -51,8 +51,7 @@ public class CategoriaController : ControllerBase
 
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarCategoria(int id, Categoria categoria)
-    {
-        
+    {        
         await _categoriaService.AtualizarCategoriaAsync(id, categoria);
         return NoContent();
     }

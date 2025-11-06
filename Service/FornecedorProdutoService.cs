@@ -7,26 +7,106 @@ namespace ApiHortifruti.Service;
 
 public class FornecedorProdutoService : IFornecedorProdutoService
 {
-    private readonly IFornecedorProdutoRepository _fornecedorProdutoRepository;
+    private readonly IUnityOfWork _uow;
 
-    public FornecedorProdutoService(IFornecedorProdutoRepository fornecedorProdutoRepository)
+    public FornecedorProdutoService(IUnityOfWork uow)
     {
-        _fornecedorProdutoRepository = fornecedorProdutoRepository;
+        _uow = uow;
     }
 
     public async Task<IEnumerable<FornecedorProduto>> ObterTodosFornecedorProdutosAsync()
     {
-        return await _fornecedorProdutoRepository.ObterTodosAsync();
+        return await _uow.FornecedorProduto.ObterTodosAsync();
     }
 
     public async Task<FornecedorProduto?> ObterFornecedorProdutoPorIdAsync(int fornecedorId, int produtoId)
     {
-        return await _fornecedorProdutoRepository.ObterPorIdAsync(fornecedorId, produtoId);
+        return await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorId, produtoId);
     }
 
     public async Task<FornecedorProduto> CriarFornecedorProdutoAsync(FornecedorProduto fornecedorProduto)
     {
-        return await _fornecedorProdutoRepository.AdicionarAsync(fornecedorProduto);
+        var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornecedorProduto.FornecedorId); // Consulta o fornecedor por id
+        var produto = await _uow.Produto.ObterPorIdAsync(fornecedorProduto.ProdutoId); // Consulta o produto por id
+        var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorProduto.FornecedorId, fornecedorProduto.ProdutoId); // Consulta a relação pelos id's
+
+        if (fornecedor == null) // Valida se o fornecedor existe
+            throw new KeyNotFoundException("Fornecedor não encontrado.");
+
+        if (produto == null) // Valida se o produto existe
+            throw new KeyNotFoundException("Produto não encontrado.");
+
+        if (existente != null) // Valida se a relação já existe
+            throw new KeyNotFoundException("A relação entre o fornecedor e o produto já existe.");
+
+        await _uow.BeginTransactionAsync(); // Inicia a transação
+
+        try
+        {
+            fornecedorProduto.Disponibilidade = true; // Define a disponibilidade como verdadeira por padrão
+            fornecedorProduto.DataRegistro = DateOnly.FromDateTime(DateTime.Now); // Definição da data de registro como a data atual
+
+            var novoFornecedorProduto = await _uow.FornecedorProduto.AdicionarAsync(fornecedorProduto); // Adiciona o novo fornecedorProduto
+
+            await _uow.SaveChangesAsync(); // Salva as alterações
+            await _uow.CommitAsync(); // Confirma a transação
+
+            return novoFornecedorProduto;
+        }
+        catch
+        {
+            await _uow.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task CriarVariosFornecedorProdutosAsync(List<FornecedorProduto> fornecedorProdutos)
+    {
+        if (fornecedorProdutos == null || !fornecedorProdutos.Any())
+            return;
+
+        // Verifica associações duplicadas na lista recebida como parâmetro
+        var duplicados = fornecedorProdutos
+            .GroupBy(fp => new { fp.FornecedorId, fp.ProdutoId })
+            .Where(g => g.Count() > 1)
+            .Select(g => g.Key)
+            .ToList();
+
+        if (duplicados.Any()) // Se houver duplicatas ([fornecedorId, produtoId]), lança uma exceção
+            throw new InvalidOperationException("Existem associações duplicadas na lista fornecida.");
+
+        await _uow.BeginTransactionAsync(); // Inicia a transação
+
+        try
+        {
+            foreach (var fornProd in fornecedorProdutos)
+            {
+                var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornProd.FornecedorId);
+                var produto = await _uow.Produto.ObterPorIdAsync(fornProd.ProdutoId);
+                var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornProd.FornecedorId, fornProd.ProdutoId);
+
+                if (fornecedor == null)
+                    throw new KeyNotFoundException($"Fornecedor com Id {fornProd.FornecedorId} não encontrado.");
+
+                if (produto == null)
+                    throw new KeyNotFoundException($"Produto com Id {fornProd.ProdutoId} não encontrado.");
+
+                if (existente != null)
+                    throw new InvalidOperationException($"A relação para o FornecedorId {fornProd.FornecedorId} e ProdutoId {fornProd.ProdutoId} já existe.");
+
+                fornProd.Disponibilidade = true;
+                fornProd.DataRegistro = DateOnly.FromDateTime(DateTime.Now);
+            }
+
+            await _uow.FornecedorProduto.AdicionarVariosAsync(fornecedorProdutos);
+            await _uow.SaveChangesAsync();
+            await _uow.CommitAsync();
+        }
+        catch
+        {
+            await _uow.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task AtualizarFornecedorProdutoAsync(int fornecedorId, int produtoId, FornecedorProduto fornecedorProduto)
@@ -36,12 +116,11 @@ public class FornecedorProdutoService : IFornecedorProdutoService
             // Lançar erro/exceção | [new argumentexception]?
             return;
         }
-        await _fornecedorProdutoRepository.AtualizarAsync(fornecedorProduto);
+        await _uow.FornecedorProduto.AtualizarAsync(fornecedorProduto);
     }
 
     public async Task DeletarFornecedorProdutoAsync(int fornecedorId, int produtoId)
     {
-        await _fornecedorProdutoRepository.DeletarAsync(fornecedorId, produtoId);
+        await _uow.FornecedorProduto.DeletarAsync(fornecedorId, produtoId);
     }
 }
-

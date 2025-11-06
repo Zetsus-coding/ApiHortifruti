@@ -16,15 +16,24 @@ public class FornecedorService : IFornecedorService
     public async Task<IEnumerable<Fornecedor>> ObterTodosFornecedoresAsync()
     {
         return await _fornecedorRepository.ObterTodosAsync();
+
+        // Precisa lançar exceção se a lista estiver vazia?
+        // if (!fornecedor.Any())
+        //     throw new DBConcurrencyException("Nenhum fornecedor criado.");
     }
 
     public async Task<Fornecedor?> ObterFornecedorPorIdAsync(int id)
     {
         return await _fornecedorRepository.ObterPorIdAsync(id);
+
+        // Precisa lançar exceção se o id não for encontrado?
+        // if (fornecedor == null)
+        //     throw new KeyNotFoundException("Fornecedor não encontrado.");
     }
 
     public async Task<Fornecedor> CriarFornecedorAsync(Fornecedor fornecedor)
     {
+        fornecedor.DataRegistro = DateOnly.FromDateTime(DateTime.Now);
         return await _fornecedorRepository.AdicionarAsync(fornecedor);
     }
 
@@ -32,14 +41,13 @@ public class FornecedorService : IFornecedorService
     {
         if (id != fornecedor.Id)
         {
-            // Lançar erro/exceção
-            return;
+            throw new ArgumentException("O ID do fornecedor na URL não corresponde ao ID no corpo da requisição.");
         }
         await _fornecedorRepository.AtualizarAsync(fornecedor);
     }
 
-    public async Task DeletarFornecedorAsync(int id)
-    {
-        await _fornecedorRepository.DeletarAsync(id);
-    }
+    // public async Task DeletarFornecedorAsync(int id)
+    // {
+    //     await _fornecedorRepository.DeletarAsync(id);
+    // }
 }

@@ -8,5 +8,6 @@ public interface IFornecedorService
     Task<Fornecedor?> ObterFornecedorPorIdAsync(int id);
     Task<Fornecedor> CriarFornecedorAsync(Fornecedor fornecedor);
     Task AtualizarFornecedorAsync(int id, Fornecedor fornecedor);
-    Task DeletarFornecedorAsync(int id);
+    
+    // Task DeletarFornecedorAsync(int id);
 }

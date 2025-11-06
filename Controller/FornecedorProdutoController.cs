@@ -1,6 +1,7 @@
 using ApiHortifruti.Data.Repository;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controllers;
@@ -11,10 +12,12 @@ namespace ApiHortifruti.Controllers;
 public class FornecedorProdutoController : ControllerBase
 {
     private readonly IFornecedorProdutoService _fornecedorProdutoService;
+    private readonly IMapper _mapper;
 
-    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService)
+    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService, IMapper mapper)
     {
         _fornecedorProdutoService = fornecedorProdutoService;
+        _mapper = mapper;
     }
 
     // Operação de consulta de todos os registro da tabela
@@ -37,12 +40,25 @@ public class FornecedorProdutoController : ControllerBase
 
     // Operação de criação do registro na tabela
     [HttpPost]
-    public async Task<ActionResult<FornecedorProduto>> CriarFornecedorProduto(FornecedorProduto fornecedorProduto)
+    public async Task<ActionResult<FornecedorProduto>> CriarFornecedorProduto(PostFornecedorProdutoDTO fornecedorProdutoDTO)
     {
+        var fornecedorProduto = _mapper.Map<FornecedorProduto>(fornecedorProdutoDTO);
+
         var fornecedorProdutoCriada = await _fornecedorProdutoService.CriarFornecedorProdutoAsync(fornecedorProduto);
 
         return CreatedAtAction(nameof(ObterFornecedorProduto), new { fornecedorId = fornecedorProduto.FornecedorId, produtoId = fornecedorProduto.ProdutoId },
             fornecedorProdutoCriada);
+    }
+
+    // Operação de criação de vários registros na tabela
+    [HttpPost("batch")]
+    public async Task<IActionResult> CriarVariosFornecedorProduto(List<PostFornecedorProdutoDTO> fornecedorProdutoDTOs)
+    {
+        var fornecedorProdutos = _mapper.Map<List<FornecedorProduto>>(fornecedorProdutoDTOs);
+
+        await _fornecedorProdutoService.CriarVariosFornecedorProdutosAsync(fornecedorProdutos);
+
+        return NoContent();
     }
 
     // Operação de alteração de algum registro na tabela
@@ -61,5 +77,5 @@ public class FornecedorProdutoController : ControllerBase
     {
         await _fornecedorProdutoService.DeletarFornecedorProdutoAsync(fornecedorId, produtoId);
         return NoContent();
-    } 
+    }
 }

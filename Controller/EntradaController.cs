@@ -52,7 +52,6 @@ public class EntradaController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarEntrada(int id, Entrada entrada)
     {
-        if (id != entrada.Id) return BadRequest();
         await _entradaService.AtualizarEntradaAsync(id, entrada);
         return NoContent();
     }
