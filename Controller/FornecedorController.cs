@@ -49,7 +49,6 @@ public class FornecedorController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFornecedor(int id, Fornecedor fornecedor)
     {
-        if (id != fornecedor.Id) return BadRequest();
         await _fornecedorService.AtualizarFornecedorAsync(id, fornecedor);
         return NoContent();
     }

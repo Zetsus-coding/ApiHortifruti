@@ -21,14 +21,20 @@ public class FornecedorProdutoRepository : IFornecedorProdutoRepository
 
     public async Task<FornecedorProduto?> ObterPorIdAsync(int fornecedorId, int produtoId)
     {
-        return await _context.FornecedorProduto.FindAsync(fornecedorId, produtoId);
+        return await _context.FornecedorProduto.SingleOrDefaultAsync(fp =>
+            fp.FornecedorId == fornecedorId && fp.ProdutoId == produtoId);
     }
 
     public async Task<FornecedorProduto> AdicionarAsync(FornecedorProduto fornecedorProduto)
     {
         _context.FornecedorProduto.Add(fornecedorProduto);
-        await _context.SaveChangesAsync();
+        // await _context.SaveChangesAsync(); // Removido para ser controlado pelo UnitOfWork
         return fornecedorProduto;
+    }
+
+    public async Task AdicionarVariosAsync(List<FornecedorProduto> fornecedorProdutos)
+    {
+        _context.FornecedorProduto.AddRange(fornecedorProdutos);
     }
 
     public async Task AtualizarAsync(FornecedorProduto fornecedorProduto)

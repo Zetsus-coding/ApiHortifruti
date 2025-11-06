@@ -48,7 +48,6 @@ public class ProdutoController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarProduto(int id, Produto produto)
     {
-        if (id != produto.Id) return BadRequest();
         await _produtoService.AtualizarProdutoAsync(id, produto);
         return NoContent();
     }

@@ -48,15 +48,14 @@ public class FuncionarioController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFuncionario(int id, Funcionario funcionario)
     {
-        if (id != funcionario.Id) return BadRequest();
         await _funcionarioService.AtualizarFuncionarioAsync(id, funcionario);
         return NoContent();
     }
     
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarFuncionario(int id) 
-    { 
-        await _funcionarioService.DeletarFuncionarioAsync(id); 
-        return NoContent(); 
-    }
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarFuncionario(int id) 
+    // { 
+    //     await _funcionarioService.DeletarFuncionarioAsync(id); 
+    //     return NoContent(); 
+    // }
 }
