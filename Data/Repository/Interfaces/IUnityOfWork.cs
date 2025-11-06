@@ -16,7 +16,8 @@ public interface IUnityOfWork : IDisposable, IAsyncDisposable
     IUnidadeMedidaRepository UnidadeMedida { get; }
     IHistoricoProdutoRepository HistoricoProduto { get; }
     IFornecedorProdutoRepository FornecedorProduto { get; }
-
+    ICargoRepository Cargo { get; }
+    
     // Controle de persistência
     public Task<int> SaveChangesAsync();
 
