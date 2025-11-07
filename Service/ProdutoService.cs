@@ -16,11 +16,14 @@ public class ProdutoService : IProdutoService
 
     public async Task<IEnumerable<Produto>> ObterTodosProdutoAsync()
     {
-        return await _uow.Produto.ObterTodosAsync(); // Chamada a camada de repositório (através do Unit of Work) para obter todos
-
-        // É preciso exceção caso a lista esteja vazia?
-        // if (!produto.Any())
-        //     throw new DBConcurrencyException("Nenhum produto criado.");
+        try
+        {
+            return await _uow.Produto.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Produto?> ObterProdutoPorIdAsync(int id)

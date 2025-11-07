@@ -7,27 +7,34 @@ namespace ApiHortifruti.Service;
 
 public class ItemSaidaService : IItemSaidaService
 {
-    private readonly IItemSaidaRepository _itemSaidaRepository;
+    private readonly IUnityOfWork _uow;
 
-    public ItemSaidaService(IItemSaidaRepository itemSaidaRepository)
+    public ItemSaidaService( IUnityOfWork uow)
     {
-        _itemSaidaRepository = itemSaidaRepository; // Inj. dependência
+        _uow = uow;
     }
 
     public async Task<IEnumerable<ItemSaida>> ObterTodosItemSaidasAsync()
     {
-        return await _itemSaidaRepository.ObterTodosAsync();
+        try
+        {
+            return await _uow.ItensSaida.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<ItemSaida?> ObterItemSaidaPorIdAsync(int id)
     {
-        return await _itemSaidaRepository.ObterPorIdAsync(id);
+        return await _uow.ItensSaida.ObterPorIdAsync(id);
         
     }
 
     public async Task<ItemSaida> CriarItemSaidaAsync(ItemSaida itemSaida)
     {
-        return await _itemSaidaRepository.AdicionarAsync(itemSaida);
+        return await _uow.ItensSaida.AdicionarAsync(itemSaida);
     }
 
     public async Task AtualizarItemSaidaAsync(int id, ItemSaida itemSaida)
@@ -37,12 +44,12 @@ public class ItemSaidaService : IItemSaidaService
             // Lançar erro/exceção
             return;
         }
-        await _itemSaidaRepository.AtualizarAsync(itemSaida);
+        await _uow.ItensSaida.AtualizarAsync(itemSaida);
     }
 
     public async Task DeletarItemSaidaAsync(int id)
     {
-        await _itemSaidaRepository.DeletarAsync(id);
+        await _uow.ItensSaida.DeletarAsync(id);
     }
 }
 

@@ -6,25 +6,28 @@ namespace ApiHortifruti.Service;
 
 public class FornecedorService : IFornecedorService
 {
-    private readonly IFornecedorRepository _fornecedorRepository;
+    private readonly IUnityOfWork _uow;
 
-    public FornecedorService(IFornecedorRepository fornecedorRepository)
+    public FornecedorService( IUnityOfWork uow)
     {
-        _fornecedorRepository = fornecedorRepository;
+        _uow = uow;
     }
 
     public async Task<IEnumerable<Fornecedor>> ObterTodosFornecedoresAsync()
     {
-        return await _fornecedorRepository.ObterTodosAsync();
-
-        // Precisa lançar exceção se a lista estiver vazia?
-        // if (!fornecedor.Any())
-        //     throw new DBConcurrencyException("Nenhum fornecedor criado.");
+        try
+        {
+            return await _uow.Fornecedor.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Fornecedor?> ObterFornecedorPorIdAsync(int id)
     {
-        return await _fornecedorRepository.ObterPorIdAsync(id);
+        return await _uow.Fornecedor.ObterPorIdAsync(id);
 
         // Precisa lançar exceção se o id não for encontrado?
         // if (fornecedor == null)
@@ -34,7 +37,7 @@ public class FornecedorService : IFornecedorService
     public async Task<Fornecedor> CriarFornecedorAsync(Fornecedor fornecedor)
     {
         fornecedor.DataRegistro = DateOnly.FromDateTime(DateTime.Now);
-        return await _fornecedorRepository.AdicionarAsync(fornecedor);
+        return await _uow.Fornecedor.AdicionarAsync(fornecedor);
     }
 
     public async Task AtualizarFornecedorAsync(int id, Fornecedor fornecedor)
@@ -43,11 +46,11 @@ public class FornecedorService : IFornecedorService
         {
             throw new ArgumentException("O ID do fornecedor na URL não corresponde ao ID no corpo da requisição.");
         }
-        await _fornecedorRepository.AtualizarAsync(fornecedor);
+        await _uow.Fornecedor.AtualizarAsync(fornecedor);
     }
 
     // public async Task DeletarFornecedorAsync(int id)
     // {
-    //     await _fornecedorRepository.DeletarAsync(id);
+    //     await _uow.Fornecedor.DeletarAsync(id);
     // }
 }

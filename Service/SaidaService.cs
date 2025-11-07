@@ -9,25 +9,35 @@ public class SaidaService : ISaidaService
 {
     private readonly ISaidaRepository _saidaRepository;
 
-    public SaidaService(ISaidaRepository saidaRepository)
+    private readonly IUnityOfWork _uow;
+
+    public SaidaService(ISaidaRepository saidaRepository, IUnityOfWork uow)
     {
         _saidaRepository = saidaRepository; // Inj. dependência
+        _uow = uow;
     }
 
     public async Task<IEnumerable<Saida>> ObterTodosSaidasAsync()
     {
-        return await _saidaRepository.ObterTodosAsync();
+        try
+        {
+            return await _uow.Saida.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Saida?> ObterSaidaPorIdAsync(int id)
     {
-        return await _saidaRepository.ObterPorIdAsync(id);
+        return await _uow.Saida.ObterPorIdAsync(id);
         
     }
 
     public async Task<Saida> CriarSaidaAsync(Saida saida)
     {
-        return await _saidaRepository.AdicionarAsync(saida);
+        return await _uow.Saida.AdicionarAsync(saida);
     }
 
     public async Task AtualizarSaidaAsync(int id, Saida saida)
@@ -37,12 +47,12 @@ public class SaidaService : ISaidaService
             // Lançar erro/exceção
             return;
         }
-        await _saidaRepository.AtualizarAsync(saida);
+        await _uow.Saida.AtualizarAsync(saida);
     }
 
     public async Task DeletarSaidaAsync(int id)
     {
-        await _saidaRepository.DeletarAsync(id);
+        await _uow.Saida.DeletarAsync(id);
     }
 }
 
