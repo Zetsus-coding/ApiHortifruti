@@ -18,6 +18,8 @@ public partial class Fornecedor
 
     public DateOnly DataRegistro { get; set; }
 
+    public bool Ativo { get; set; }
+
     [JsonIgnore]
     public virtual ICollection<Entrada> Entrada { get; set; } = new List<Entrada>();
 

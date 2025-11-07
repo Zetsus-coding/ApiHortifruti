@@ -25,16 +25,7 @@ public partial class Funcionario
     public string AgenciaBancaria { get; set; } = null!;
 
     public bool Ativo { get; set; }
-    
-    [JsonIgnore]
-    public virtual Cargo? Cargo { get; set; }
 
     [JsonIgnore]
     public virtual ICollection<Saida> Saida { get; set; } = new List<Saida>();
-
-    [JsonIgnore]
-    public virtual ICollection<Token> Token { get; set; } = new List<Token>();
-
-    [JsonIgnore]
-    public virtual ICollection<Usuario> Usuario { get; set; } = new List<Usuario>();
 }

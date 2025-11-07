@@ -36,11 +36,6 @@ public class FuncionarioService : IFuncionarioService
         await _uow.BeginTransactionAsync();
         try
         {
-            var cargo = await _uow.Cargo.ObterPorIdAsync(funcionario.CargoId);
-
-            if (cargo is null)
-                throw new KeyNotFoundException("O cargo informado não existe.");
-
             await _uow.Funcionario.AdicionarAsync(funcionario);
             
             await _uow.SaveChangesAsync();
