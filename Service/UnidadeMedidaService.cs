@@ -16,11 +16,14 @@ public class UnidadeMedidaService : IUnidadeMedidaService
 
     public async Task<IEnumerable<UnidadeMedida>> ObterTodosUnidadeMedidaAsync()
     {
-        return await _uow.UnidadeMedida.ObterTodosAsync(); // Chamada a camada de repositório (através do Unit of Work) para obter todos
-
-        // É preciso exceção caso a lista esteja vazia?
-        // if (!getAllUnidadeMedida.Any())
-        //  throw new DBConcurrencyException("Nenhuma unidade de medida criada.");
+        try
+        {
+            return await _uow.UnidadeMedida.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<UnidadeMedida?> ObterUnidadeMedidaPorIdAsync(int id)

@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -26,7 +27,7 @@ public class MotivoMovimentacaoController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<MotivoMovimentacao>> ObterMotivoMovimentacao(int id)
+    public async Task<ActionResult<MotivoMovimentacao>> ObterMotivoMovimentacao([Range(1, int.MaxValue)] int id)
     {
         var getIdMotivoMovimentacao = await _motivoMovimentacaoService.ObterMotivoMovimentacaoPorIdAsync(id);
 
@@ -45,17 +46,17 @@ public class MotivoMovimentacaoController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarMotivoMovimentacao(int id, MotivoMovimentacao motivoMovimentacao)
+    public async Task<IActionResult> AtualizarMotivoMovimentacao([Range(1, int.MaxValue)] int id, MotivoMovimentacao motivoMovimentacao)
     {
         if (id != motivoMovimentacao.Id) return BadRequest();
         await _motivoMovimentacaoService.AtualizarMotivoMovimentacaoAsync(id, motivoMovimentacao);
         return NoContent();
     }
 
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletarMotivoMovimentacao(int id) 
-    { 
-        await _motivoMovimentacaoService.DeletarMotivoMovimentacaoAsync(id); 
-        return NoContent(); 
-    } 
+    // [HttpDelete("{id}")]
+    // public async Task<IActionResult> DeletarMotivoMovimentacao([Range(1, int.MaxValue)]int id) 
+    // { 
+    //     await _motivoMovimentacaoService.DeletarMotivoMovimentacaoAsync(id); 
+    //     return NoContent(); 
+    // } 
 }

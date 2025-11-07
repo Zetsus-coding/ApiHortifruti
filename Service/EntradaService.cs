@@ -19,7 +19,14 @@ public class EntradaService : IEntradaService
 
     public async Task<IEnumerable<Entrada>> ObterTodosEntradasAsync()
     {
-        return await _uow.Entrada.ObterTodosAsync();
+        try
+        {
+            return await _uow.Entrada.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Entrada?> ObterEntradaPorIdAsync(int id)

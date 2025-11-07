@@ -7,26 +7,33 @@ namespace ApiHortifruti.Service;
 
 public class HistoricoProdutoService : IHistoricoProdutoService
 {
-    private readonly IHistoricoProdutoRepository _historicoProdutoRepository;
+    private readonly IUnityOfWork _uow;
 
-    public HistoricoProdutoService(IHistoricoProdutoRepository historicoProdutoRepository)
+    public HistoricoProdutoService(IUnityOfWork uow)
     {
-        _historicoProdutoRepository = historicoProdutoRepository;
+        _uow = uow;
     }
 
     public async Task<IEnumerable<HistoricoProduto>> ObterTodosHistoricoProdutosAsync()
     {
-        return await _historicoProdutoRepository.ObterTodosAsync();
+        try
+        {
+            return await _uow.HistoricoProduto.ObterTodosAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<HistoricoProduto?> ObterHistoricoProdutoPorIdAsync(int id)
     {
-        return await _historicoProdutoRepository.ObterPorIdAsync(id);
+        return await _uow.HistoricoProduto.ObterPorIdAsync(id);
     }
 
     public async Task<HistoricoProduto> CriarHistoricoProdutoAsync(HistoricoProduto historicoProduto)
     {
-        return await _historicoProdutoRepository.AdicionarAsync(historicoProduto);
+        return await _uow.HistoricoProduto.AdicionarAsync(historicoProduto);
     }
 
     public async Task AtualizarHistoricoProdutoAsync(int id, HistoricoProduto historicoProduto)
@@ -36,12 +43,12 @@ public class HistoricoProdutoService : IHistoricoProdutoService
             // Lançar erro/exceção
             return;
         }
-        await _historicoProdutoRepository.AtualizarAsync(historicoProduto);
+        await _uow.HistoricoProduto.AtualizarAsync(historicoProduto);
     }
 
     public async Task DeletarHistoricoProdutoAsync(int id)
     {
-        await _historicoProdutoRepository.DeletarAsync(id);
+        await _uow.HistoricoProduto.DeletarAsync(id);
     }
 }
 

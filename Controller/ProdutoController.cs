@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
@@ -51,7 +52,7 @@ public class ProdutoController : ControllerBase
 
     // Atualização de um produto existente
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarProduto(int id, Produto produto)
+    public async Task<IActionResult> AtualizarProduto([Range(1, int.MaxValue)] int id, Produto produto)
     {
         await _produtoService.AtualizarProdutoAsync(id, produto); // Chamada a camada de serviço para atualizar
         return NoContent();
@@ -59,7 +60,7 @@ public class ProdutoController : ControllerBase
 
     // Exclusão de um produto existente
     // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarProduto(int id) 
+    // public async Task<IActionResult> DeletarProduto([Range(1, int.MaxValue)]int id) 
     // { 
     //     await _produtoService.DeletarProdutoAsync(id); // Chamada a camada de serviço para deletar
     //     return NoContent(); 

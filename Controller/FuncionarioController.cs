@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
@@ -27,7 +28,7 @@ public class FuncionarioController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<Funcionario>> ObteFuncionario(int id)
+    public async Task<ActionResult<Funcionario>> ObteFuncionario([Range(1, int.MaxValue)]int id)
     {
         var funcionario = await _funcionarioService.ObterFuncionarioPorIdAsync(id);
 
@@ -46,14 +47,14 @@ public class FuncionarioController : ControllerBase
     }
 
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarFuncionario(int id, Funcionario funcionario)
+    public async Task<IActionResult> AtualizarFuncionario([Range(1, int.MaxValue)] int id, Funcionario funcionario)
     {
         await _funcionarioService.AtualizarFuncionarioAsync(id, funcionario);
         return NoContent();
     }
     
     // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarFuncionario(int id) 
+    // public async Task<IActionResult> DeletarFuncionario([Range(1, int.MaxValue)]int id) 
     // { 
     //     await _funcionarioService.DeletarFuncionarioAsync(id); 
     //     return NoContent(); 

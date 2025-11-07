@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
@@ -32,7 +33,7 @@ public class FornecedorController : ControllerBase
 
     // Consulta de um fornecedor por ID
     [HttpGet("{id}")]
-    public async Task<ActionResult<Fornecedor>> ObterFornecedor(int id)
+    public async Task<ActionResult<Fornecedor>> ObterFornecedor([Range(1, int.MaxValue)]int id)
     {
         var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id); // Chamada a camada de serviço para obter por ID
 
@@ -52,7 +53,7 @@ public class FornecedorController : ControllerBase
 
     // Atualização de um fornecedor existente
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarFornecedor(int id, Fornecedor fornecedor)
+    public async Task<IActionResult> AtualizarFornecedor([Range(1, int.MaxValue)] int id, Fornecedor fornecedor)
     {
         await _fornecedorService.AtualizarFornecedorAsync(id, fornecedor); // Chamada a camada de serviço para atualizar
         return NoContent();
@@ -60,7 +61,7 @@ public class FornecedorController : ControllerBase
     
     // Exclusão de um fornecedor existente
     // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarFornecedor(int id) 
+    // public async Task<IActionResult> DeletarFornecedor([Range(1, int.MaxValue)] int id) 
     // { 
     //     await _fornecedorService.DeletarFornecedorAsync(id); // Chamada a camada de serviço para deletar
     //     return NoContent(); 

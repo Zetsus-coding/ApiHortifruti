@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -24,7 +25,7 @@ public class HistoricoProdutoController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProduto(int id) // Faz sentido? Ou deveria ser por produto?
+    public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProduto([Range(1, int.MaxValue)] int id) // Faz sentido? Ou deveria ser por produto?
     {
         var getIdHistoricoProduto = await _historicoProdutoService.ObterHistoricoProdutoPorIdAsync(id);
 
@@ -41,7 +42,7 @@ public class HistoricoProdutoController : ControllerBase
     // }
 
     // [HttpPut("{id}")]
-    // public async Task<IActionResult> AtualizarHistoricoProduto(int id, HistoricoProduto historicoProduto)
+    // public async Task<IActionResult> AtualizarHistoricoProduto([Range(1, int.MaxValue)] int id, HistoricoProduto historicoProduto)
     // {
     //     if (id != historicoProduto.Id) return BadRequest();
     //     await _historicoProdutoService.AtualizarHistoricoProdutoAsync(id, historicoProduto);
@@ -49,7 +50,7 @@ public class HistoricoProdutoController : ControllerBase
     // }
 
     // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarHistoricoProduto(int id) 
+    // public async Task<IActionResult> DeletarHistoricoProduto([Range(1, int.MaxValue)] int id) 
     // { 
     //     await _historicoProdutoService.DeletarHistoricoProdutoAsync(id); 
     //     return NoContent(); 
