@@ -33,7 +33,7 @@ public class CategoriaRepository : ICategoriaRepository
     {
         _context.Entry(categoria).State = EntityState.Modified;
     }
-
+    
     // public async Task DeletarAsync(int id)
     // {
     //     var categoria = await ObterPorIdAsync(id);

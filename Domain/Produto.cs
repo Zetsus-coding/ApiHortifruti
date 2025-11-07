@@ -22,9 +22,7 @@ public partial class Produto
 
     public decimal QuantidadeMinima { get; set; }
 
-    /// <summary>
-    /// Talvez alterar quant. máx para permitir NULL?
-    /// </summary>
+    public bool Ativo { get; set; }
 
     public virtual Categoria? Categoria { get; set; }
  
