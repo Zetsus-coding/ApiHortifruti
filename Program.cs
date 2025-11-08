@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text.Json.Serialization;
 using ApiHortifruti;
 using ApiHortifruti.Middlewares;
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,11 +38,11 @@ builder.Services.AddAuthentication(options =>
         {
             // Valida o emissor (Keycloak Authority)
             ValidateIssuer = true,
-            ValidIssuer = builder.Configuration["Keycloak:Authority"],
+            //ValidIssuer = builder.Configuration["Keycloak:Authority"],
 
             // Valida a audiência (Client ID)
             ValidateAudience = true,
-            ValidAudience = builder.Configuration["Keycloak:Audience"],
+            //ValidAudience = builder.Configuration["Keycloak:Audience"],
 
             // Keycloak publica as chaves públicas (JWKS) no endpoint de Authority,
             // o middleware usa isso para validar a assinatura do token.
@@ -54,10 +55,10 @@ builder.Services.AddAuthentication(options =>
 
             // Permite a leitura de claims de roles/papéis
             // Faz um mapeamento entre as claims que o ASP.NET espera e as que o Keycloak utiliza
-            RoleClaimType = "realm_access/aspnet-api/roles",
+            // RoleClaimType = "realm_access/Api-Hortifruti/roles",
             NameClaimType = "preferred_username",
         };
-        
+
         // Debug
         options.Events = new JwtBearerEvents
         {
@@ -78,10 +79,13 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-builder.Services.AddOpenApi(); // Adiciona o OpenApi
-builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
-builder.Services.AddAutoMapper(typeof(Program).Assembly);
-builder.Services.AddControllers()
+    builder.Services.AddScoped<IClaimsTransformation, KeycloakResourceRolesTransformation>();
+    builder.Services.AddOpenApi();
+    builder.Services.AddAuthorization();
+    builder.Services.AddOpenApi(); // Adiciona o OpenApi
+    builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
+    builder.Services.AddAutoMapper(typeof(Program).Assembly);
+    builder.Services.AddControllers()
     .AddJsonOptions(options =>
     {
         // Configura o serializador para usar o nome dos enums em vez do valor númerico

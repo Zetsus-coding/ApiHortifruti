@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -26,6 +27,7 @@ public class MotivoMovimentacaoController : ControllerBase
         return Ok(getAllMotivoMovimentacao);
     }
 
+    [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<MotivoMovimentacao>> ObterMotivoMovimentacao([Range(1, int.MaxValue)] int id)
     {
@@ -37,6 +39,7 @@ public class MotivoMovimentacaoController : ControllerBase
 
     // get produtos associados a motivoMovimentacao (aqui [/motivoMovimentacao/idmotivoMovimentacao/produtos] ou em produtos [/produtos?motivoMovimentacao=x])?
 
+    [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<MotivoMovimentacao>> CriarMotivoMovimentacao(MotivoMovimentacao motivoMovimentacao)
     {
@@ -45,6 +48,7 @@ public class MotivoMovimentacaoController : ControllerBase
             motivoMovimentacaoCriada);
     }
 
+    [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarMotivoMovimentacao([Range(1, int.MaxValue)] int id, MotivoMovimentacao motivoMovimentacao)
     {

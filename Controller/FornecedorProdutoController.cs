@@ -3,6 +3,7 @@ using ApiHortifruti.Data.Repository;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controllers;
@@ -30,8 +31,9 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de consulta por ID
+    [Authorize(Roles = "get(id)")]
     [HttpGet("{fornecedorId}/{produtoId}")]
-    public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProduto([Range(1, int.MaxValue)]int fornecedorId, [Range(1, int.MaxValue)]int produtoId)
+    public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
     {
         var getIdFornecedorProduto = await _fornecedorProdutoService.ObterFornecedorProdutoPorIdAsync(fornecedorId, produtoId);
 
@@ -40,6 +42,7 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de criação do registro na tabela
+    [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<FornecedorProduto>> CriarFornecedorProduto(PostFornecedorProdutoDTO fornecedorProdutoDTO)
     {
@@ -52,6 +55,7 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de criação de vários registros na tabela
+    [Authorize(Roles = "post(varios)")]
     [HttpPost("batch")]
     public async Task<IActionResult> CriarVariosFornecedorProduto(List<PostFornecedorProdutoDTO> fornecedorProdutoDTOs)
     {
@@ -63,7 +67,8 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de alteração de algum registro na tabela
-    [HttpPut("{fornecedorId}/{produtoId}")] 
+    [Authorize(Roles = "put")]
+    [HttpPut("{fornecedorId}/{produtoId}")]
     public async Task<IActionResult> AtualizarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId, FornecedorProduto fornecedorProduto)
     {
         if (fornecedorId != fornecedorProduto.FornecedorId || produtoId != fornecedorProduto.ProdutoId) return BadRequest();
@@ -73,6 +78,7 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de exclusão de algum registro na tabela
+    [Authorize(Roles = "delete")]
     [HttpDelete("{fornecedorId}/{produtoId}")]
     public async Task<IActionResult> DeletarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
     {

@@ -64,6 +64,12 @@ public class GlobalExceptionHandlingMiddleware
             status = HttpStatusCode.BadRequest;
             stackTrace = exception.StackTrace;
         }
+        else if (exceptionType == typeof(ArgumentNullException))
+        {
+            mensagem = exception.Message;
+            status = HttpStatusCode.BadRequest;
+            stackTrace = exception.StackTrace;
+        }
 
         else
         {
