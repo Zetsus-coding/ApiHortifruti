@@ -4,6 +4,7 @@ using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -32,6 +33,7 @@ public class ProdutoController : ControllerBase
     }
 
     // Consulta de um produto por ID
+    [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Produto>> ObterProduto(int id)
     {
@@ -40,6 +42,7 @@ public class ProdutoController : ControllerBase
     }
 
     // Criação de um novo produto
+    [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Produto>> CriarProduto(PostProdutoDTO postProdutoDTO)
     {
@@ -51,6 +54,7 @@ public class ProdutoController : ControllerBase
     }
 
     // Atualização de um produto existente
+    [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarProduto([Range(1, int.MaxValue)] int id, Produto produto)
     {
@@ -59,6 +63,7 @@ public class ProdutoController : ControllerBase
     }
 
     // Exclusão de um produto existente
+    //[Authorize(Roles = "delete")]
     // [HttpDelete("{id}")]
     // public async Task<IActionResult> DeletarProduto([Range(1, int.MaxValue)]int id) 
     // { 

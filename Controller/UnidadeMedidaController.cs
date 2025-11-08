@@ -4,6 +4,7 @@ using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controllers;
@@ -32,6 +33,7 @@ public class UnidadeMedidaController : ControllerBase
     }
 
     // Consulta uma unidade de medida pelo ID
+    [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedida([Range(1, int.MaxValue)] int id)
     {
@@ -40,6 +42,7 @@ public class UnidadeMedidaController : ControllerBase
     }
 
     // Cria uma nova unidade de medida
+    [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<UnidadeMedida>> CriarUnidadeMedida(PostUnidadeMedidaDTO postUnidadeMedidaDTO)
     {
@@ -51,6 +54,7 @@ public class UnidadeMedidaController : ControllerBase
     }
 
     // Atualiza uma unidade de medida existente
+    [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarUnidadeMedida([Range(1, int.MaxValue)] int id, UnidadeMedida unidadeMedida)
     {

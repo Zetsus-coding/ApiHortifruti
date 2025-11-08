@@ -4,6 +4,7 @@ using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -32,8 +33,9 @@ public class FornecedorController : ControllerBase
     }
 
     // Consulta de um fornecedor por ID
+    [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Fornecedor>> ObterFornecedor([Range(1, int.MaxValue)]int id)
+    public async Task<ActionResult<Fornecedor>> ObterFornecedor([Range(1, int.MaxValue)] int id)
     {
         var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id); // Chamada a camada de serviço para obter por ID
 
@@ -41,6 +43,7 @@ public class FornecedorController : ControllerBase
     }
 
     // Criação de um novo fornecedor
+    [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Fornecedor>> CriarFornecedor(PostFornecedorDTO postFornecedorDTO)
     {
@@ -52,6 +55,7 @@ public class FornecedorController : ControllerBase
     }
 
     // Atualização de um fornecedor existente
+    [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFornecedor([Range(1, int.MaxValue)] int id, Fornecedor fornecedor)
     {

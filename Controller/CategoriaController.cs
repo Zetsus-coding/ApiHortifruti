@@ -4,6 +4,7 @@ using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -33,8 +34,9 @@ public class CategoriaController : ControllerBase
     }
 
     // Consulta de categoria por id
+    [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Categoria>> ObterCategoria([Range(1, int.MaxValue)]int id)
+    public async Task<ActionResult<Categoria>> ObterCategoria([Range(1, int.MaxValue)] int id)
     {
         var categoria = await _categoriaService.ObterCategoriaPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(categoria);
@@ -43,6 +45,7 @@ public class CategoriaController : ControllerBase
     // get produtos associados a categoria (aqui [/categoria/idcategoria/produtos] ou em produtos [/produtos?categoria=x])?
 
     // Criação de categoria
+    [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Categoria>> CriarCategoria(PostCategoriaDTO postCategoriaDTO)
     {
@@ -54,6 +57,7 @@ public class CategoriaController : ControllerBase
     }
 
     // Atualização de uma categoria existente
+    [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarCategoria([Range(1, int.MaxValue)] int id, Categoria categoria)
     {

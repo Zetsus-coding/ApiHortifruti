@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -29,6 +30,7 @@ public class SaidaController : ControllerBase
         return Ok(saida);
     }
 
+    [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Saida>> ObterSaida([Range(1, int.MaxValue)] int id) // get por id
     {
@@ -39,7 +41,7 @@ public class SaidaController : ControllerBase
     }
 
     // get produtos associados a saida (aqui [/saida/idsaida/produtos] ou em produtos [/produtos?saida=x])?
-
+    [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Saida>> CriarSaida(PostSaidaDTO postSaidaDTO)
     {
@@ -49,7 +51,7 @@ public class SaidaController : ControllerBase
         return CreatedAtAction(nameof(ObterSaida), new { id = saidaCriada.Id },
             saidaCriada);
     }
-
+    [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarSaida([Range(1, int.MaxValue)] int id, Saida saida)
     {
