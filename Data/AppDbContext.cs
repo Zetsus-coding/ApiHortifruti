@@ -10,7 +10,6 @@ public partial class AppDbContext : DbContext
     {
     }
 
-    
    public virtual DbSet<Categoria> Categoria { get; set; }
 
     public virtual DbSet<Entrada> Entrada { get; set; }

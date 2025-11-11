@@ -9,9 +9,9 @@ public partial class PostSaidaDTO
     public int MotivoMovimentacaoId { get; set; }
 
 
-    [Required]
-    [Range(1, int.MaxValue)]
-    public int FuncionarioId { get; set; }
+    // [Required]
+    // [Range(1, int.MaxValue)]
+    // public int FuncionarioId { get; set; }
 
 
     public string? CadastroCliente { get; set; } // OPCIONAL: CPF ou CNPJ, caso informado
