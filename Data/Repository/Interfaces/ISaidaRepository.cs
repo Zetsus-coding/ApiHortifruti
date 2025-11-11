@@ -9,4 +9,6 @@ public interface ISaidaRepository
     Task<Saida> AdicionarAsync(Saida saida);
     Task AtualizarAsync(Saida saida);
     Task DeletarAsync(int id);
+    Task<decimal> ObterTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim);
+
 }
