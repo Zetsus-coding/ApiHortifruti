@@ -21,11 +21,11 @@ public class HistoricoProdutoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterTodosHistoricoProduto()
     {
-        var getAllHistoricoProduto = await _historicoProdutoService.ObterTodosHistoricoProdutosAsync();
-        return Ok(getAllHistoricoProduto);
+        var historicoProduto = await _historicoProdutoService.ObterTodosHistoricoProdutosAsync();
+        return Ok(historicoProduto);
     }
 
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProduto([Range(1, int.MaxValue)] int id) // Faz sentido? Ou deveria ser por produto?
     {

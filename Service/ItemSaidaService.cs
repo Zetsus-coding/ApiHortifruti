@@ -4,52 +4,38 @@ using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
 
-
 public class ItemSaidaService : IItemSaidaService
 {
     private readonly IUnityOfWork _uow;
 
-    public ItemSaidaService( IUnityOfWork uow)
+    public ItemSaidaService(IUnityOfWork uow)
     {
-        _uow = uow;
+        _uow = uow; // Inj. dependência
     }
 
-    public async Task<IEnumerable<ItemSaida>> ObterTodosItemSaidasAsync()
+    public async Task AdicionarItensSaidaAsync(int saidaId, IEnumerable<ItemSaida> itens)
     {
-        try
+        if (itens == null || !itens.Any())
+            throw new InvalidOperationException("É necessário adicionar no mínimo um item à saída.");
+
+        if (itens.Any(item => item.Quantidade <= 0))
+            throw new InvalidOperationException("A quantidade de todos os itens deve ser maior que zero");
+
+        await _uow.ItensSaida.AdicionarItensSaidaAsync(itens);
+
+        foreach (var item in itens)
         {
-            return await _uow.ItensSaida.ObterTodosAsync();
+            var produto = await _uow.Produto.ObterPorIdAsync(item.ProdutoId);
+
+            if (produto == null)
+                throw new InvalidOperationException($"O produto com ID {item.ProdutoId} não existe.");
+
+            if (produto.QuantidadeAtual < item.Quantidade)
+                throw new InvalidOperationException($"Estoque insuficiente para o produto ID {item.ProdutoId}. Disponível: {produto.QuantidadeAtual}, solicitado: {item.Quantidade}.");
+
+            produto.QuantidadeAtual -= item.Quantidade;
+            await _uow.Produto.AtualizarAsync(produto);
         }
-        catch (Exception)
-        {
-            throw;
-        }
-    }
-
-    public async Task<ItemSaida?> ObterItemSaidaPorIdAsync(int id)
-    {
-        return await _uow.ItensSaida.ObterPorIdAsync(id);
-        
-    }
-
-    public async Task<ItemSaida> CriarItemSaidaAsync(ItemSaida itemSaida)
-    {
-        return await _uow.ItensSaida.AdicionarAsync(itemSaida);
-    }
-
-    public async Task AtualizarItemSaidaAsync(int id, ItemSaida itemSaida)
-    {
-        if (id != itemSaida.Id)
-        {
-            // Lançar erro/exceção
-            return;
-        }
-        await _uow.ItensSaida.AtualizarAsync(itemSaida);
-    }
-
-    public async Task DeletarItemSaidaAsync(int id)
-    {
-        await _uow.ItensSaida.DeletarAsync(id);
     }
 }
 

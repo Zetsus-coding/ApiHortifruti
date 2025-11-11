@@ -1,5 +1,7 @@
 # TODO
     
+    - Habilitar o CORS para permitir chamadas do frontend Angular.
+    - Query necessaria | Qual controller vai pertencer? | Tem parametros? | ???
 
 # MAYBE
 

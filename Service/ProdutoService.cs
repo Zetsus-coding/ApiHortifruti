@@ -28,19 +28,27 @@ public class ProdutoService : IProdutoService
 
     public async Task<Produto?> ObterProdutoPorIdAsync(int id)
     {
-        return await _uow.Produto.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID
-
-        // É preciso exceção caso o id não exista?
-        // if (produto == null)
-        //     throw new NotFoundExeption("Produto não existe.");        
+        return await _uow.Produto.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID    
     }
 
-    public async Task<Produto?> ObterPorCodigoAsync(string codigo)
+    public async Task<Produto?> ObterProdutoPorCodigoAsync(string codigo)
     {
-        return await _uow.Produto.ObterPorCodigoAsync(codigo); // Chamada a camada de repositório (através do Unit of Work) para obter por código
+        return await _uow.Produto.ObterProdutoPorCodigoAsync(codigo); // Chamada a camada de repositório (através do Unit of Work) para obter por código
 
         // É preciso exceção caso o código não exista?
         // if (codigo == null)
+    }
+
+    public async Task<IEnumerable<Produto>> ObterProdutosEstoqueCriticoAsync()
+    {
+        try
+        {
+            return await _uow.Produto.ObterEstoqueCriticoAsync();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Produto> CriarProdutoAsync(Produto produto)
@@ -51,7 +59,7 @@ public class ProdutoService : IProdutoService
         var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(produto.UnidadeMedidaId); // Consulta de unidade de medida por id
         if (unidadeMedida is null) throw new KeyNotFoundException("A unidade de medida informada não existe."); // Valida se a unidade de medida existe
         
-        var codigoExistente = await _uow.Produto.ObterPorCodigoAsync(produto.Codigo); // Consulta de produto por código
+        var codigoExistente = await _uow.Produto.ObterProdutoPorCodigoAsync(produto.Codigo); // Consulta de produto por código
         if (codigoExistente is not null) throw new ArgumentException("Esse código de produto já existe."); // Valida se o código do produto já existe
 
         await _uow.BeginTransactionAsync();

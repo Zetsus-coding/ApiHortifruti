@@ -32,8 +32,17 @@ public class ProdutoController : ControllerBase
         return Ok(produto);
     }
 
+    // Consulta de produtos com estoque atual menor ou igual à quantidade mínima
+    [HttpGet("estoque-critico")]
+    public async Task<ActionResult<IEnumerable<GetProdutoEstoqueCriticoDTO>>> ObterProdutosEstoqueCritico()
+    {
+        var produtos = await _produtoService.ObterProdutosEstoqueCriticoAsync();
+        var produtosDTO = _mapper.Map<IEnumerable<GetProdutoEstoqueCriticoDTO>>(produtos);
+        return Ok(produtosDTO);
+    }
+
     // Consulta de um produto por ID
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Produto>> ObterProduto(int id)
     {
@@ -41,8 +50,16 @@ public class ProdutoController : ControllerBase
         return Ok(produto);
     }
 
+    // // Consulta de um produto por código (ex.: código de barras) // TODO: Necessário avaliar mais a fundo
+    // [HttpGet("codigo/{codigo}")]
+    // public async Task<ActionResult<Produto>> ObterProdutoPorCodigo(string codigo)
+    // {
+    //     var produto = await _produtoService.ObterProdutoPorCodigoAsync(codigo); // Chamada a camada de serviço para obter por código de barras
+    //     return Ok(produto);
+    // }
+
     // Criação de um novo produto
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Produto>> CriarProduto(PostProdutoDTO postProdutoDTO)
     {
@@ -54,16 +71,17 @@ public class ProdutoController : ControllerBase
     }
 
     // Atualização de um produto existente
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarProduto([Range(1, int.MaxValue)] int id, Produto produto)
+    public async Task<IActionResult> AtualizarProduto([Range(1, int.MaxValue)] int id, PutProdutoDTO putProdutoDTO)
     {
+        var produto = _mapper.Map<Produto>(putProdutoDTO);
         await _produtoService.AtualizarProdutoAsync(id, produto); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
 
     // Exclusão de um produto existente
-    //[Authorize(Roles = "delete")]
+    //// [Authorize(Roles = "delete")]
     // [HttpDelete("{id}")]
     // public async Task<IActionResult> DeletarProduto([Range(1, int.MaxValue)]int id) 
     // { 

@@ -8,7 +8,7 @@ public partial class ItemSaida
 
     public int SaidaId { get; set; }
 
-    public int Quantidade { get; set; }
+    public decimal Quantidade { get; set; }
 
     public decimal Valor { get; set; }
 

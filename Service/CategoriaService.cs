@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
@@ -28,13 +29,9 @@ public class CategoriaService : ICategoriaService
         }
     }
 
-    public async Task<Categoria?> ObterCategoriaPorIdAsync(int id)
+    public async Task<Categoria?> ObterCategoriaPorIdAsync([Range(1, int.MaxValue)] int id)
     {
         return await _uow.Categoria.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID
-
-        // É preciso exceção caso o id não exista?
-        // if (categoria == null) 
-        //     throw new NotFoundExeption("Categoria não existe.");
     }
 
     public async Task<Categoria> CriarCategoriaAsync(Categoria categoria)
@@ -45,7 +42,7 @@ public class CategoriaService : ICategoriaService
         return categoria;
     }
 
-    public async Task AtualizarCategoriaAsync(int id, Categoria categoria)
+    public async Task AtualizarCategoriaAsync([Range(1, int.MaxValue)] int id, Categoria categoria) // TODO: PutCategoriaDTO
     {
         if (id != categoria.Id)
         {

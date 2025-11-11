@@ -22,10 +22,17 @@ public class ProdutoRepository : IProdutoRepository
     {
         return await _context.Produto.FindAsync(id);
     }
-
-    public async Task<Produto?> ObterPorCodigoAsync(string codigo)
+    
+    public async Task<Produto?> ObterProdutoPorCodigoAsync(string codigo)
     {
         return await _context.Produto.FirstOrDefaultAsync(p => p.Codigo == codigo);
+    }
+
+    public async Task<IEnumerable<Produto>> ObterEstoqueCriticoAsync()
+    {
+        return await _context.Produto
+            .Where(p => p.QuantidadeAtual <= p.QuantidadeMinima)
+            .ToListAsync();
     }
 
     public async Task<Produto> AdicionarAsync(Produto produto)

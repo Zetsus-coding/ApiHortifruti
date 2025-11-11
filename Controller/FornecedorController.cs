@@ -33,7 +33,7 @@ public class FornecedorController : ControllerBase
     }
 
     // Consulta de um fornecedor por ID
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Fornecedor>> ObterFornecedor([Range(1, int.MaxValue)] int id)
     {
@@ -43,7 +43,7 @@ public class FornecedorController : ControllerBase
     }
 
     // Criação de um novo fornecedor
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Fornecedor>> CriarFornecedor(PostFornecedorDTO postFornecedorDTO)
     {
@@ -55,7 +55,7 @@ public class FornecedorController : ControllerBase
     }
 
     // Atualização de um fornecedor existente
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFornecedor([Range(1, int.MaxValue)] int id, Fornecedor fornecedor)
     {

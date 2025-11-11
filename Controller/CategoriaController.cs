@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using ApiHortifruti.Domain;
-using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -34,7 +32,7 @@ public class CategoriaController : ControllerBase
     }
 
     // Consulta de categoria por id
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Categoria>> ObterCategoria([Range(1, int.MaxValue)] int id)
     {
@@ -45,7 +43,7 @@ public class CategoriaController : ControllerBase
     // get produtos associados a categoria (aqui [/categoria/idcategoria/produtos] ou em produtos [/produtos?categoria=x])?
 
     // Criação de categoria
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Categoria>> CriarCategoria(PostCategoriaDTO postCategoriaDTO)
     {
@@ -57,7 +55,7 @@ public class CategoriaController : ControllerBase
     }
 
     // Atualização de uma categoria existente
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarCategoria([Range(1, int.MaxValue)] int id, Categoria categoria)
     {
@@ -67,7 +65,7 @@ public class CategoriaController : ControllerBase
 
     // Exclusão de uma categoria existente
     // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarCategoria(int id)
+    // public async Task<IActionResult> DeletarCategoria([Range(1, int.MaxValue)] int id)
     // { 
     //     await _categoriaService.DeletarCategoriaAsync(id); // Chamada a camada de serviço para deletar
     //     return NoContent(); 

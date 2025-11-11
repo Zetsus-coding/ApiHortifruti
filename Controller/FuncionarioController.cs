@@ -28,7 +28,7 @@ public class FuncionarioController : ControllerBase
         return Ok(funcionario);
     }
 
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<Funcionario>> ObteFuncionario([Range(1, int.MaxValue)]int id)
     {
@@ -37,7 +37,7 @@ public class FuncionarioController : ControllerBase
         if (funcionario == null) return NotFound();
         return Ok(funcionario);
     }
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Funcionario>> CriarFuncionario(PostFuncionarioDTO postFuncionarioDTO)
     {
@@ -47,7 +47,7 @@ public class FuncionarioController : ControllerBase
         return CreatedAtAction(nameof(ObteFuncionario), new { funcionarioCriado.Id },
             funcionarioCriado);
     }
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFuncionario([Range(1, int.MaxValue)] int id, Funcionario funcionario)
     {

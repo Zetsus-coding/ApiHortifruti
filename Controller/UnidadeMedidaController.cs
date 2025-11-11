@@ -28,12 +28,12 @@ public class UnidadeMedidaController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UnidadeMedida>>> ObterTodosUnidadeMedida()
     {
-        var getAllUnidadeMedida = await _unidadeMedidaService.ObterTodosUnidadeMedidaAsync(); // Chamada a camada de serviço para obter todos
-        return Ok(getAllUnidadeMedida);
+        var unidadeMedida = await _unidadeMedidaService.ObterTodosUnidadeMedidaAsync(); // Chamada a camada de serviço para obter todos
+        return Ok(unidadeMedida);
     }
 
     // Consulta uma unidade de medida pelo ID
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedida([Range(1, int.MaxValue)] int id)
     {
@@ -42,7 +42,7 @@ public class UnidadeMedidaController : ControllerBase
     }
 
     // Cria uma nova unidade de medida
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<UnidadeMedida>> CriarUnidadeMedida(PostUnidadeMedidaDTO postUnidadeMedidaDTO)
     {
@@ -54,7 +54,7 @@ public class UnidadeMedidaController : ControllerBase
     }
 
     // Atualiza uma unidade de medida existente
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarUnidadeMedida([Range(1, int.MaxValue)] int id, UnidadeMedida unidadeMedida)
     {

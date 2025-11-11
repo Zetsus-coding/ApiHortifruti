@@ -23,11 +23,11 @@ public class MotivoMovimentacaoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MotivoMovimentacao>>> ObterTodosMotivoMovimentacao()
     {
-        var getAllMotivoMovimentacao = await _motivoMovimentacaoService.ObterTodosMotivoMovimentacaoAsync();
-        return Ok(getAllMotivoMovimentacao);
+        var motivoMovimentacao = await _motivoMovimentacaoService.ObterTodosMotivoMovimentacaoAsync();
+        return Ok(motivoMovimentacao);
     }
 
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
     public async Task<ActionResult<MotivoMovimentacao>> ObterMotivoMovimentacao([Range(1, int.MaxValue)] int id)
     {
@@ -39,7 +39,7 @@ public class MotivoMovimentacaoController : ControllerBase
 
     // get produtos associados a motivoMovimentacao (aqui [/motivoMovimentacao/idmotivoMovimentacao/produtos] ou em produtos [/produtos?motivoMovimentacao=x])?
 
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<MotivoMovimentacao>> CriarMotivoMovimentacao(MotivoMovimentacao motivoMovimentacao)
     {
@@ -48,7 +48,7 @@ public class MotivoMovimentacaoController : ControllerBase
             motivoMovimentacaoCriada);
     }
 
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarMotivoMovimentacao([Range(1, int.MaxValue)] int id, MotivoMovimentacao motivoMovimentacao)
     {

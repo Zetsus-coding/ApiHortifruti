@@ -9,12 +9,28 @@ using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// CORS - Configuração para permitir requisições de diferentes origens (domínios)
+var PermitirOrigensEspecificas = "_PermitirOrigensEspecificas";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: PermitirOrigensEspecificas,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:4200") // Substitua pelo(s) domínio(s) permitido(s)
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                                // .AllowCredentials(); // Caso seja necessário enviar cookies ou credenciais de autenticação (keycloak?)
+                      });
+});
+
 // Configurações da conexão no appsettings
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var serverVersion = new MySqlServerVersion(new Version(8, 0, 44));
 
 // Conexão com o banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
+    options.UseMySql(connectionString, serverVersion));
 
 // Configurações do keycloak no appsettings
 var keycloakConfig = builder.Configuration.GetSection("Keycloak");
@@ -79,28 +95,31 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-    builder.Services.AddScoped<IClaimsTransformation, KeycloakResourceRolesTransformation>();
-    builder.Services.AddOpenApi();
-    builder.Services.AddAuthorization();
-    builder.Services.AddOpenApi(); // Adiciona o OpenApi
-    builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
-    builder.Services.AddAutoMapper(typeof(Program).Assembly);
-    builder.Services.AddControllers()
-    .AddJsonOptions(options =>
-    {
-        // Configura o serializador para usar o nome dos enums em vez do valor númerico
-        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+builder.Services.AddScoped<IClaimsTransformation, KeycloakResourceRolesTransformation>();
+builder.Services.AddOpenApi();
+builder.Services.AddAuthorization();
+builder.Services.AddOpenApi(); // Adiciona o OpenApi
+builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
+builder.Services.AddAutoMapper(typeof(Program).Assembly);
+builder.Services.AddControllers()
+.AddJsonOptions(options =>
+{
+    // Configura o serializador para usar o nome dos enums em vez do valor númerico
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 
-        // Evita(?) o loop infinito na serialização de objetos (referências circulares)
-        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
-    });
+    // Evita(?) o loop infinito na serialização de objetos (referências circulares)
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+});
 
 builder.Services.AddApplicationServices(); // Faz o AddScoped automático do services e repositories (e sua respectivas interfaces) -> baseado nos nomes dos arquivos/classes
 
 var app = builder.Build();
 
 app.UseHttpsRedirection();
-app.UseMiddleware(typeof(GlobalExceptionHandlingMiddleware));
+app.UseRouting();
+
+app.UseMiddleware(typeof(GlobalExceptionHandlingMiddleware)); // Middleware de tratamento global de exceções
+app.UseCors(PermitirOrigensEspecificas); // Habilita o CORS com política definida anteriormente
 
 app.UseAuthentication(); // Identificação (leitura do token)
 app.UseAuthorization(); // Autorização (utilização do [Authorize])

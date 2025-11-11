@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
@@ -26,13 +27,9 @@ public class UnidadeMedidaService : IUnidadeMedidaService
         }
     }
 
-    public async Task<UnidadeMedida?> ObterUnidadeMedidaPorIdAsync(int id)
+    public async Task<UnidadeMedida?> ObterUnidadeMedidaPorIdAsync([Range(1, int.MaxValue)] int id)
     {
         return await _uow.UnidadeMedida.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID
-
-        // É preciso exceção caso o id não exista?
-        // if (getIdUnidadeMedida == null)
-        // throw new NotFoundExeption("Unidade de medida não existe.");
     }
 
     public async Task<UnidadeMedida> CriarUnidadeMedidaAsync(UnidadeMedida unidadeMedida)
@@ -43,7 +40,7 @@ public class UnidadeMedidaService : IUnidadeMedidaService
         return unidadeMedida;
     }
 
-    public async Task AtualizarUnidadeMedidaAsync(int id, UnidadeMedida unidadeMedida)
+    public async Task AtualizarUnidadeMedidaAsync([Range(1, int.MaxValue)] int id, UnidadeMedida unidadeMedida)
     {
         if (id != unidadeMedida.Id)
         {
