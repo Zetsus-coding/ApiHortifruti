@@ -29,7 +29,7 @@ public class KeycloakResourceRolesTransformation : IClaimsTransformation
         // 1. Deserializa o valor do claim 'resource_access' (que é um JSON)
         using var document = JsonDocument.Parse(resourceAccessClaim.Value);
 
-        // 2. Tenta obter o objeto do seu cliente ('Hortifruti-Api')
+        // 2. Tenta obter o objeto do seu cliente
         if (document.RootElement.TryGetProperty(_clientId, out var clientElement))
         {
             // 3. Tenta obter o array de 'roles' dentro do seu cliente
@@ -37,7 +37,7 @@ public class KeycloakResourceRolesTransformation : IClaimsTransformation
             {
                 var identity = (ClaimsIdentity)principal.Identity;
 
-                // 4. Adiciona cada role como um ClaimTypes.Role, que o [Authorize(Roles="post")] espera
+                // 4. Adiciona cada role como um ClaimTypes.Role, que o // [Authorize(Roles="post")] espera
                 foreach (var role in rolesElement.EnumerateArray())
                 {
                     identity.AddClaim(new Claim(ClaimTypes.Role, role.GetString()!));

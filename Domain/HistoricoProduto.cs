@@ -17,7 +17,7 @@ public partial class HistoricoProduto
 
     public DateOnly DataAlteracao { get; set; }
 
-    public int FuncionarioId { get; set; }
+    // public int FuncionarioId { get; set; }
 
     public virtual Produto Produto { get; set; } = null!;
 }

@@ -26,12 +26,12 @@ public class FornecedorProdutoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterTodosFornecedorProduto()
     {
-        var getAllFornecedorProduto = await _fornecedorProdutoService.ObterTodosFornecedorProdutosAsync();
-        return Ok(getAllFornecedorProduto);
+        var fornecedorProduto = await _fornecedorProdutoService.ObterTodosFornecedorProdutosAsync();
+        return Ok(fornecedorProduto);
     }
 
     // Operação de consulta por ID
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     [HttpGet("{fornecedorId}/{produtoId}")]
     public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
     {
@@ -42,7 +42,7 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de criação do registro na tabela
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<FornecedorProduto>> CriarFornecedorProduto(PostFornecedorProdutoDTO fornecedorProdutoDTO)
     {
@@ -55,7 +55,7 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de criação de vários registros na tabela
-    [Authorize(Roles = "post(varios)")]
+    // [Authorize(Roles = "post(varios)")]
     [HttpPost("batch")]
     public async Task<IActionResult> CriarVariosFornecedorProduto(List<PostFornecedorProdutoDTO> fornecedorProdutoDTOs)
     {
@@ -67,7 +67,7 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de alteração de algum registro na tabela
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{fornecedorId}/{produtoId}")]
     public async Task<IActionResult> AtualizarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId, FornecedorProduto fornecedorProduto)
     {
@@ -78,7 +78,7 @@ public class FornecedorProdutoController : ControllerBase
     }
 
     // Operação de exclusão de algum registro na tabela
-    [Authorize(Roles = "delete")]
+    // [Authorize(Roles = "delete")]
     [HttpDelete("{fornecedorId}/{produtoId}")]
     public async Task<IActionResult> DeletarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
     {

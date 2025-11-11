@@ -26,6 +26,6 @@ public partial class Funcionario
 
     public bool Ativo { get; set; }
 
-    [JsonIgnore]
-    public virtual ICollection<Saida> Saida { get; set; } = new List<Saida>();
+    // [JsonIgnore]
+    // public virtual ICollection<Saida> Saida { get; set; } = new List<Saida>();
 }

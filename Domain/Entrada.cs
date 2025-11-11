@@ -14,6 +14,8 @@ public partial class Entrada
 
     public DateOnly DataCompra { get; set; } // DateOnly(Ano, mês, dia)
 
+    //public TimeOnly HoraCompra { get; set; } // TimeOnly(Hora, minuto, segundo)
+
     public string NumeroNota { get; set; } = null!; // Não pode ser repetida por fornecedor
 
     // public string NotaFiscal { get; set; } = null!; // Removido

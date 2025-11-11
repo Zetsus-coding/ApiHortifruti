@@ -26,8 +26,8 @@ public class UnidadeMedidaRepository : IUnidadeMedidaRepository
 
     public async Task<UnidadeMedida> AdicionarAsync(UnidadeMedida unidadeMedida)
     {
-        _context.UnidadeMedida.Add(unidadeMedida);
-        return unidadeMedida; // redundate?
+        await _context.UnidadeMedida.AddAsync(unidadeMedida);
+        return unidadeMedida;
     }
 
     public async Task AtualizarAsync(UnidadeMedida unidadeMedida)

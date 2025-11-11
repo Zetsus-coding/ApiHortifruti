@@ -31,7 +31,7 @@ public class EntradaController : ControllerBase
     }
 
     [HttpGet("{id}")]
-    [Authorize(Roles = "get(id)")]
+    // [Authorize(Roles = "get(id)")]
     public async Task<ActionResult<Entrada>> ObterEntrada([Range(1, int.MaxValue)] int id)
     {
         var entrada = await _entradaService.ObterEntradaPorIdAsync(id);
@@ -41,7 +41,7 @@ public class EntradaController : ControllerBase
     }
 
     // get produtos associados a entrada (aqui [/entrada/identrada/produtos] ou em produtos [/produtos?entrada=x])?
-    [Authorize(Roles = "post")]
+    // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Entrada>> CriarEntrada(PostEntradaDTO postEntradaDTO)
     {
@@ -51,7 +51,7 @@ public class EntradaController : ControllerBase
         return CreatedAtAction(nameof(ObterEntrada), new { id = entradaCriada.Id },
             entradaCriada);
     }
-    [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarEntrada([Range(1, int.MaxValue)] int id, Entrada entrada)
     {

@@ -8,7 +8,7 @@ public partial class Saida
 
     public int MotivoMovimentacaoId { get; set; }
 
-    public int FuncionarioId { get; set; }
+    //public int FuncionarioId { get; set; }
 
     public string? CadastroCliente { get; set; }
 
@@ -24,7 +24,7 @@ public partial class Saida
 
     public TimeOnly HoraSaida { get; set; }
 
-    public virtual Funcionario Funcionario { get; set; } = null!;
+    // public virtual Funcionario Funcionario { get; set; } = null!;
 
     public virtual MotivoMovimentacao MotivoMovimentacao { get; set; } = null!;
 
