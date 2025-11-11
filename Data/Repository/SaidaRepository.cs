@@ -23,6 +23,13 @@ public class SaidaRepository : ISaidaRepository
         return await _context.Saida.FindAsync(id);
     }
 
+    public async Task<decimal> ObterTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim)
+    {
+        return await _context.Saida
+            .Where(s => s.DataSaida >= dataInicio && s.DataSaida < dataFim)
+            .SumAsync(s => s.ValorFinal);
+    }
+
     public async Task<Saida> AdicionarAsync(Saida saida)
     {
         _context.Saida.Add(saida);
