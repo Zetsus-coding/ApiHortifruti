@@ -25,14 +25,13 @@ public partial class PostSaidaDTO
     public bool Desconto { get; set; } // Indica se houve desconto na saída
 
 
-    [ValidacaoCampoPreco]
     [RequiredIfTrue("Desconto")] // Só é obrigatório se o campo Desconto for true
     public decimal? ValorDesconto { get; set; }
 
 
-    [Required]
-    [ValidacaoCampoPreco]
-    public decimal ValorFinal { get; set; } // Se Desconto for true, ValorTotal - ValorDesconto, senão igual a ValorTotal
+    // [Required]
+    // [ValidacaoCampoPreco]
+    // public decimal ValorFinal { get; set; } // Se Desconto for true, ValorTotal - ValorDesconto, senão igual a ValorTotal
 
 
     // [DataNaoFutura]
