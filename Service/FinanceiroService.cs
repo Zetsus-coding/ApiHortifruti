@@ -1,4 +1,5 @@
 using ApiHortifruti.Data.Repository.Interfaces;
+using ApiHortifruti.Domain;
 using SuaApi.Services;
 
 namespace ApiHortifruti.Services;
@@ -37,5 +38,9 @@ public class FinanceiroService : IFinanceiroService
         var hoje = DateOnly.FromDateTime(DateTime.Today);
         var totalSaidas = await _uow.Saida.ObterTotalPorPeriodoAsync(hoje, hoje);
         return totalSaidas;
+    }
+    public async Task<IEnumerable<Entrada>> ObterEntradasRecentesAsync()
+    {
+        return await _uow.Entrada.ObterRecentesAsync();
     }
 }

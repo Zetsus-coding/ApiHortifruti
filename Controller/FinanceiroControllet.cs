@@ -1,3 +1,4 @@
+using ApiHortifruti.Domain;
 using Microsoft.AspNetCore.Mvc;
 using SuaApi.Services;
 
@@ -55,6 +56,25 @@ public class FinanceiroController : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, $"Erro ao calcular vendas diárias: {ex.Message}");
+        }
+    }
+    [HttpGet("entradas-recentes")]
+    public async Task<ActionResult<IEnumerable<Entrada>>> ObterEntradasRecentes()
+    {
+        try
+        {
+            var entradas = await _financeiroService.ObterEntradasRecentesAsync();
+            
+            if (entradas == null || !entradas.Any())
+            {
+                return NoContent();
+            }
+            
+            return Ok(entradas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Erro ao buscar entradas recentes: {ex.Message}");
         }
     }
 }

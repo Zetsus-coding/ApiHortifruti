@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using ApiHortifruti.Domain;
 using ApiHortifruti.Data.Repository.Interfaces;
+using ApiHortifruti.Domain;
 
 namespace ApiHortifruti.Data.Repository;
 
@@ -28,6 +28,12 @@ public class EntradaRepository : IEntradaRepository
         return await _context.Entrada
             .Where(e => e.DataCompra >= dataInicio && e.DataCompra < dataFim)
             .SumAsync(e => e.PrecoTotal);
+    }
+    public async Task<IEnumerable<Entrada>> ObterRecentesAsync()
+    {
+        return await _context.Entrada
+            .OrderByDescending(e => e.DataCompra)
+            .ToListAsync();
     }
 
     public async Task<Entrada?> ObterPorNumeroNotaAsync(string numeroNota, int fornecedorId)
