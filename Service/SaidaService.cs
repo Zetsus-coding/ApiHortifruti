@@ -39,8 +39,8 @@ public class SaidaService : ISaidaService
             if (motivo == null) // Validação de existência do motivo de movimentação
                 throw new InvalidOperationException("Motivo de movimentação não encontrado no sistema");
 
-            if (saida.DataSaida > DateOnly.FromDateTime(DateTime.Now)) // Validação de data futura
-                throw new InvalidOperationException("A data da saída não pode ser uma data futura");
+            // if (saida.DataSaida > DateOnly.FromDateTime(DateTime.Now)) // Validação de data futura
+            //     throw new InvalidOperationException("A data da saída não pode ser uma data futura");
 
             if (saida.ItemSaida == null || !saida.ItemSaida.Any()) // Validação de itens na saída
                 throw new InvalidOperationException("É obrigatório adicionar ao menos um item na saída");
