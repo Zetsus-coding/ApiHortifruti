@@ -44,14 +44,31 @@ public class SaidaService : ISaidaService
 
             if (saida.ItemSaida == null || !saida.ItemSaida.Any()) // Validação de itens na saída
                 throw new InvalidOperationException("É obrigatório adicionar ao menos um item na saída");
-            
-            var descontoAplicado = saida.Desconto ? (saida.ValorDesconto ?? 0m) : 0m;
-            if (descontoAplicado < 0)
-                throw new InvalidOperationException("Valor de desconto inválido");
 
-            saida.ValorFinal = saida.ValorTotal - descontoAplicado;
-            if (saida.ValorFinal < 0)
-                throw new InvalidOperationException("O valor final da saída não pode ser negativo");
+            if (saida.Desconto)
+            {
+                if (saida.ValorDesconto == null)
+                    throw new InvalidOperationException("Valor de desconto deve ser informado quando houver desconto");
+
+                if (saida.ValorDesconto < 0)
+                    throw new InvalidOperationException("Valor de desconto inválido");
+
+                if (saida.ValorTotal * 0.5m < saida.ValorDesconto)
+                    throw new InvalidOperationException("O valor do desconto não pode ser maior que 50% do valor total");
+
+                saida.ValorFinal = saida.ValorTotal - (saida.ValorDesconto ?? 0);
+                if (saida.ValorFinal < 0)
+                    throw new InvalidOperationException("O valor final da saída não pode ser negativo");
+            }
+            
+            else
+            {
+                saida.ValorDesconto = 0;
+                saida.ValorFinal = saida.ValorTotal;
+            }
+
+            saida.DataSaida = DateOnly.FromDateTime(DateTime.Now);
+            saida.HoraSaida = TimeOnly.FromDateTime(DateTime.Now);
 
             await _uow.Saida.AdicionarAsync(saida);
             await _itemSaidaService.AdicionarItensSaidaAsync(saida.Id, saida.ItemSaida);
@@ -84,4 +101,3 @@ public class SaidaService : ISaidaService
     //     await _uow.SaveChangesAsync();
     // }
 }
-

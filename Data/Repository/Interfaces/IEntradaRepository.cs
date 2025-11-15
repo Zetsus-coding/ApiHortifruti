@@ -11,5 +11,6 @@ public interface IEntradaRepository
     Task AtualizarAsync(Entrada entrada);
     Task DeletarAsync(int id);
     Task<decimal> ObterTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim);
+    Task<IEnumerable<Entrada>> ObterRecentesAsync();
 
 }

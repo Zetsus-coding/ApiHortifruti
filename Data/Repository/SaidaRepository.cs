@@ -26,7 +26,7 @@ public class SaidaRepository : ISaidaRepository
     public async Task<decimal> ObterTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim)
     {
         return await _context.Saida
-            .Where(s => s.DataSaida >= dataInicio && s.DataSaida < dataFim)
+            .Where(s => s.DataSaida >= dataInicio && s.DataSaida <= dataFim)
             .SumAsync(s => s.ValorFinal);
     }
 
