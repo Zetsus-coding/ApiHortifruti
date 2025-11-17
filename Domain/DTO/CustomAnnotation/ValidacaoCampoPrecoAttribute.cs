@@ -21,6 +21,6 @@ public class ValidacaoCampoPrecoAttribute : ValidationAttribute
             return ValidationResult.Success;
         }
 
-        return new ValidationResult("Valor não é um preço válido");
+        return new ValidationResult("Não foi possível validar a informação do preço");
     }
 }

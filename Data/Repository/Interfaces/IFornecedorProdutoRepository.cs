@@ -7,7 +7,7 @@ public interface IFornecedorProdutoRepository
     Task<IEnumerable<FornecedorProduto>> ObterTodosAsync();
     Task<FornecedorProduto?> ObterPorIdAsync(int fornecedorId, int produtoId);
     Task<FornecedorProduto> AdicionarAsync(FornecedorProduto fornecedorProduto);
-    Task AdicionarVariosAsync(List<FornecedorProduto> fornecedorProdutos);
+    Task<IEnumerable<FornecedorProduto>> AdicionarVariosAsync(IEnumerable<FornecedorProduto> fornecedorProdutos);
     Task AtualizarAsync(FornecedorProduto fornecedorProduto);
     Task DeletarAsync(int fornecedorId, int produtoId);
 }

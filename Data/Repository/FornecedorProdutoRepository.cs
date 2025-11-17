@@ -32,9 +32,10 @@ public class FornecedorProdutoRepository : IFornecedorProdutoRepository
         return fornecedorProduto;
     }
 
-    public async Task AdicionarVariosAsync(List<FornecedorProduto> fornecedorProdutos)
+    public async Task<IEnumerable<FornecedorProduto>> AdicionarVariosAsync(IEnumerable<FornecedorProduto> fornecedorProdutos)
     {
         _context.FornecedorProduto.AddRange(fornecedorProdutos);
+        return fornecedorProdutos;
     }
 
     public async Task AtualizarAsync(FornecedorProduto fornecedorProduto)

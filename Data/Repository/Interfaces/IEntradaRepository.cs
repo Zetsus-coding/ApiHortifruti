@@ -7,10 +7,10 @@ public interface IEntradaRepository
     Task<IEnumerable<Entrada>> ObterTodosAsync();
     Task<Entrada?> ObterPorIdAsync(int id);
     Task<Entrada?> ObterPorNumeroNotaAsync(string numeroNota, int fornecedorId); // Verifica se já existe uma nota fiscal com esse número para esse fornecedor
+    Task<decimal> ObterValorTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim);
+    Task<IEnumerable<Entrada>> ObterRecentesAsync();
     Task AdicionarAsync(Entrada entrada);
     Task AtualizarAsync(Entrada entrada);
     Task DeletarAsync(int id);
-    Task<decimal> ObterTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim);
-    Task<IEnumerable<Entrada>> ObterRecentesAsync();
 
 }

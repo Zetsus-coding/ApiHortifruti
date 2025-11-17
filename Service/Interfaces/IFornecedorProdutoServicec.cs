@@ -6,8 +6,8 @@ public interface IFornecedorProdutoService
 {
     Task<IEnumerable<FornecedorProduto>> ObterTodosFornecedorProdutosAsync();
     Task<FornecedorProduto?> ObterFornecedorProdutoPorIdAsync(int fornecedorId, int produtoId);
-    Task<FornecedorProduto> CriarFornecedorProdutoAsync(FornecedorProduto categoria);
-    Task CriarVariosFornecedorProdutosAsync(List<FornecedorProduto> categorias);
-    Task AtualizarFornecedorProdutoAsync(int fornecedorId, int produtoId, FornecedorProduto categoria);
+    Task<FornecedorProduto> CriarFornecedorProdutoAsync(FornecedorProduto fornecedorProduto);
+    Task<IEnumerable<FornecedorProduto>> CriarVariosFornecedorProdutosAsync(IEnumerable<FornecedorProduto> fornecedorProdutos);
+    Task AtualizarFornecedorProdutoAsync(int fornecedorId, int produtoId, FornecedorProduto fornecedorProduto);
     Task DeletarFornecedorProdutoAsync(int fornecedorId, int produtoId);
 }

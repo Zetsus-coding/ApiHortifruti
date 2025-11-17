@@ -45,7 +45,7 @@ public class SaidaService : ISaidaService
             if (saida.ItemSaida == null || !saida.ItemSaida.Any()) // Validação de itens na saída
                 throw new InvalidOperationException("É obrigatório adicionar ao menos um item na saída");
 
-            if (saida.Desconto)
+            if (saida.Desconto) // Validações de desconto
             {
                 if (saida.ValorDesconto == null)
                     throw new InvalidOperationException("Valor de desconto deve ser informado quando houver desconto");

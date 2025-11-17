@@ -1,6 +1,6 @@
 ﻿namespace ApiHortifruti.Domain.Enum;
 
-public enum TipoMovimentacaoEnum
+public enum MotivoEnum
 {
     compra = 1,
     venda = 2,

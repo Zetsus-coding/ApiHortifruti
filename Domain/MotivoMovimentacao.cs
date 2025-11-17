@@ -7,7 +7,7 @@ public partial class MotivoMovimentacao
 {
     public int Id { get; set; }
 
-    public string TipoMovimentacao { get; set; }
+    public string Motivo { get; set; }
 
     public bool Ativo { get; set; }
 
