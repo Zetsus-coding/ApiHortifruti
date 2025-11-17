@@ -9,7 +9,7 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
 {
     private readonly IUnityOfWork _uow;
 
-    public MotivoMovimentacaoService( IUnityOfWork uow)
+    public MotivoMovimentacaoService(IUnityOfWork uow)
     {
         
         _uow = uow;

@@ -6,8 +6,6 @@ public partial class Funcionario
 {
     public int Id { get; set; }
 
-    public int CargoId { get; set; }
-
     public string Cpf { get; set; } = null!;
 
     public string Rg { get; set; } = null!;
