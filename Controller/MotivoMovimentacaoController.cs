@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,11 +13,13 @@ namespace ApiHortifruti.Controller;
 public class MotivoMovimentacaoController : ControllerBase
 {
     private readonly IMotivoMovimentacaoService _motivoMovimentacaoService;
+    private readonly IMapper _mapper;
 
     // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
-    public MotivoMovimentacaoController(IMotivoMovimentacaoService motivoMovimentacaoService)
+    public MotivoMovimentacaoController(IMotivoMovimentacaoService motivoMovimentacaoService, IMapper mapper)
     {
         _motivoMovimentacaoService = motivoMovimentacaoService;
+        _mapper = mapper;
     }
 
     // OPERAÇÕES
@@ -41,8 +44,10 @@ public class MotivoMovimentacaoController : ControllerBase
 
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<MotivoMovimentacao>> CriarMotivoMovimentacao(MotivoMovimentacao motivoMovimentacao)
+    public async Task<ActionResult<MotivoMovimentacao>> CriarMotivoMovimentacao(PostMotivoMovimentacaoDTO postMotivoMovimentacaoDTO)
     {
+        var motivoMovimentacao = _mapper.Map<MotivoMovimentacao>(postMotivoMovimentacaoDTO); // Mapeamento DTO -> Domain
+
         var motivoMovimentacaoCriada = await _motivoMovimentacaoService.CriarMotivoMovimentacaoAsync(motivoMovimentacao);
         return CreatedAtAction(nameof(ObterMotivoMovimentacao), new { id = motivoMovimentacaoCriada.Id },
             motivoMovimentacaoCriada);
@@ -57,10 +62,10 @@ public class MotivoMovimentacaoController : ControllerBase
         return NoContent();
     }
 
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarMotivoMovimentacao([Range(1, int.MaxValue)]int id) 
-    // { 
-    //     await _motivoMovimentacaoService.DeletarMotivoMovimentacaoAsync(id); 
-    //     return NoContent(); 
-    // } 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarMotivoMovimentacao([Range(1, int.MaxValue)]int id) 
+    { 
+        await _motivoMovimentacaoService.DeletarMotivoMovimentacaoAsync(id); 
+        return NoContent(); 
+    } 
 }

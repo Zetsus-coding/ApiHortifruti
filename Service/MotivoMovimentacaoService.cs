@@ -35,6 +35,7 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
 
     public async Task<MotivoMovimentacao> CriarMotivoMovimentacaoAsync(MotivoMovimentacao motivoMovimentacao)
     {
+        motivoMovimentacao.Ativo = true;
         return await _uow.MotivoMovimentacao.AdicionarAsync(motivoMovimentacao);
     }
 

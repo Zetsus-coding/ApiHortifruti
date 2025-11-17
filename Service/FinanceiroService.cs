@@ -19,8 +19,8 @@ public class FinanceiroService : IFinanceiroService
         var dataFim = DateOnly.FromDateTime(DateTime.Today); // Amanhã 00:00:00 (para pegar hoje completo)
         var dataInicio = DateOnly.FromDateTime(dataFim.ToDateTime(TimeOnly.MinValue)).AddDays(-7); // 7 dias atrás
 
-        var totalEntradas = await _uow.Entrada.ObterTotalPorPeriodoAsync(dataInicio, dataFim);
-        var totalSaidas = await _uow.Saida.ObterTotalPorPeriodoAsync(dataInicio, dataFim);
+        var totalEntradas = await _uow.Entrada.ObterValorTotalPorPeriodoAsync(dataInicio, dataFim);
+        var totalSaidas = await _uow.Saida.ObterValorTotalPorPeriodoAsync(dataInicio, dataFim);
 
         return totalSaidas - totalEntradas;
     }
@@ -30,13 +30,13 @@ public class FinanceiroService : IFinanceiroService
         var primeiroDia = new DateOnly(hoje.Year, hoje.Month, 1);
         var ultimoDia = primeiroDia.AddMonths(1).AddDays(-1); // último dia do mês
 
-        var totalEntradas = await _uow.Entrada.ObterTotalPorPeriodoAsync(primeiroDia, ultimoDia);
+        var totalEntradas = await _uow.Entrada.ObterValorTotalPorPeriodoAsync(primeiroDia, ultimoDia);
         return totalEntradas;
     }
     public async Task<decimal> CalcularVendasDoDiaAsync()
     {
         var hoje = DateOnly.FromDateTime(DateTime.Today);
-        var totalSaidas = await _uow.Saida.ObterTotalPorPeriodoAsync(hoje, hoje);
+        var totalSaidas = await _uow.Saida.ObterValorTotalPorPeriodoAsync(hoje, hoje);
         return totalSaidas;
     }
     public async Task<IEnumerable<Entrada>> ObterEntradasRecentesAsync()

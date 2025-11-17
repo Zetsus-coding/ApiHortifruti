@@ -23,7 +23,7 @@ public class EntradaRepository : IEntradaRepository
         return await _context.Entrada.FindAsync(id);
     }
 
-    public async Task<decimal> ObterTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim)
+    public async Task<decimal> ObterValorTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim)
     {
         return await _context.Entrada
             .Where(e => e.DataCompra >= dataInicio && e.DataCompra < dataFim)
