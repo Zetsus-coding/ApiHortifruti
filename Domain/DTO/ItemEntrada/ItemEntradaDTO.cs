@@ -17,12 +17,11 @@ public class ItemEntradaDTO
     public string? Lote { get; set; }
 
 
-    [DataNaoPassada(ErrorMessage = "Produto com validade inválida (já vencida)")]
+    [DataNaoPassada(ErrorMessage = "Produto com validade inválida (produto vencido)")]
     public string? Validade { get; set; }
 
 
     [Required(ErrorMessage = "O preço do produto é obrigatório")] // Deve ser obrigatório?
-    //[RegularExpression(@"^(0|\d{0,16}(\.\d{0,2})?)$", ErrorMessage = "Formato de preço inválido")] // Formato válido
-    [Range(0, 99999999.99, MinimumIsExclusive = true, ErrorMessage = "O preço deve ser maior que zero")] // Valor maior que zero
+    [ValidacaoCampoPreco()] // Preço deve ser maior ou igual a zero e com até duas casas decimais
     public decimal PrecoUnitario { get; set; }
 }

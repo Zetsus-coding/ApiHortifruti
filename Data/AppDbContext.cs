@@ -272,9 +272,9 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Ativo).HasColumnName("ativo");
-            entity.Property(e => e.TipoMovimentacao)
+            entity.Property(e => e.Motivo)
                 .HasMaxLength(20)
-                .HasColumnName("tipo_movimentacao");
+                .HasColumnName("motivo");
         });
 
         modelBuilder.Entity<Produto>(entity =>

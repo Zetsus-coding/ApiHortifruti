@@ -57,13 +57,13 @@ public class FornecedorProdutoController : ControllerBase
     // Operação de criação de vários registros na tabela
     // [Authorize(Roles = "post(varios)")]
     [HttpPost("batch")]
-    public async Task<IActionResult> CriarVariosFornecedorProduto(List<PostFornecedorProdutoDTO> fornecedorProdutoDTOs)
+    public async Task<IEnumerable<FornecedorProduto>> CriarVariosFornecedorProduto(IEnumerable<PostFornecedorProdutoDTO> fornecedorProdutoDTOs)
     {
         var fornecedorProdutos = _mapper.Map<List<FornecedorProduto>>(fornecedorProdutoDTOs);
 
-        await _fornecedorProdutoService.CriarVariosFornecedorProdutosAsync(fornecedorProdutos);
+        var fornecedorProdutosCriadas = await _fornecedorProdutoService.CriarVariosFornecedorProdutosAsync(fornecedorProdutos);
 
-        return NoContent();
+        return fornecedorProdutosCriadas;
     }
 
     // Operação de alteração de algum registro na tabela

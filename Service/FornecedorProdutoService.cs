@@ -67,10 +67,10 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         }
     }
 
-    public async Task CriarVariosFornecedorProdutosAsync(List<FornecedorProduto> fornecedorProdutos)
+    public async Task<IEnumerable<FornecedorProduto>> CriarVariosFornecedorProdutosAsync(IEnumerable<FornecedorProduto> fornecedorProdutos)
     {
         if (fornecedorProdutos == null || !fornecedorProdutos.Any())
-            return;
+            throw new ArgumentException("A lista de associações não pode ser nula ou vazia.");
 
         // Verifica associações duplicadas na lista recebida como parâmetro
         var duplicados = fornecedorProdutos
@@ -108,6 +108,7 @@ public class FornecedorProdutoService : IFornecedorProdutoService
             await _uow.FornecedorProduto.AdicionarVariosAsync(fornecedorProdutos);
             await _uow.SaveChangesAsync();
             await _uow.CommitAsync();
+            return fornecedorProdutos;
         }
         catch
         {
