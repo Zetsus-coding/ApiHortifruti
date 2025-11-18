@@ -22,7 +22,7 @@ public class FuncionarioController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Funcionario>>> ObterFuncionarios()
+    public async Task<ActionResult<IEnumerable<Funcionario>>> ObterTodosOsFuncionarios()
     {
         var funcionario = await _funcionarioService.ObterTodosFuncionarioAsync();
         return Ok(funcionario);
@@ -30,7 +30,7 @@ public class FuncionarioController : ControllerBase
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Funcionario>> ObteFuncionario([Range(1, int.MaxValue)]int id)
+    public async Task<ActionResult<Funcionario>> ObteFuncionarioPorId([Range(1, int.MaxValue)]int id)
     {
         var funcionario = await _funcionarioService.ObterFuncionarioPorIdAsync(id);
 

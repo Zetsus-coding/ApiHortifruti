@@ -24,15 +24,15 @@ public class SaidaController : ControllerBase
 
     // OPERAÇÕES
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Saida>>> ObterSaidas() // get all
+    public async Task<ActionResult<IEnumerable<Saida>>> ObterTodasAsSaidas() // get all
     {
-        var saida = await _saidaService.ObterTodosSaidasAsync();
-        return Ok(saida);
+        var saida = await _saidaService.ObterTodasAsSaidaAsync();
+        return Ok(saida); 
     }
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Saida>> ObterSaida([Range(1, int.MaxValue)] int id) // get por id
+    public async Task<ActionResult<Saida>> ObterSaidaPorId([Range(1, int.MaxValue)] int id) // get por id
     {
         var saida = await _saidaService.ObterSaidaPorIdAsync(id);
 
@@ -48,7 +48,7 @@ public class SaidaController : ControllerBase
         var saida = _mapper.Map<Saida>(postSaidaDTO);
 
         var saidaCriada = await _saidaService.CriarSaidaAsync(saida);
-        return CreatedAtAction(nameof(ObterSaida), new { id = saidaCriada.Id },
+        return CreatedAtAction(nameof(ObterSaidaPorId), new { id = saidaCriada.Id },
             saidaCriada);
     }
     

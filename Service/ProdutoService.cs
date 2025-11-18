@@ -14,7 +14,7 @@ public class ProdutoService : IProdutoService
         _uow = uow;
     }
 
-    public async Task<IEnumerable<Produto>> ObterTodosProdutoAsync()
+    public async Task<IEnumerable<Produto>> ObterTodosOsProdutosAsync()
     {
         try
         {

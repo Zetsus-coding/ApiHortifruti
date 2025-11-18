@@ -24,15 +24,15 @@ public class EntradaController : ControllerBase
 
     // OPERAÇÕES
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Entrada>>> ObterEntradas()
+    public async Task<ActionResult<IEnumerable<Entrada>>> ObterTodasAsEntradas()
     {
-        var entrada = await _entradaService.ObterTodosEntradasAsync();
+        var entrada = await _entradaService.ObterTodasAsEntradasAsync();
         return Ok(entrada);
     }
 
     [HttpGet("{id}")]
     // [Authorize(Roles = "get(id)")]
-    public async Task<ActionResult<Entrada>> ObterEntrada([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<Entrada>> ObterEntradaPorId([Range(1, int.MaxValue)] int id)
     {
         var entrada = await _entradaService.ObterEntradaPorIdAsync(id);
 
@@ -40,7 +40,26 @@ public class EntradaController : ControllerBase
         return Ok(entrada);
     }
 
-    // get produtos associados a entrada (aqui [/entrada/identrada/produtos] ou em produtos [/produtos?entrada=x])?
+    [HttpGet("entradas-recentes")]
+    public async Task<ActionResult<IEnumerable<Entrada>>> ObterEntradasRecentes()
+    {
+        try
+        {
+            var entradas = await _entradaService.ObterEntradasRecentesAsync();
+            
+            if (entradas == null || !entradas.Any())
+            {
+                return NoContent();
+            }
+            
+            return Ok(entradas);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Erro ao buscar entradas recentes: {ex.Message}");
+        }
+    }
+
     // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Entrada>> CriarEntrada(PostEntradaDTO postEntradaDTO)
@@ -48,7 +67,7 @@ public class EntradaController : ControllerBase
         var entrada = _mapper.Map<Entrada>(postEntradaDTO);
 
         var entradaCriada = await _entradaService.CriarEntradaAsync(entrada);
-        return CreatedAtAction(nameof(ObterEntrada), new { id = entradaCriada.Id },
+        return CreatedAtAction(nameof(ObterTodasAsEntradas), new { id = entradaCriada.Id },
             entradaCriada);
     }
     // [Authorize(Roles = "put")]

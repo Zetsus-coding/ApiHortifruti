@@ -19,7 +19,7 @@ public class HistoricoProdutoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterTodosHistoricoProduto()
+    public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterTodosOsHistoricosProdutos()
     {
         var historicoProduto = await _historicoProdutoService.ObterTodosHistoricoProdutosAsync();
         return Ok(historicoProduto);
@@ -27,12 +27,23 @@ public class HistoricoProdutoController : ControllerBase
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProduto([Range(1, int.MaxValue)] int id) // Faz sentido? Ou deveria ser por produto?
+    public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProdutoPorId([Range(1, int.MaxValue)] int id) // Faz sentido? Ou deveria ser por produto?
     {
         var getIdHistoricoProduto = await _historicoProdutoService.ObterHistoricoProdutoPorIdAsync(id);
 
         if (getIdHistoricoProduto == null) return NotFound();
         return Ok(getIdHistoricoProduto);
+    }
+
+    // Consulta de histórico de produto por ID do produto
+    // [Authorize(Roles = "id")]
+    [HttpGet("produto/{produtoId}")]
+    public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterHistoricoProdutoPorProdutoId([Range(1, int.MaxValue)] int produtoId)
+    {
+        var historicoProduto = await _historicoProdutoService.ObterHistoricoProdutoPorProdutoIdAsync(produtoId); // MARCADO
+
+        if (historicoProduto == null || !historicoProduto.Any()) return NotFound();
+        return Ok(historicoProduto);
     }
 
     // [HttpPost]

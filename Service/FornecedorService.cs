@@ -13,7 +13,7 @@ public class FornecedorService : IFornecedorService
         _uow = uow;
     }
 
-    public async Task<IEnumerable<Fornecedor>> ObterTodosFornecedoresAsync()
+    public async Task<IEnumerable<Fornecedor>> ObterTodosOsFornecedoresAsync()
     {
         try
         {

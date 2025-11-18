@@ -26,16 +26,16 @@ public class UnidadeMedidaController : ControllerBase
 
     // Consulta todas as unidades de medida
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UnidadeMedida>>> ObterTodosUnidadeMedida()
+    public async Task<ActionResult<IEnumerable<UnidadeMedida>>> ObterTodasAsUnidadesMedida()
     {
-        var unidadeMedida = await _unidadeMedidaService.ObterTodosUnidadeMedidaAsync(); // Chamada a camada de serviço para obter todos
+        var unidadeMedida = await _unidadeMedidaService.ObterTodasAsUnidadeMedidaAsync(); // Chamada a camada de serviço para obter todos
         return Ok(unidadeMedida);
     }
 
     // Consulta uma unidade de medida pelo ID
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedida([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedidaPorId([Range(1, int.MaxValue)] int id)
     {
         var getIdUnidadeMedida = await _unidadeMedidaService.ObterUnidadeMedidaPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(getIdUnidadeMedida);

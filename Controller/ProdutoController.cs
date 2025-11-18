@@ -26,7 +26,7 @@ public class ProdutoController : ControllerBase
 
     // Consulta de todos os produtos
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutos()
+    public async Task<ActionResult<IEnumerable<Produto>>> ObterTodosOsProdutos()
     {
         var produto = await _produtoService.ObterTodosProdutoAsync(); // Chamada a camada de serviço para obter todos
         return Ok(produto);
@@ -34,7 +34,7 @@ public class ProdutoController : ControllerBase
 
     // Consulta de produtos com estoque atual menor ou igual à quantidade mínima
     [HttpGet("estoque-critico")]
-    public async Task<ActionResult<IEnumerable<GetProdutoEstoqueCriticoDTO>>> ObterProdutosEstoqueCritico()
+    public async Task<ActionResult<IEnumerable<GetProdutoEstoqueCriticoDTO>>> ObterProdutosComEstoqueCritico()
     {
         var produtos = await _produtoService.ObterProdutosEstoqueCriticoAsync();
         var produtosDTO = _mapper.Map<IEnumerable<GetProdutoEstoqueCriticoDTO>>(produtos);
@@ -44,19 +44,19 @@ public class ProdutoController : ControllerBase
     // Consulta de um produto por ID
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Produto>> ObterProduto(int id)
+    public async Task<ActionResult<Produto>> ObterProdutoPorId(int id)
     {
         var produto = await _produtoService.ObterProdutoPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(produto);
     }
 
-    // // Consulta de um produto por código (ex.: código de barras) // TODO: Necessário avaliar mais a fundo
-    // [HttpGet("codigo/{codigo}")]
-    // public async Task<ActionResult<Produto>> ObterProdutoPorCodigo(string codigo)
-    // {
-    //     var produto = await _produtoService.ObterProdutoPorCodigoAsync(codigo); // Chamada a camada de serviço para obter por código de barras
-    //     return Ok(produto);
-    // }
+    // Consulta de um produto por código (ex.: código de barras)
+    [HttpGet("codigo/{codigo}")]
+    public async Task<ActionResult<Produto>> ObterProdutoPorCodigo(string codigo)
+    {
+        var produto = await _produtoService.ObterProdutoPorCodigoAsync(codigo); // Chamada a camada de serviço para obter por código de barras
+        return Ok(produto);
+    }
 
     // Criação de um novo produto
     // [Authorize(Roles = "post")]

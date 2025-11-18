@@ -70,7 +70,6 @@ public class GlobalExceptionHandlingMiddleware
             status = HttpStatusCode.BadRequest;
             stackTrace = exception.StackTrace;
         }
-
         else
         {
             // Tratar a exceção genérica como Erro Interno do Servidor (500)

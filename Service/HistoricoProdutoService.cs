@@ -14,7 +14,7 @@ public class HistoricoProdutoService : IHistoricoProdutoService
         _uow = uow;
     }
 
-    public async Task<IEnumerable<HistoricoProduto>> ObterTodosHistoricoProdutosAsync()
+    public async Task<IEnumerable<HistoricoProduto>> ObterTodosOsHistoricosProdutosAsync()
     {
         try
         {

@@ -13,7 +13,7 @@ public class FuncionarioService : IFuncionarioService
         _uow = uow;
     }
 
-    public async Task<IEnumerable<Funcionario>> ObterTodosFuncionarioAsync()
+    public async Task<IEnumerable<Funcionario>> ObterTodosOsFuncionariosAsync()
     {
         try
         {

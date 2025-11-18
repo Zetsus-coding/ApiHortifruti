@@ -24,21 +24,39 @@ public class FornecedorProdutoController : ControllerBase
 
     // Operação de consulta de todos os registro da tabela
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterTodosFornecedorProduto()
+    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterTodosOsFornecedorProduto()
     {
-        var fornecedorProduto = await _fornecedorProdutoService.ObterTodosFornecedorProdutosAsync();
+        var fornecedorProduto = await _fornecedorProdutoService.ObterTodosOsFornecedorProdutoAsync();
         return Ok(fornecedorProduto);
     }
 
     // Operação de consulta por ID
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{fornecedorId}/{produtoId}")]
-    public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
+    public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProdutoPorId([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
     {
         var getIdFornecedorProduto = await _fornecedorProdutoService.ObterFornecedorProdutoPorIdAsync(fornecedorId, produtoId);
 
         if (getIdFornecedorProduto == null) return NotFound();
         return Ok(getIdFornecedorProduto);
+    }
+
+    // Operação de consulta de todos os produtos de um fornecedor
+    // [Authorize(Roles = "get(id)")]
+    [HttpGet("fornecedor/{fornecedorId}")]
+    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
+    {
+        var produtosFornecedor = await _fornecedorProdutoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
+        return Ok(produtosFornecedor);
+    }
+
+    // Operação de consulta de todos os produtos de um fornecedor
+    // [Authorize(Roles = "get(id)")]
+    [HttpGet("fornecedor/{fornecedorId}")]
+    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
+    {
+        var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
+        return Ok(produtosFornecedor);
     }
 
     // Operação de criação do registro na tabela
@@ -50,7 +68,7 @@ public class FornecedorProdutoController : ControllerBase
 
         var fornecedorProdutoCriada = await _fornecedorProdutoService.CriarFornecedorProdutoAsync(fornecedorProduto);
 
-        return CreatedAtAction(nameof(ObterFornecedorProduto), new { fornecedorId = fornecedorProduto.FornecedorId, produtoId = fornecedorProduto.ProdutoId },
+        return CreatedAtAction(nameof(ObterFornecedorProdutoPorId), new { fornecedorId = fornecedorProduto.FornecedorId, produtoId = fornecedorProduto.ProdutoId },
             fornecedorProdutoCriada);
     }
 
