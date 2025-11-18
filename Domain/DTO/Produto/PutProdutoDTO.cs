@@ -26,7 +26,7 @@ public class PutProdutoDTO
     [Required(ErrorMessage = "O código do produto é obrigatório")]
     [StringLength(50, ErrorMessage = "A código do produto não pode exceder 50 caracteres")]
     public string Codigo { get; set; }
-
+    
 
     [StringLength(150, ErrorMessage = "A descrição do produto não pode exceder 150 caracteres")]
     public string? Descricao { get; set; }

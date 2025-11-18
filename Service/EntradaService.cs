@@ -82,6 +82,11 @@ public class EntradaService : IEntradaService
         // await _entradaRepository.AtualizarAsync(entrada);
     }
 
+    public Task<IEnumerable<Entrada>> ObterEntradasRecentesAsync()
+    {
+        throw new NotImplementedException();
+    }
+
     // public async Task DeletarEntradaAsync(int id)
     // {
     //     // await _entradaRepository.DeletarAsync(id);

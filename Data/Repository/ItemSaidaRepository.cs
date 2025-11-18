@@ -48,4 +48,9 @@ public class ItemSaidaRepository : IItemSaidaRepository
             _context.ItemSaida.Remove(itemSaida);
         }
     }
+
+    public Task ObterTodosDeUmaSaidaAsync(int idSaida)
+    {
+        throw new NotImplementedException();
+    }
 }

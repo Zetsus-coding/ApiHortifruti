@@ -19,7 +19,7 @@ public class EntradaServiceTests
 
     // Dados de teste (Mocks de Entidades)
     private readonly Fornecedor _fornecedorFake = new Fornecedor { Id = 1, NomeFantasia = "Fazenda Bom Fruto" };
-    private readonly MotivoMovimentacao _motivoFake = new MotivoMovimentacao { Id = 1, TipoMovimentacao = "Compra" };
+    private readonly MotivoMovimentacao _motivoFake = new MotivoMovimentacao { Id = 1, Motivo = "Compra" };
 
     // Entrada Válida (usa DateOnly de ontem)
     private readonly Entrada _entradaValida = new Entrada
@@ -84,7 +84,7 @@ public class EntradaServiceTests
     public async Task ObterTodosEntradasAsync_DeveChamarRepositorio()
     {
         // Act
-        await _service.ObterTodosEntradasAsync();
+        await _service.ObterTodasAsEntradasAsync();
 
         // Assert
         _mockEntradaRepo.Verify(r => r.ObterTodosAsync(), Times.Once);

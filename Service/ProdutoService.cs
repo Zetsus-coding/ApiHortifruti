@@ -123,6 +123,11 @@ public class ProdutoService : IProdutoService
         }
     }
 
+    public Task<IEnumerable<FornecedorProduto>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
+    {
+        throw new NotImplementedException();
+    }
+
     // public async Task DeletarProdutoAsync(int id)
     // {
     //     await _produtoRepository.DeletarAsync(id);

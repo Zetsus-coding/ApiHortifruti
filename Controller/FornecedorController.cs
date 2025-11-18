@@ -59,7 +59,7 @@ public class FornecedorController : ControllerBase
         var fornecedor = _mapper.Map<Fornecedor>(postFornecedorDTO); // Conversão de DTO para entidade
 
         var fornecedorCriado = await _fornecedorService.CriarFornecedorAsync(fornecedor); // Chamada a camada de serviço para criar
-        return CreatedAtAction(nameof(ObterFornecedor), new { fornecedorCriado.Id },
+        return CreatedAtAction(nameof(ObterTodosOsFornecedores), new { fornecedorCriado.Id },
             fornecedorCriado);
     }
 

@@ -30,11 +30,11 @@ public class CategoriaServiceTests
 
         // Configurar o comportamento do método ObterTodosAsync
         mockCategoriaRepository.Setup(r => r.ObterTodosAsync())
-                               .ReturnsAsync(_categoriasFake);
+        .ReturnsAsync(_categoriasFake);
 
         // Configurar o comportamento do método ObterPorIdAsync
         mockCategoriaRepository.Setup(r => r.ObterPorIdAsync(It.IsAny<int>()))
-                               .ReturnsAsync((int id) => _categoriasFake.FirstOrDefault(c => c.Id == id));
+        .ReturnsAsync((int id) => _categoriasFake.FirstOrDefault(c => c.Id == id));
 
         // Configurar o Mock do UoW para retornar o Repositório de Categoria
         _mockUow.Setup(uow => uow.Categoria).Returns(mockCategoriaRepository.Object);
@@ -52,7 +52,7 @@ public class CategoriaServiceTests
     public async Task ObterTodosCategoriasAsync_DeveRetornarTodasCategorias()
     {
         // Act
-        var resultado = await _service.ObterTodosCategoriasAsync();
+        var resultado = await _service.ObterTodasAsCategoriasAsync();
 
         // Assert
         Assert.NotNull(resultado);
@@ -72,7 +72,7 @@ public class CategoriaServiceTests
 
         // Act & Assert
         // O teste deve garantir que a exceção seja lançada (propagada) pelo serviço
-        await Assert.ThrowsAsync<Exception>(() => _service.ObterTodosCategoriasAsync());
+        await Assert.ThrowsAsync<Exception>(() => _service.ObterTodasAsCategoriasAsync());
 
         // Verificar se o método correto no repositório foi chamado
         _mockUow.Verify(uow => uow.Categoria.ObterTodosAsync(), Times.Once);
@@ -127,7 +127,7 @@ public class CategoriaServiceTests
         
         // Act
         var resultado = await _service.CriarCategoriaAsync(novaCategoria);
-
+        
         // Assert
         Assert.Equal(novaCategoria, resultado);
         

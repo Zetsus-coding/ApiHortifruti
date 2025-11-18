@@ -28,7 +28,7 @@ public class ProdutoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Produto>>> ObterTodosOsProdutos()
     {
-        var produto = await _produtoService.ObterTodosProdutoAsync(); // Chamada a camada de serviço para obter todos
+        var produto = await _produtoService.ObterTodosOsProdutosAsync(); // Chamada a camada de serviço para obter todos
         return Ok(produto);
     }
 
@@ -66,7 +66,7 @@ public class ProdutoController : ControllerBase
         var produto = _mapper.Map<Produto>(postProdutoDTO); // Conversão de DTO para entidade
 
         var produtoCriada = await _produtoService.CriarProdutoAsync(produto); // Chamada a camada de serviço para criar
-        return CreatedAtAction(nameof(ObterProduto), new { id = produtoCriada.Id },
+        return CreatedAtAction(nameof(ObterTodosOsProdutos), new { id = produtoCriada.Id },
             produtoCriada);
     }
 

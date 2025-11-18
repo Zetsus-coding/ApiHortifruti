@@ -19,4 +19,9 @@ public class ItemEntradaRepository : IItemEntradaRepository
     {
        await _context.ItemEntrada.AddRangeAsync(itens); // Adiciona no context a "lista" de itens (ou item se só tiver 1 item na list)
     }
+
+    public Task ObterTodosDeUmaEntradaAsync(int idEntrada)
+    {
+        throw new NotImplementedException();
+    }
 }

@@ -49,6 +49,11 @@ public class FornecedorService : IFornecedorService
         await _uow.Fornecedor.AtualizarAsync(fornecedor);
     }
 
+    public Task<IEnumerable<FornecedorProduto>> ObterFornecedoresPorProdutoIdAsync(int produtoId)
+    {
+        throw new NotImplementedException();
+    }
+
     // public async Task DeletarFornecedorAsync(int id)
     // {
     //     await _uow.Fornecedor.DeletarAsync(id);

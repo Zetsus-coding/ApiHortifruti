@@ -50,5 +50,10 @@ public class HistoricoProdutoService : IHistoricoProdutoService
     {
         await _uow.HistoricoProduto.DeletarAsync(id);
     }
+
+    public Task<IEnumerable<HistoricoProduto>> ObterHistoricoProdutoPorProdutoIdAsync(int produtoId)
+    {
+        throw new NotImplementedException();
+    }
 }
 
