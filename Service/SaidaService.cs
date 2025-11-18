@@ -15,7 +15,7 @@ public class SaidaService : ISaidaService
         _itemSaidaService = itemSaidaService;
     }
 
-    public async Task<IEnumerable<Saida>> ObterTodosSaidasAsync()
+    public async Task<IEnumerable<Saida>> ObterTodasAsSaidasAsync()
     {
         return await _uow.Saida.ObterTodosAsync();
     }

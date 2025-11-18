@@ -6,7 +6,6 @@ using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
 
-
 namespace ApiHortifruti.Tests;
 
 public class EntradaServiceTests
@@ -19,7 +18,6 @@ public class EntradaServiceTests
     private readonly Mock<IMotivoMovimentacaoRepository> _mockMotivoRepo;
 
     // Dados de teste (Mocks de Entidades)
-    // Usando as propriedades que você definiu recentemente
     private readonly Fornecedor _fornecedorFake = new Fornecedor { Id = 1, NomeFantasia = "Fazenda Bom Fruto" };
     private readonly MotivoMovimentacao _motivoFake = new MotivoMovimentacao { Id = 1, TipoMovimentacao = "Compra" };
 
@@ -45,8 +43,6 @@ public class EntradaServiceTests
         _mockFornecedorRepo = new Mock<IFornecedorRepository>();
         _mockMotivoRepo = new Mock<IMotivoMovimentacaoRepository>();
 
-        // 2. Configurar Comportamento Padrão de Sucesso (Setup)
-
         // Repositórios de Dependência
         _mockFornecedorRepo.Setup(r => r.ObterPorIdAsync(1)).ReturnsAsync(_fornecedorFake);
         _mockMotivoRepo.Setup(r => r.ObterPorIdAsync(1)).ReturnsAsync(_motivoFake);
@@ -54,12 +50,6 @@ public class EntradaServiceTests
         // Simular Fornecedor/Motivo inexistente para IDs diferentes de 1
         _mockFornecedorRepo.Setup(r => r.ObterPorIdAsync(It.Is<int>(id => id != 1))).ReturnsAsync((Fornecedor?)null);
         _mockMotivoRepo.Setup(r => r.ObterPorIdAsync(It.Is<int>(id => id != 1))).ReturnsAsync((MotivoMovimentacao?)null);
-
-        // ...existing code...
-
-        // ...existing code...
-
-        // ...existing setup...
 
         // Repositório de Entrada (checar nota duplicada e métodos CRUD)
         _mockEntradaRepo.Setup(r => r.ObterPorNumeroNotaAsync(It.IsAny<string>(), It.IsAny<int>())).ReturnsAsync((Entrada?)null);

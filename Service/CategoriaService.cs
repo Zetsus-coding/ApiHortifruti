@@ -17,7 +17,7 @@ public class CategoriaService : ICategoriaService
         _uow = uow;
     }
 
-    public async Task<IEnumerable<Categoria>> ObterTodosCategoriasAsync()
+    public async Task<IEnumerable<Categoria>> ObterTodasAsCategoriasAsync()
     {
         try
         {

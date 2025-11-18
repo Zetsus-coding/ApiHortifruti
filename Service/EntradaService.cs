@@ -17,7 +17,7 @@ public class EntradaService : IEntradaService
         _itemEntradaService = itemEntradaService;
     }
 
-    public async Task<IEnumerable<Entrada>> ObterTodosEntradasAsync()
+    public async Task<IEnumerable<Entrada>> ObterTodasAsEntradasAsync()
     {
         try
         {
@@ -82,8 +82,8 @@ public class EntradaService : IEntradaService
         // await _entradaRepository.AtualizarAsync(entrada);
     }
 
-    public async Task DeletarEntradaAsync(int id)
-    {
-        // await _entradaRepository.DeletarAsync(id);
-    }
+    // public async Task DeletarEntradaAsync(int id)
+    // {
+    //     // await _entradaRepository.DeletarAsync(id);
+    // }
 }

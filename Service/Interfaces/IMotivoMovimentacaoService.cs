@@ -4,7 +4,7 @@ namespace ApiHortifruti.Service.Interfaces;
 
 public interface IMotivoMovimentacaoService
 {
-    Task<IEnumerable<MotivoMovimentacao>> ObterTodosMotivoMovimentacaoAsync();
+    Task<IEnumerable<MotivoMovimentacao>> ObterTodosOsMotivosMovimentacaoAsync();
     Task<MotivoMovimentacao?> ObterMotivoMovimentacaoPorIdAsync(int id);
     Task<MotivoMovimentacao> CriarMotivoMovimentacaoAsync(MotivoMovimentacao motivoMovimentacao);
     Task AtualizarMotivoMovimentacaoAsync(int id, MotivoMovimentacao motivoMovimentacao);

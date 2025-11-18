@@ -8,3 +8,6 @@ public class CategoriaProfile : Profile
         CreateMap<PostCategoriaDTO, Categoria>().ReverseMap();
     }
 }
+
+    
+

@@ -14,7 +14,7 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         _uow = uow;
     }
 
-    public async Task<IEnumerable<FornecedorProduto>> ObterTodosFornecedorProdutosAsync()
+    public async Task<IEnumerable<FornecedorProduto>> ObterTodosOsFornecedorProdutoAsync()
     {
         try
         {
@@ -131,4 +131,9 @@ public class FornecedorProdutoService : IFornecedorProdutoService
     {
         await _uow.FornecedorProduto.DeletarAsync(fornecedorId, produtoId);
     }
+
+    // public Task<IEnumerable<FornecedorProduto>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
+    // {
+    //     throw new NotImplementedException();
+    // }
 }

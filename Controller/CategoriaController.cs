@@ -22,19 +22,18 @@ public class CategoriaController : ControllerBase
         _mapper = mapper;
     }
 
-
     // Consulta de todas as categorias
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Categoria>>> ObterCategorias()
+    public async Task<ActionResult<IEnumerable<Categoria>>> ObterTodasAsCategorias()
     {
-        var categoria = await _categoriaService.ObterTodosCategoriasAsync(); // Chamada a camada de serviço para obter todos
+        var categoria = await _categoriaService.ObterTodasAsCategoriasAsync(); // Chamada a camada de serviço para obter todos
         return Ok(categoria);
     }
 
     // Consulta de categoria por id
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Categoria>> ObterCategoria([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<Categoria>> ObterCategoriaPorId([Range(1, int.MaxValue)] int id)
     {
         var categoria = await _categoriaService.ObterCategoriaPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(categoria);
@@ -50,7 +49,7 @@ public class CategoriaController : ControllerBase
         var categoria = _mapper.Map<Categoria>(postCategoriaDTO); // Conversão de DTO para entidade
 
         var categoriaCriada = await _categoriaService.CriarCategoriaAsync(categoria); // Chamada a camada de serviço para criar
-        return CreatedAtAction(nameof(ObterCategoria), new { id = categoriaCriada.Id },
+        return CreatedAtAction(nameof(ObterTodasAsCategorias), new { id = categoriaCriada.Id },
             categoriaCriada);
     }
 

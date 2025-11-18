@@ -58,6 +58,21 @@
         public int Estoque { get; private set; }
 
         // Construtor(es)
+         public Produto(string nome, decimal preco, int estoqueInicial)
+        {
+            if (string.IsNullOrWhiteSpace(nome))
+                throw new ArgumentException("O nome do produto não pode ser vazio.");
+
+            if (preco <= 0) // Regra de negócio
+                throw new ArgumentException("O preço deve ser positivo.");
+
+            if (estoqueInicial < 0) // Regra de negócio
+                throw new ArgumentException("O estoque inicial não pode ser negativo.");
+
+            Nome = nome;
+            Preco = preco;
+            Estoque = estoqueInicial;
+        }
 
         public void DarBaixaNoEstoque(int quantidade)
         {

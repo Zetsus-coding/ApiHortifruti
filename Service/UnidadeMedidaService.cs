@@ -15,7 +15,7 @@ public class UnidadeMedidaService : IUnidadeMedidaService
         _uow = uow;
     }
 
-    public async Task<IEnumerable<UnidadeMedida>> ObterTodosUnidadeMedidaAsync()
+    public async Task<IEnumerable<UnidadeMedida>> ObterTodasAsUnidadesMedidaAsync()
     {
         try
         {

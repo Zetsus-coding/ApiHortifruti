@@ -4,21 +4,31 @@
 ** TODO = (A fazer)
 ** NS = NOT STARTED (Não iniciado)
 ** DONE = (Finalizado)
-** DOING = (Em andamento / Fazendo)
 ** MAYBE = (Talvez)
+** DOING = (Em andamento / Fazendo)
 
 // ---------------------------------- //
+
+[ Correção / Refatoração ] - FAZER COM MAIS "URGÊNCIA" ------------------------------------------------
 
 1. (ALL) TODO -> DTO POST (Checar), DTO GET, DTO PUT, DTO RESPONSE;
 2. (ALL) TODO -> Rever assinaturas dos métodos (padronização);
 3. (ALL) TODO -> Método deletar dos endpoints precisa ter validação se o ID existe (ObterPorId) para evitar exception de id inválido (caso deletar esteja ativo)
     3.1. (ALL) TODO -> [REFERENTE AO ANTERIOR] Validação para todo mundo! Ex: Item referenciado em outra tabela (Categoria -> Frutas id: 1; Produto ->  Nome: Banana; idCategoria: 1)
-4. (ALL) TODO -> Mover o auto mapper para a camada de serviço e adicionar validações nas próprias classes de domínio (ex: pelo construtor) além de métodos de manipulação do próprio objeto dentro dele
-    4.1. & 4.2. Exemplo no arquivo de exemplos (TODO.examples.md)
-5. (ALL) MAYBE -> Retirar do body os objetos criados (igual no atualizar), apenas responder com os códigos (ex: 2xx, 4xx etc.). Só preencher o body das requisições quando for necessário (em um get, por exemplo)
 6. (ALL) MAYBE -> Alguns retornos não estão batendo (EntradaService CriarEntrada<void> enquanto que no EntradaController<Entrada>)
 7. (FornecedorProduto) -> ObterPorId não faz sentido (porque BUSCAR só um registro?). Faz mais sentido para mim (Alexandre) buscar os registro por fornecedorId ou por produtoId;
 8. (Produto) -> Obter por código precisa ser definido como será implementado no front para o back (provavelmente com o uso de LINQ "LIKE")
+
+// ------------------------------------------------------------------------
+
+[ Provável projeto futuro ]
+4. (ALL) TODO -> Mover o auto mapper para a camada de serviço e adicionar validações nas próprias classes de domínio (ex: pelo construtor) além de métodos de manipulação do próprio objeto dentro dele
+    4.1. & 4.2. Exemplo no arquivo de exemplos (TODO.examples.md)
+
+[ Provável projeto futuro ]
+5. (ALL) MAYBE -> Retirar do body os objetos criados (igual no atualizar), apenas responder com os códigos (ex: 2xx, 4xx etc.). Só preencher o body das requisições quando for necessário (em um get, por exemplo)
+
+
 
 # DIAGRAMA DE CLASSES
 
@@ -67,7 +77,7 @@ REPOSITORIES: DOING
 - MotivoMovimentacao : DONE
 - Fornecedor : DONE
 - HistoricoProduto : DONE
-- Funcionario : NS
+- Funcionario : DONE
 
 // ------------------------------------------------------ //
 

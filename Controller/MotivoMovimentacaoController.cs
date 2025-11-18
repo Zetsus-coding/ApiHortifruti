@@ -24,7 +24,7 @@ public class MotivoMovimentacaoController : ControllerBase
 
     // OPERAÇÕES
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MotivoMovimentacao>>> ObterTodosMotivoMovimentacao()
+    public async Task<ActionResult<IEnumerable<MotivoMovimentacao>>> ObterTodosOsMotivosMovimentacao()
     {
         var motivoMovimentacao = await _motivoMovimentacaoService.ObterTodosMotivoMovimentacaoAsync();
         return Ok(motivoMovimentacao);
@@ -32,7 +32,7 @@ public class MotivoMovimentacaoController : ControllerBase
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<MotivoMovimentacao>> ObterMotivoMovimentacao([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<MotivoMovimentacao>> ObterMotivoMovimentacaoPorId([Range(1, int.MaxValue)] int id)
     {
         var getIdMotivoMovimentacao = await _motivoMovimentacaoService.ObterMotivoMovimentacaoPorIdAsync(id);
 

@@ -26,20 +26,29 @@ public class FornecedorController : ControllerBase
 
     // Consulta de todos os fornecedores
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterFornecedores()
+    public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterTodosOsFornecedores()
     {
-        var fornecedor = await _fornecedorService.ObterTodosFornecedoresAsync(); // Chamada a camada de serviço para obter todos
+        var fornecedor = await _fornecedorService.ObterTodosOsFornecedoresAsync(); // Chamada a camada de serviço para obter todos
         return Ok(fornecedor);
     }
 
     // Consulta de um fornecedor por ID
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Fornecedor>> ObterFornecedor([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<Fornecedor>> ObterFornecedorPorId([Range(1, int.MaxValue)] int id)
     {
         var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id); // Chamada a camada de serviço para obter por ID
 
         return Ok(fornecedor);
+    }
+
+    // Operação de consulta de todos os fornecedores de um produto
+    // [Authorize(Roles = "get(id)")]
+    [HttpGet("produto/{produtoId}")]
+    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterFornecedoresPorProdutoId([Range(1, int.MaxValue)] int produtoId)
+    {
+        var fornecedoresProduto = await _fornecedorService.ObterFornecedoresPorProdutoIdAsync(produtoId);
+        return Ok(fornecedoresProduto);
     }
 
     // Criação de um novo fornecedor
