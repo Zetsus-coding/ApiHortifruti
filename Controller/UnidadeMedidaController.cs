@@ -28,7 +28,7 @@ public class UnidadeMedidaController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UnidadeMedida>>> ObterTodasAsUnidadesMedida()
     {
-        var unidadeMedida = await _unidadeMedidaService.ObterTodasAsUnidadeMedidaAsync(); // Chamada a camada de serviço para obter todos
+        var unidadeMedida = await _unidadeMedidaService.ObterTodasAsUnidadesMedidaAsync(); // Chamada a camada de serviço para obter todos
         return Ok(unidadeMedida);
     }
 
@@ -49,7 +49,7 @@ public class UnidadeMedidaController : ControllerBase
         var unidadeMedida = _mapper.Map<UnidadeMedida>(postUnidadeMedidaDTO); // Conversão de DTO para entidade
 
         var unidadeMedidaCriada = await _unidadeMedidaService.CriarUnidadeMedidaAsync(unidadeMedida); // Chamada a camada de serviço para criar
-        return CreatedAtAction(nameof(ObterUnidadeMedida), new { unidadeMedidaCriada.Id },
+        return CreatedAtAction(nameof(ObterTodasAsUnidadesMedida), new { unidadeMedidaCriada.Id },
             unidadeMedidaCriada);
     }
 

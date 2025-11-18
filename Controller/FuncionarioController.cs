@@ -24,7 +24,7 @@ public class FuncionarioController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Funcionario>>> ObterTodosOsFuncionarios()
     {
-        var funcionario = await _funcionarioService.ObterTodosFuncionarioAsync();
+        var funcionario = await _funcionarioService.ObterTodosOsFuncionariosAsync();
         return Ok(funcionario);
     }
 
@@ -44,7 +44,7 @@ public class FuncionarioController : ControllerBase
         var funcionario = _mapper.Map<Funcionario>(postFuncionarioDTO); // Conversão de DTO para entidade
         
         var funcionarioCriado = await _funcionarioService.CriarFuncionarioAsync(funcionario);
-        return CreatedAtAction(nameof(ObteFuncionario), new { funcionarioCriado.Id },
+        return CreatedAtAction(nameof(ObterTodosOsFuncionarios), new { funcionarioCriado.Id },
             funcionarioCriado);
     }
     // [Authorize(Roles = "put")]

@@ -21,7 +21,7 @@ public class HistoricoProdutoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterTodosOsHistoricosProdutos()
     {
-        var historicoProduto = await _historicoProdutoService.ObterTodosHistoricoProdutosAsync();
+        var historicoProduto = await _historicoProdutoService.ObterTodosOsHistoricosProdutosAsync();
         return Ok(historicoProduto);
     }
 

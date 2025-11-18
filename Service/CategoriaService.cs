@@ -31,7 +31,14 @@ public class CategoriaService : ICategoriaService
 
     public async Task<Categoria?> ObterCategoriaPorIdAsync([Range(1, int.MaxValue)] int id)
     {
-        return await _uow.Categoria.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID
+        try
+        {
+            return await _uow.Categoria.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para obter por ID
+        }
+        catch (Exception)
+        {
+            throw;
+        }
     }
 
     public async Task<Categoria> CriarCategoriaAsync(Categoria categoria)

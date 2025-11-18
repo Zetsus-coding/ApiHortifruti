@@ -15,10 +15,14 @@ public class FornecedorProdutoController : ControllerBase
 {
     private readonly IFornecedorProdutoService _fornecedorProdutoService;
     private readonly IMapper _mapper;
+    private readonly IProdutoService _produtoService;
 
-    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService, IMapper mapper)
+    // Construtor com injeção de dependência do serviço e do mapper
+
+    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService, IProdutoService produtoService, IMapper mapper)
     {
         _fornecedorProdutoService = fornecedorProdutoService;
+        _produtoService = produtoService;
         _mapper = mapper;
     }
 
@@ -44,20 +48,20 @@ public class FornecedorProdutoController : ControllerBase
     // Operação de consulta de todos os produtos de um fornecedor
     // [Authorize(Roles = "get(id)")]
     [HttpGet("fornecedor/{fornecedorId}")]
-    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
+    public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
     {
-        var produtosFornecedor = await _fornecedorProdutoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
+        var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
         return Ok(produtosFornecedor);
     }
 
     // Operação de consulta de todos os produtos de um fornecedor
     // [Authorize(Roles = "get(id)")]
-    [HttpGet("fornecedor/{fornecedorId}")]
-    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
-    {
-        var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
-        return Ok(produtosFornecedor);
-    }
+    // [HttpGet("fornecedor/{fornecedorId}")]
+    // public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
+    // {
+    //     var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
+    //     return Ok(produtosFornecedor);
+    // }
 
     // Operação de criação do registro na tabela
     // [Authorize(Roles = "post")]

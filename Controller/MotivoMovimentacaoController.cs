@@ -26,7 +26,7 @@ public class MotivoMovimentacaoController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MotivoMovimentacao>>> ObterTodosOsMotivosMovimentacao()
     {
-        var motivoMovimentacao = await _motivoMovimentacaoService.ObterTodosMotivoMovimentacaoAsync();
+        var motivoMovimentacao = await _motivoMovimentacaoService.ObterTodosOsMotivosMovimentacaoAsync();
         return Ok(motivoMovimentacao);
     }
 
@@ -49,7 +49,7 @@ public class MotivoMovimentacaoController : ControllerBase
         var motivoMovimentacao = _mapper.Map<MotivoMovimentacao>(postMotivoMovimentacaoDTO); // Mapeamento DTO -> Domain
 
         var motivoMovimentacaoCriada = await _motivoMovimentacaoService.CriarMotivoMovimentacaoAsync(motivoMovimentacao);
-        return CreatedAtAction(nameof(ObterMotivoMovimentacao), new { id = motivoMovimentacaoCriada.Id },
+        return CreatedAtAction(nameof(ObterTodosOsMotivosMovimentacao), new { id = motivoMovimentacaoCriada.Id },
             motivoMovimentacaoCriada);
     }
 

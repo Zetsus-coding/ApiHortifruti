@@ -26,7 +26,7 @@ public class SaidaController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Saida>>> ObterTodasAsSaidas() // get all
     {
-        var saida = await _saidaService.ObterTodasAsSaidaAsync();
+        var saida = await _saidaService.ObterTodasAsSaidasAsync();
         return Ok(saida); 
     }
 
