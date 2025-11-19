@@ -2,6 +2,7 @@ using ApiHortifruti.Controllers;
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service;
+using ApiHortifruti.Service.Interfaces;
 using Moq;
 using Xunit;
 
@@ -11,7 +12,7 @@ public class FornecedorServiceTests
 {
     private readonly Mock<IUnityOfWork> _mockUow;
     private readonly Mock<IFornecedorRepository> _mockFornecedorRepo;
-    private readonly Mock<ApiHortifruti.Tests.Interfaces.IFornecedorServiceTests.IDateTimeProvider> _mockDateTimeProvider;
+    private readonly Mock<IDateTimeProvider> _mockDateTimeProvider;
     private readonly FornecedorService _service;
     
     private readonly DateOnly _hojeAtual = DateOnly.FromDateTime(DateTime.Today);
@@ -26,7 +27,7 @@ public class FornecedorServiceTests
     {
         _mockUow = new Mock<IUnityOfWork>();
         _mockFornecedorRepo = new Mock<IFornecedorRepository>();
-        _mockDateTimeProvider = new Mock<ApiHortifruti.Tests.Interfaces.IFornecedorServiceTests.IDateTimeProvider>();
+        _mockDateTimeProvider = new Mock<IDateTimeProvider>();
 
         // Configurar o UoW para retornar o Repositório de Fornecedor
         _mockUow.Setup(uow => uow.Fornecedor).Returns(_mockFornecedorRepo.Object);

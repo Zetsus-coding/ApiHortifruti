@@ -4,6 +4,7 @@ using ApiHortifruti.Service;
 using Moq;
 using Xunit;
 using Microsoft.EntityFrameworkCore.Storage;
+using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Tests;
 
@@ -14,7 +15,7 @@ public class ProdutoServiceTests
     private readonly Mock<ICategoriaRepository> _mockCategoriaRepo;
     private readonly Mock<IUnidadeMedidaRepository> _mockUnidadeMedidaRepo;
     private readonly Mock<IHistoricoProdutoRepository> _mockHistoricoProdutoRepo;
-    private readonly Mock<Interfaces.IProdutoServiceTests.IDateTimeProvider> _mockDateTimeProvider;
+    private readonly Mock<IDateTimeProvider> _mockDateTimeProvider;
     private readonly ProdutoService _service;
     
     // Data Fixa para testes determinísticos
@@ -38,7 +39,7 @@ public class ProdutoServiceTests
         _mockCategoriaRepo = new Mock<ICategoriaRepository>();
         _mockUnidadeMedidaRepo = new Mock<IUnidadeMedidaRepository>();
         _mockHistoricoProdutoRepo = new Mock<IHistoricoProdutoRepository>();
-        _mockDateTimeProvider = new Mock<Interfaces.IProdutoServiceTests.IDateTimeProvider>(); // Ajuste o namespace conforme sua interface
+        _mockDateTimeProvider = new Mock<IDateTimeProvider>();
 
         // Configurar o UoW para retornar os Repositórios
         _mockUow.Setup(uow => uow.Produto).Returns(_mockProdutoRepo.Object);
@@ -46,7 +47,7 @@ public class ProdutoServiceTests
         _mockUow.Setup(uow => uow.UnidadeMedida).Returns(_mockUnidadeMedidaRepo.Object);
         _mockUow.Setup(uow => uow.HistoricoProduto).Returns(_mockHistoricoProdutoRepo.Object);
 
-        // 🚨 CORREÇÃO IMPORTANTE: Configurar Transações para evitar NullReferenceException
+
         _mockUow.Setup(uow => uow.BeginTransactionAsync()).ReturnsAsync(Mock.Of<IDbContextTransaction>());        
         _mockUow.Setup(uow => uow.CommitAsync()).Returns(Task.CompletedTask);
         _mockUow.Setup(uow => uow.RollbackAsync()).Returns(Task.CompletedTask); // O Rollback precisa estar configurado para ser rastreado

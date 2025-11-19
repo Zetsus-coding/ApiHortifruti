@@ -7,11 +7,11 @@ namespace ApiHortifruti.Service;
 public class ProdutoService : IProdutoService
 {
     private readonly IUnityOfWork _uow;
-    private readonly Tests.Interfaces.IProdutoServiceTests.IDateTimeProvider _dateTimeProvider;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
 
     // Construtor com injeção de dependência do repositório
-    public ProdutoService(IUnityOfWork uow, Tests.Interfaces.IProdutoServiceTests.IDateTimeProvider dateTimeProvider)
+    public ProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider)
     {
         _uow = uow;
         _dateTimeProvider = dateTimeProvider;
@@ -93,7 +93,7 @@ public class ProdutoService : IProdutoService
 
     public async Task AtualizarProdutoAsync(int id, Produto produto)
     {
-        var transaction = await _uow.BeginTransactionAsync();
+        await _uow.BeginTransactionAsync();
 
 
         try
