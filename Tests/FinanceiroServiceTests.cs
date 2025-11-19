@@ -3,14 +3,6 @@ using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Services;
 using Moq;
 using Xunit;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SuaApi.Services; // Para a interface IFinanceiroService (assumindo que está neste namespace ou ApiHortifruti.Service.Interfaces)
-
-// ⚠️ ATENÇÃO: As interfaces IEntradaRepository e ISaidaRepository devem estar referenciadas
-// corretamente no seu projeto de testes, assim como IUnityOfWork.
-// Usaremos os nomes de métodos esperados do seu serviço.
 
 namespace ApiHortifruti.Tests;
 
@@ -32,16 +24,12 @@ public class FinanceiroServiceTests
 
     public FinanceiroServiceTests()
     {
-        // 1. Inicializar Mocks
         _mockUow = new Mock<IUnityOfWork>();
         _mockEntradaRepo = new Mock<IEntradaRepository>();
         _mockSaidaRepo = new Mock<ISaidaRepository>();
 
-        // 2. Configurar o UoW para retornar os Repositórios
         _mockUow.Setup(uow => uow.Entrada).Returns(_mockEntradaRepo.Object);
         _mockUow.Setup(uow => uow.Saida).Returns(_mockSaidaRepo.Object);
-
-        // 3. Configurar os comportamentos dos Repositórios (Setups)
 
         // Configuração de Lucro Semanal (7 dias atrás até hoje fixo)
         var dataInicioSemana = _hojeAtual.AddDays(-7);
@@ -70,12 +58,6 @@ public class FinanceiroServiceTests
         _mockEntradaRepo.Setup(r => r.ObterRecentesAsync()).ReturnsAsync(entradasRecentesFake);
 
 
-        // 4. Instanciar o serviço injetando o mock do UoW
-        // ⚠️ IMPORTANTE: O serviço depende de DateTime.Today. Precisamos de um artifício
-        // para fixar a data, mas, como o serviço não permite injeção de IDateTimeProvider,
-        // o teste irá falhar se executado em uma data diferente. Para fins de demonstração,
-        // vamos assumir que a data é a correta no momento da execução, mas em código real
-        // você precisaria injetar um provedor de data e hora.
 
         _service = new FinanceiroService(_mockUow.Object);
     }

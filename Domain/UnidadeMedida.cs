@@ -4,14 +4,14 @@ namespace ApiHortifruti.Domain;
 
 public class UnidadeMedida
 {
-    public int Id { get; private set; }
+    public int Id { get; set; }
 
-    public string Nome { get; private set; } = null!;
+    public string Nome { get; set; } = null!;
 
-    public string Abreviacao { get; private set; } = null!;
+    public string Abreviacao { get; set; } = null!;
 
     [JsonIgnore]
-    public virtual ICollection<Produto> Produto { get; private set; } = new List<Produto>();
+    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
 
     //public UnidadeMedida() { }
 

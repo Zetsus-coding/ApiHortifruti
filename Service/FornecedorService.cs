@@ -47,6 +47,7 @@ public class FornecedorService : IFornecedorService
             throw new ArgumentException("O ID do fornecedor na URL não corresponde ao ID no corpo da requisição.");
         }
         await _uow.Fornecedor.AtualizarAsync(fornecedor);
+        await _uow.SaveChangesAsync();
     }
 
     public Task<IEnumerable<FornecedorProduto>> ObterFornecedoresPorProdutoIdAsync(int produtoId)

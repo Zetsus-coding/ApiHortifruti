@@ -10,6 +10,8 @@ public interface IFornecedorService
     Task<IEnumerable<FornecedorProduto>> ObterFornecedoresPorProdutoIdAsync(int produtoId); // TODO: VERIFICAR E IMPLEMENTAR
     Task<Fornecedor> CriarFornecedorAsync(Fornecedor fornecedor);
     Task AtualizarFornecedorAsync(int id, Fornecedor fornecedor);
+    
+    
 
     // Task DeletarFornecedorAsync(int id);
 }

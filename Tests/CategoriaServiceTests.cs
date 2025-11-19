@@ -25,7 +25,6 @@ public class CategoriaServiceTests
         _mockUow = new Mock<IUnityOfWork>();
 
         // Configurar o Mock do Repositório (que está dentro do UoW)
-        // Note: Crie um mock para o repositório IRepository<Categoria>
         var mockCategoriaRepository = new Mock<ICategoriaRepository>();
 
         // Configurar o comportamento do método ObterTodosAsync
@@ -172,8 +171,6 @@ public class CategoriaServiceTests
         await Assert.ThrowsAsync<ArgumentException>(
             () => _service.AtualizarCategoriaAsync(idUrl, categoriaComIdDiferente));
 
-        // Assert (Verificar que NENHUM método de persistência foi chamado)
-        // Isso é crucial: se a validação falha, nada deve ser enviado ao repositório/banco de dados.
         _mockUow.Verify(uow => uow.Categoria.AtualizarAsync(It.IsAny<Categoria>()), Times.Never);
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
     }

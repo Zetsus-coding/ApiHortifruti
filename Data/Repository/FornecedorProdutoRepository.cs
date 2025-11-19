@@ -41,7 +41,6 @@ public class FornecedorProdutoRepository : IFornecedorProdutoRepository
     public async Task AtualizarAsync(FornecedorProduto fornecedorProduto)
     {
         _context.Entry(fornecedorProduto).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int fornecedorId, int produtoId)
@@ -51,7 +50,6 @@ public class FornecedorProdutoRepository : IFornecedorProdutoRepository
         if (fornecedorProduto != null)
         {
             _context.FornecedorProduto.Remove(fornecedorProduto);
-            await _context.SaveChangesAsync();
         }
     }
 }

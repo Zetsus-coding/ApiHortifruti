@@ -26,14 +26,12 @@ public class MotivoMovimentacaoRepository : IMotivoMovimentacaoRepository
     public async Task<MotivoMovimentacao> AdicionarAsync(MotivoMovimentacao motivoMovimentacao)
     {
         _context.MotivoMovimentacao.Add(motivoMovimentacao);
-        await _context.SaveChangesAsync();
         return motivoMovimentacao;
     }
 
     public async Task AtualizarAsync(MotivoMovimentacao motivoMovimentacao)
     {
         _context.Entry(motivoMovimentacao).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
@@ -43,7 +41,6 @@ public class MotivoMovimentacaoRepository : IMotivoMovimentacaoRepository
         if (motivoMovimentacao != null)
         {
             _context.MotivoMovimentacao.Remove(motivoMovimentacao);
-            await _context.SaveChangesAsync();
         }
     }
 }
