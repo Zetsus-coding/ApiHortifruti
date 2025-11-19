@@ -4,14 +4,16 @@ using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
 
-
 public class FornecedorProdutoService : IFornecedorProdutoService
 {
     private readonly IUnityOfWork _uow;
+    // Altere o namespace para o local correto da sua interface
+    private readonly ApiHortifruti.Service.Interfaces.IDateTimeProvider _dateTimeProvider;
 
-    public FornecedorProdutoService(IUnityOfWork uow)
+    public FornecedorProdutoService(IUnityOfWork uow, ApiHortifruti.Service.Interfaces.IDateTimeProvider dateTimeProvider)
     {
         _uow = uow;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<IEnumerable<FornecedorProduto>> ObterTodosOsFornecedorProdutoAsync()
@@ -33,30 +35,25 @@ public class FornecedorProdutoService : IFornecedorProdutoService
 
     public async Task<FornecedorProduto> CriarFornecedorProdutoAsync(FornecedorProduto fornecedorProduto)
     {
-        var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornecedorProduto.FornecedorId); // Consulta o fornecedor por id
-        var produto = await _uow.Produto.ObterPorIdAsync(fornecedorProduto.ProdutoId); // Consulta o produto por id
-        var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorProduto.FornecedorId, fornecedorProduto.ProdutoId); // Consulta a relação pelos id's
-
-        if (fornecedor == null) // Valida se o fornecedor existe
-            throw new KeyNotFoundException("Fornecedor não encontrado.");
-
-        if (produto == null) // Valida se o produto existe
-            throw new KeyNotFoundException("Produto não encontrado.");
-
-        if (existente != null) // Valida se a relação já existe
-            throw new KeyNotFoundException("A relação entre o fornecedor e o produto já existe.");
-
-        await _uow.BeginTransactionAsync(); // Inicia a transação
+        await _uow.BeginTransactionAsync();
 
         try
         {
-            fornecedorProduto.Disponibilidade = true; // Define a disponibilidade como verdadeira por padrão
-            fornecedorProduto.DataRegistro = DateOnly.FromDateTime(DateTime.Now); // Definição da data de registro como a data atual
+            var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornecedorProduto.FornecedorId);
+            var produto = await _uow.Produto.ObterPorIdAsync(fornecedorProduto.ProdutoId);
+            var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorProduto.FornecedorId, fornecedorProduto.ProdutoId);
 
-            var novoFornecedorProduto = await _uow.FornecedorProduto.AdicionarAsync(fornecedorProduto); // Adiciona o novo fornecedorProduto
+            if (fornecedor == null) throw new KeyNotFoundException("Fornecedor não encontrado.");
+            if (produto == null) throw new KeyNotFoundException("Produto não encontrado.");
+            if (existente != null) throw new InvalidOperationException("A relação entre o fornecedor e o produto já existe."); // Mudado para InvalidOperationException (mais semântico para conflito)
 
-            await _uow.SaveChangesAsync(); // Salva as alterações
-            await _uow.CommitAsync(); // Confirma a transação
+            fornecedorProduto.Disponibilidade = true;
+            fornecedorProduto.DataRegistro = _dateTimeProvider.Today; // Usando provider
+
+            var novoFornecedorProduto = await _uow.FornecedorProduto.AdicionarAsync(fornecedorProduto);
+
+            await _uow.SaveChangesAsync();
+            await _uow.CommitAsync();
 
             return novoFornecedorProduto;
         }
@@ -72,37 +69,32 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         if (fornecedorProdutos == null || !fornecedorProdutos.Any())
             throw new ArgumentException("A lista de associações não pode ser nula ou vazia.");
 
-        // Verifica associações duplicadas na lista recebida como parâmetro
         var duplicados = fornecedorProdutos
             .GroupBy(fp => new { fp.FornecedorId, fp.ProdutoId })
             .Where(g => g.Count() > 1)
             .Select(g => g.Key)
             .ToList();
 
-        if (duplicados.Any()) // Se houver duplicatas ([fornecedorId, produtoId]), lança uma exceção
+        if (duplicados.Any())
             throw new InvalidOperationException("Existem associações duplicadas na lista fornecida.");
 
-        await _uow.BeginTransactionAsync(); // Inicia a transação
+        await _uow.BeginTransactionAsync();
 
         try
         {
             foreach (var fornProd in fornecedorProdutos)
             {
+                // Nota: Fazer consultas dentro de loop pode ser lento, mas para manter a lógica original:
                 var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornProd.FornecedorId);
                 var produto = await _uow.Produto.ObterPorIdAsync(fornProd.ProdutoId);
                 var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornProd.FornecedorId, fornProd.ProdutoId);
 
-                if (fornecedor == null)
-                    throw new KeyNotFoundException($"Fornecedor com Id {fornProd.FornecedorId} não encontrado.");
-
-                if (produto == null)
-                    throw new KeyNotFoundException($"Produto com Id {fornProd.ProdutoId} não encontrado.");
-
-                if (existente != null)
-                    throw new InvalidOperationException($"A relação para o FornecedorId {fornProd.FornecedorId} e ProdutoId {fornProd.ProdutoId} já existe.");
+                if (fornecedor == null) throw new KeyNotFoundException($"Fornecedor com Id {fornProd.FornecedorId} não encontrado.");
+                if (produto == null) throw new KeyNotFoundException($"Produto com Id {fornProd.ProdutoId} não encontrado.");
+                if (existente != null) throw new InvalidOperationException($"A relação para o FornecedorId {fornProd.FornecedorId} e ProdutoId {fornProd.ProdutoId} já existe.");
 
                 fornProd.Disponibilidade = true;
-                fornProd.DataRegistro = DateOnly.FromDateTime(DateTime.Now);
+                fornProd.DataRegistro = _dateTimeProvider.Today; // Usando provider
             }
 
             await _uow.FornecedorProduto.AdicionarVariosAsync(fornecedorProdutos);
@@ -121,19 +113,16 @@ public class FornecedorProdutoService : IFornecedorProdutoService
     {
         if (fornecedorId != fornecedorProduto.FornecedorId || produtoId != fornecedorProduto.ProdutoId)
         {
-            // Lançar erro/exceção | [new argumentexception]?
-            return;
+            throw new ArgumentException("Os IDs da relação informados na URL não correspondem ao corpo da requisição.");
         }
+        
         await _uow.FornecedorProduto.AtualizarAsync(fornecedorProduto);
+        await _uow.SaveChangesAsync(); // Adicionado
     }
 
     public async Task DeletarFornecedorProdutoAsync(int fornecedorId, int produtoId)
     {
         await _uow.FornecedorProduto.DeletarAsync(fornecedorId, produtoId);
+        await _uow.SaveChangesAsync(); // Adicionado
     }
-
-    // public Task<IEnumerable<FornecedorProduto>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
-    // {
-    //     throw new NotImplementedException();
-    // }
 }

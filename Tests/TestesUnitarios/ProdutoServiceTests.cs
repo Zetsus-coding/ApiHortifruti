@@ -71,9 +71,7 @@ public class ProdutoServiceTests
         _mockUnidadeMedidaRepo.Setup(r => r.ObterPorIdAsync(It.IsNotIn(1))).ReturnsAsync((UnidadeMedida)null!); 
         
         // Instanciar o serviço
-        // Se você ainda não atualizou o construtor do ProdutoService para receber IDateTimeProvider, remova o segundo argumento abaixo.
         _service = new ProdutoService(_mockUow.Object, _mockDateTimeProvider.Object); 
-        // _service = new ProdutoService(_mockUow.Object, _mockDateTimeProvider.Object); // Use esta linha se já tiver refatorado o serviço
     }
 
     // ---------------------------------------------------------------------

@@ -64,17 +64,17 @@ public class ItemEntradaServiceTests
 
         // Assert
         
-        // 1. Verifica se o método de adicionar itens foi chamado no repositório
+        //Verifica se o método de adicionar itens foi chamado no repositório
         _mockItemEntradaRepo.Verify(r => r.AdicionarItensEntradaAsync(itensParaAdicionar), Times.Once);
 
-        // 2. Verifica se o estoque dos produtos foi atualizado corretamente na memória
+        //Verifica se o estoque dos produtos foi atualizado corretamente na memória
         var produto1 = _produtosFake.First(p => p.Id == 1);
         var produto2 = _produtosFake.First(p => p.Id == 2);
 
         Assert.Equal(150, produto1.QuantidadeAtual); // 100 + 50 = 150
         Assert.Equal(20, produto2.QuantidadeAtual);  // 0 + 20 = 20
 
-        // 3. Verifica se o método de atualizar produto foi chamado para cada item
+        //Verifica se o método de atualizar produto foi chamado para cada item
         _mockProdutoRepo.Verify(r => r.AtualizarAsync(It.IsAny<Produto>()), Times.Exactly(2));
     }
 
