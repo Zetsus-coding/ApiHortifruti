@@ -5,9 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <UserSecretsId>a6638fe1-b103-4ea3-aeaa-39a459fdd5ea</UserSecretsId>
   </PropertyGroup>
-  <ItemGroup>
 
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.11" />
@@ -17,8 +15,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageReference Include="Moq" Version="4.20.72" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.11.0" />
+  </ItemGroup>
+
+  <!-- Corrigido: a pasta ApiHortifruti.Tests está no mesmo nível do ApiHortifruti.csproj -->
+  <ItemGroup>
+    <Compile Remove="ApiHortifruti.Tests\**\*.cs" />
   </ItemGroup>
 </Project>
