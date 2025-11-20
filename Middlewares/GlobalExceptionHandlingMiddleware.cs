@@ -1,4 +1,6 @@
 using ApiHortifruti.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using System.Data;
 using System.Net;
 using System.Text.Json;
@@ -24,7 +26,6 @@ public class GlobalExceptionHandlingMiddleware
         {
             await HandleExeptionAsync(context, ex);
         }
-
     }
 
     private static Task HandleExeptionAsync(HttpContext context, Exception exception)
@@ -69,6 +70,40 @@ public class GlobalExceptionHandlingMiddleware
             mensagem = exception.Message;
             status = HttpStatusCode.BadRequest;
             stackTrace = exception.StackTrace;
+        }
+        else if (exceptionType == typeof(DbUpdateException))
+        {
+            if (exception.InnerException is MySqlException mySqlException) // Verifica se a exceção é do MySQL
+            {
+                switch (mySqlException.Number)
+                {
+                    case 1451: // Restrição de chave estrangeira (referenciada em outro lugar)
+                        mensagem = "Não é possivel excluir o registro pois o mesmo está sendo utilizado em outro lugar. Por favor, verifique outros registros relacionados a este.";
+                        status = HttpStatusCode.Conflict; // 409 Conflito
+                        stackTrace = exception.StackTrace;
+                        break;
+                    case 1452: // Restrição de chave estrangeira (chave informada não existe)
+                        mensagem = "Não é possível adicionar este registro pois a referência informada não existe.";
+                        status = HttpStatusCode.Conflict;
+                        break;
+
+                    case 1062: // Tentativa de inserção de registro duplicado (Unique Key)
+                        mensagem = "Já existe um registro com esses dados (duplicado).";
+                        status = HttpStatusCode.Conflict;
+                        break;
+                    default: // Outras exceções do MySQL não tratadas
+                        mensagem = "Erro ao realizar a operação no banco de dados.Exceção ainda não tratada. ERRO:" + exception.Message;
+                        status = HttpStatusCode.InternalServerError;
+                        stackTrace = exception.StackTrace;
+                        break;
+                }
+            }
+            else
+            {
+                mensagem = "Erro ao salvar dados no banco. ERROR_MSG: " + exception.Message;
+                status = HttpStatusCode.InternalServerError;
+                stackTrace = exception.StackTrace;
+            }
         }
         else
         {

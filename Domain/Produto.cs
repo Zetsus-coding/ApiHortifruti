@@ -22,7 +22,7 @@ public partial class Produto
 
     public decimal QuantidadeMinima { get; set; }
 
-    public bool Ativo { get; set; }
+    public bool Ativo { get; set; } = true;
 
     public virtual Categoria? Categoria { get; set; }
  
@@ -39,4 +39,5 @@ public partial class Produto
 
     [JsonIgnore]
     public virtual ICollection<ItemSaida> ItemSaida { get; set; } = new List<ItemSaida>();
+    
 }

@@ -1,4 +1,7 @@
-// ---------------------------------- //
+# TODO PARA DESENVOLVIMENTO
+    ** TODO DE PROJETOS FUTUROS SERÁ ADICIONADO DEPOIS
+    
+// ----------- TRADUÇÃO ------------- //
 
 ** ALL = (Tudo / Todos)
 ** TODO = (A fazer)
@@ -9,7 +12,7 @@
 
 // ---------------------------------- //
 
-[ Correção / Refatoração ] - FAZER COM MAIS "URGÊNCIA" ------------------------------------------------
+[ Correção / Refatoração ] - FAZER COM MAIS "URGÊNCIA" ------------------------------------------------ //
 
 1. (ALL) TODO -> DTO POST (Checar), DTO GET, DTO PUT, DTO RESPONSE;
 2. (ALL) TODO -> Rever assinaturas dos métodos (padronização);
@@ -19,16 +22,25 @@
 7. (FornecedorProduto) -> ObterPorId não faz sentido (porque BUSCAR só um registro?). Faz mais sentido para mim (Alexandre) buscar os registro por fornecedorId ou por produtoId;
 8. (Produto) -> Obter por código precisa ser definido como será implementado no front para o back (provavelmente com o uso de LINQ "LIKE")
 
-// ------------------------------------------------------------------------
+[ Provável projeto futuro ] ------------------------------------------------ //
 
-[ Provável projeto futuro ]
 4. (ALL) TODO -> Mover o auto mapper para a camada de serviço e adicionar validações nas próprias classes de domínio (ex: pelo construtor) além de métodos de manipulação do próprio objeto dentro dele
     4.1. & 4.2. Exemplo no arquivo de exemplos (TODO.examples.md)
-
-[ Provável projeto futuro ]
 5. (ALL) MAYBE -> Retirar do body os objetos criados (igual no atualizar), apenas responder com os códigos (ex: 2xx, 4xx etc.). Só preencher o body das requisições quando for necessário (em um get, por exemplo)
 
+// ------------------------------------------------------ //
 
+# ENDPOINTS
+
+- Banco
+- Classe de domínio
+- Métodos
+- Testes (manuais)
+
+ - Categoria : DOING [1, 1, ]
+
+
+// ------------------------------------------------------ //
 
 # DIAGRAMA DE CLASSES
 

@@ -37,14 +37,12 @@ public class FornecedorRepository : IFornecedorRepository
         await _context.SaveChangesAsync();
     }
 
-    // public async Task DeletarAsync(int id)
-    // {
-    //     var fornecedor = await ObterPorIdAsync(id);
-
-    //     if (fornecedor != null)
-    //     {
-    //         _context.Fornecedor.Remove(fornecedor);
-    //         await _context.SaveChangesAsync();
-    //     }
-    // }
+    public async Task DeletarAsync(Fornecedor fornecedor)
+    {
+        if (fornecedor != null)
+        {
+            _context.Fornecedor.Remove(fornecedor);
+            await _context.SaveChangesAsync();
+        }
+    }
 }

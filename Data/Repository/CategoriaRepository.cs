@@ -34,14 +34,8 @@ public class CategoriaRepository : ICategoriaRepository
         _context.Entry(categoria).State = EntityState.Modified;
     }
     
-    // public async Task DeletarAsync(int id)
-    // {
-    //     var categoria = await ObterPorIdAsync(id);
-        
-    //     if (categoria != null)
-    //     {
-    //         _context.Categoria.Remove(categoria);
-    //         await _context.SaveChangesAsync();
-    //     }
-    // }
+    public async Task DeletarAsync(Categoria categoria)
+    {
+        _context.Categoria.Remove(categoria);
+    }
 }

@@ -1,0 +1,38 @@
+using ApiHortifruti.Domain;
+using AutoMapper;
+
+public class FornecedorProdutoProfile : Profile
+ {
+     public FornecedorProdutoProfile()
+    {
+        CreateMap<PostFornecedorProdutoDTO, FornecedorProduto>().ReverseMap();
+
+        CreateMap<Fornecedor, FornecedorDetalhesComProdutosDto>()
+            // Mapeamento das propriedades de fornecedor
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.NomeFantasia, opt => opt.MapFrom(src => src.NomeFantasia))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Email))
+            .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.Telefone))
+            
+            // Mapeamento da coleção "aninhada" 
+            // (o automapper usará o profile do inner dto da lista de produtos com informações de fornecimento)
+            .ForMember(dest => dest.Produtos, opt => opt.MapFrom(src => src.FornecedorProduto));
+
+
+        // Inner dto de buscar lista de produtos com detalhes de fornecimento
+        CreateMap<FornecedorProduto, GetProdutoComDetalhesFornecimentoDTO>()
+            // Mapeamento das propriedades do relacionamento (FornecedorProduto)
+            .ForMember(dest => dest.CodigoFornecedor, opt => opt.MapFrom(src => src.CodigoFornecedor))
+            .ForMember(dest => dest.DataRegistro, opt => opt.MapFrom(src => src.DataRegistro))
+            .ForMember(dest => dest.Disponibilidade, opt => opt.MapFrom(src => src.Disponibilidade))
+
+            // Mapeamento das propriedades "aninhadas" (Produto, Categoria, UnidadeMedida etc.(?))
+            .ForMember(dest => dest.ProdutoId, opt => opt.MapFrom(src => src.ProdutoId))
+            .ForMember(dest => dest.NomeProduto, opt => opt.MapFrom(src => src.Produto.Nome))
+            .ForMember(dest => dest.DescricaoProduto, opt => opt.MapFrom(src => src.Produto.Descricao))
+            .ForMember(dest => dest.PrecoAtual, opt => opt.MapFrom(src => src.Produto.Preco))
+            .ForMember(dest => dest.NomeCategoria, opt => opt.MapFrom(src => src.Produto.Categoria.Nome))
+            .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Produto.Codigo))
+            .ForMember(dest => dest.AbreviacaoUnidadeMedida, opt => opt.MapFrom(src => src.Produto.UnidadeMedida.Abreviacao));
+    }
+ }

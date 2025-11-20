@@ -47,14 +47,11 @@ public class ProdutoRepository : IProdutoRepository
        _context.Entry(produto).State = EntityState.Modified;
     }
 
-    // public async Task DeletarAsync(int id)
-    // {
-    //     var produto = await ObterPorIdAsync(id);
-        
-    //     if (produto != null)
-    //     {
-    //         _context.Produto.Remove(produto);
-    //         await _context.SaveChangesAsync();
-    //     }
-    // }
+    public async Task DeletarAsync(Produto produto)
+    {   
+        if (produto != null)
+        {
+            _context.Produto.Remove(produto);
+        }
+    }
 }

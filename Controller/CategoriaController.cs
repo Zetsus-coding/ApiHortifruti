@@ -39,8 +39,6 @@ public class CategoriaController : ControllerBase
         return Ok(categoria);
     }
 
-    // get produtos associados a categoria (aqui [/categoria/idcategoria/produtos] ou em produtos [/produtos?categoria=x])?
-
     // Criação de categoria
     // [Authorize(Roles = "post")]
     [HttpPost]
@@ -63,10 +61,10 @@ public class CategoriaController : ControllerBase
     }
 
     // Exclusão de uma categoria existente
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarCategoria([Range(1, int.MaxValue)] int id)
-    // { 
-    //     await _categoriaService.DeletarCategoriaAsync(id); // Chamada a camada de serviço para deletar
-    //     return NoContent(); 
-    // } 
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarCategoria([Range(1, int.MaxValue)] int id)
+    { 
+        await _categoriaService.DeletarCategoriaAsync(id); // Chamada a camada de serviço para deletar
+        return NoContent(); 
+    } 
 }
