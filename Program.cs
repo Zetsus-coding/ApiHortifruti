@@ -6,8 +6,11 @@ using System.Text.Json.Serialization;
 using ApiHortifruti;
 using ApiHortifruti.Middlewares;
 using Microsoft.AspNetCore.Authentication;
+using ApiHortifruti.Service.Provider;
+using ApiHortifruti.Service.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
 
 // CORS - Configuração para permitir requisições de diferentes origens (domínios)
 var PermitirOrigensEspecificas = "_PermitirOrigensEspecificas";

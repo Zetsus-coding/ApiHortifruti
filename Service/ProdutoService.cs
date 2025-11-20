@@ -7,11 +7,14 @@ namespace ApiHortifruti.Service;
 public class ProdutoService : IProdutoService
 {
     private readonly IUnityOfWork _uow;
+    private readonly IDateTimeProvider _dateTimeProvider;
+
 
     // Construtor com injeção de dependência do repositório
-    public ProdutoService(IUnityOfWork uow)
+    public ProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider)
     {
         _uow = uow;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<IEnumerable<Produto>> ObterTodosOsProdutosAsync()
@@ -52,19 +55,21 @@ public class ProdutoService : IProdutoService
     }
 
     public async Task<Produto> CriarProdutoAsync(Produto produto)
-    {   
-        var categoria = await _uow.Categoria.ObterPorIdAsync(produto.CategoriaId); // Consulta de categoria por id
-        if (categoria is null) throw new KeyNotFoundException("A categoria informada não existe."); // Valida se a categoria existe
-        
-        var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(produto.UnidadeMedidaId); // Consulta de unidade de medida por id
-        if (unidadeMedida is null) throw new KeyNotFoundException("A unidade de medida informada não existe."); // Valida se a unidade de medida existe
-        
-        var codigoExistente = await _uow.Produto.ObterProdutoPorCodigoAsync(produto.Codigo); // Consulta de produto por código
-        if (codigoExistente is not null) throw new ArgumentException("Esse código de produto já existe."); // Valida se o código do produto já existe
-
+    {
         await _uow.BeginTransactionAsync();
+
         try
         {
+            // Consulta de categoria por id
+            var categoria = await _uow.Categoria.ObterPorIdAsync(produto.CategoriaId);
+            if (categoria is null) throw new KeyNotFoundException("A categoria informada não existe."); // Valida se a categoria existe
+
+            var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(produto.UnidadeMedidaId); // Consulta de unidade de medida por id
+            if (unidadeMedida is null) throw new KeyNotFoundException("A unidade de medida informada não existe."); // Valida se a unidade de medida existe
+
+            var codigoExistente = await _uow.Produto.ObterProdutoPorCodigoAsync(produto.Codigo); // Consulta de produto por código
+            if (codigoExistente is not null) throw new ArgumentException("Esse código de produto já existe."); // Valida se o código do produto já existe
+
             await _uow.Produto.AdicionarAsync(produto); // Chamada a camada de repositório (através do Unit of Work) para adicionar o produto
 
             // Cria um registro em historicoProduto com o preço inicial
@@ -90,31 +95,30 @@ public class ProdutoService : IProdutoService
     {
         await _uow.BeginTransactionAsync();
 
+
         try
         {
-            if (id != produto.Id)
-            {
-                throw new ArgumentException("O ID do produto na URL não corresponde ao ID no corpo da requisição.");
-            }
-    
+            if (id != produto.Id)throw new ArgumentException("Os IDs não correspondem.");
+
             var produtoExistente = await _uow.Produto.ObterPorIdAsync(id);
             if (produtoExistente is null) throw new KeyNotFoundException("Produto não encontrado."); // Valida se o produto existe
-            
-            await _uow.Produto.AtualizarAsync(produto);
+
 
             // Cria um registro em historicoProduto com novo preço, se o preço foi alterado
             if (produtoExistente.Preco != produto.Preco)
             {
-                await _uow.HistoricoProduto.AdicionarAsync(new HistoricoProduto
+                var historico = new HistoricoProduto
                 {
-                    ProdutoId = produto.Id,
+                    ProdutoId = id,
                     PrecoProduto = produto.Preco,
-                    DataAlteracao = DateOnly.FromDateTime(DateTime.Now),
-                });
+                    DataAlteracao = _dateTimeProvider?.Today ?? DateOnly.FromDateTime(DateTime.Today)
+                };
+                await _uow.HistoricoProduto.AdicionarAsync(historico);
             }
-    
-            await _uow.SaveChangesAsync(); // Salva as alterações
-            await _uow.CommitAsync(); // Confirma a transação
+
+            await _uow.Produto.AtualizarAsync(produto);
+            await _uow.SaveChangesAsync();
+            await _uow.CommitAsync();
         }
         catch
         {

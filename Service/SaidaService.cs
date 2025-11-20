@@ -1,18 +1,19 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
-
 namespace ApiHortifruti.Service;
 
 public class SaidaService : ISaidaService
 {
     private readonly IUnityOfWork _uow;
     private readonly IItemSaidaService _itemSaidaService;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public SaidaService(IUnityOfWork uow, IItemSaidaService itemSaidaService)
+    public SaidaService(IUnityOfWork uow, IItemSaidaService itemSaidaService, IDateTimeProvider dateTimeProvider)
     {
         _uow = uow;
         _itemSaidaService = itemSaidaService;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     public async Task<IEnumerable<Saida>> ObterTodasAsSaidasAsync()
@@ -27,7 +28,7 @@ public class SaidaService : ISaidaService
 
     public async Task<Saida> CriarSaidaAsync(Saida saida)
     {
-        await using var transaction = await _uow.BeginTransactionAsync();
+        await _uow.BeginTransactionAsync();
 
         try
         {
@@ -67,8 +68,8 @@ public class SaidaService : ISaidaService
                 saida.ValorFinal = saida.ValorTotal;
             }
 
-            saida.DataSaida = DateOnly.FromDateTime(DateTime.Now);
-            saida.HoraSaida = TimeOnly.FromDateTime(DateTime.Now);
+            saida.DataSaida = _dateTimeProvider.Today;
+            saida.HoraSaida = TimeOnly.FromDateTime(_dateTimeProvider.Now);
 
             await _uow.Saida.AdicionarAsync(saida);
             await _itemSaidaService.AdicionarItensSaidaAsync(saida.Id, saida.ItemSaida);
@@ -78,10 +79,10 @@ public class SaidaService : ISaidaService
 
             return saida;
         }
-        catch (Exception exc)
+        catch (Exception)
         {
-            await transaction.RollbackAsync();
-            throw new Exception("Erro ao criar a saída e/ou seus registros subsequentes. MENSAGEM: " + exc.Message);
+            await _uow.RollbackAsync();
+            throw;
         }
     }
 

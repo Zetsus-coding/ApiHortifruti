@@ -41,7 +41,6 @@ public class CategoriaRepository : ICategoriaRepository
     //     if (categoria != null)
     //     {
     //         _context.Categoria.Remove(categoria);
-    //         await _context.SaveChangesAsync();
     //     }
     // }
 }

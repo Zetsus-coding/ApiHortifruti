@@ -26,14 +26,12 @@ public class HistoricoProdutoRepository : IHistoricoProdutoRepository
     public async Task<HistoricoProduto> AdicionarAsync(HistoricoProduto historicoProduto)
     {
         _context.HistoricoProduto.Add(historicoProduto);
-        await _context.SaveChangesAsync();
         return historicoProduto;
     }
 
     public async Task AtualizarAsync(HistoricoProduto historicoProduto)
     {
         _context.Entry(historicoProduto).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
@@ -43,7 +41,6 @@ public class HistoricoProdutoRepository : IHistoricoProdutoRepository
         if (historicoProduto != null)
         {
             _context.HistoricoProduto.Remove(historicoProduto);
-            await _context.SaveChangesAsync();
         }
     }
 }

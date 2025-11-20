@@ -45,14 +45,11 @@ public class EntradaRepository : IEntradaRepository
     public async Task AdicionarAsync(Entrada entrada)
     {
         _context.Entrada.Add(entrada);
-        // await _context.SaveChangesAsync();
-        // return entrada;
     }
 
     public async Task AtualizarAsync(Entrada entrada)
     {
         _context.Entry(entrada).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
     }
 
     public async Task DeletarAsync(int id)
@@ -62,7 +59,6 @@ public class EntradaRepository : IEntradaRepository
         if (entrada != null)
         {
             _context.Entrada.Remove(entrada);
-            await _context.SaveChangesAsync();
         }
     }
 }
