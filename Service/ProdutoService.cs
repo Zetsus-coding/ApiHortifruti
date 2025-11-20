@@ -54,6 +54,7 @@ public class ProdutoService : IProdutoService
     // Inserção de um novo produto
     public async Task<Produto> CriarProdutoAsync(Produto produto)
     {
+        await _uow.BeginTransactionAsync();
         try
         {
             var categoria = await _uow.Categoria.ObterPorIdAsync(produto.CategoriaId); // Consulta de categoria por id
@@ -65,7 +66,6 @@ public class ProdutoService : IProdutoService
             var codigoExistente = await _uow.Produto.ObterProdutoPorCodigoAsync(produto.Codigo); // Consulta de produto por código
             if (codigoExistente is not null) throw new ArgumentException("Esse código de produto já existe."); // Valida se o código do produto já existe
 
-            await _uow.BeginTransactionAsync();
             await _uow.Produto.AdicionarAsync(produto); // Chamada a camada de repositório (através do Unit of Work) para adicionar o produto
 
             // Cria um registro em historicoProduto com o preço inicial (informado no momento da criação do novo produto)
@@ -91,8 +91,6 @@ public class ProdutoService : IProdutoService
     public async Task AtualizarProdutoAsync(int id, Produto produto)
     {
         await _uow.BeginTransactionAsync();
-
-
         try
         {
             if (id != produto.Id) throw new ArgumentException("O ID do produto na URL não corresponde ao ID no corpo da requisição.");
