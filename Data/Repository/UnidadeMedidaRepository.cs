@@ -35,13 +35,8 @@ public class UnidadeMedidaRepository : IUnidadeMedidaRepository
         _context.Entry(unidadeMedida).State = EntityState.Modified;
     }
 
-    // public async Task DeletarAsync(int id)
-    // {
-    //     var unidadeMedida = await ObterPorIdAsync(id);
-
-    //     if (unidadeMedida != null)
-    //     {
-    //         _context.UnidadeMedida.Remove(unidadeMedida);
-    //     }
-    // }
+    public async Task DeletarAsync(UnidadeMedida unidadeMedida)
+    {
+        _context.UnidadeMedida.Remove(unidadeMedida);
+    }
 }

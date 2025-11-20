@@ -73,10 +73,19 @@ public class FornecedorController : ControllerBase
     }
     
     // Exclusão de um fornecedor existente
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarFornecedor([Range(1, int.MaxValue)] int id) 
-    // { 
-    //     await _fornecedorService.DeletarFornecedorAsync(id); // Chamada a camada de serviço para deletar
-    //     return NoContent(); 
-    // }
+    [HttpGet("{id}/produtos")]
+    public async Task<ActionResult<FornecedorDetalhesComProdutosDTO>> ObterFornecedorComProdutos([Range(1, int.MaxValue)] int id)
+    {
+        var fornecedor = await _fornecedorService.ObterFornecedorComProdutosAsync(id);
+        var fornecedorDto = _mapper.Map<FornecedorDetalhesComProdutosDTO>(fornecedor);
+        return Ok(fornecedorDto);
+    }
+
+    // Exclusão de um fornecedor existente
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarFornecedor([Range(1, int.MaxValue)] int id)
+    {
+        await _fornecedorService.DeletarFornecedorAsync(id); // Chamada a camada de serviço para deletar
+        return NoContent();
+    }
 }

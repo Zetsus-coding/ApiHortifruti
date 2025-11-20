@@ -33,15 +33,22 @@ public class FornecedorRepository : IFornecedorRepository
     public async Task AtualizarAsync(Fornecedor fornecedor)
     {
         _context.Entry(fornecedor).State = EntityState.Modified;
-        
     }
 
     public async Task DeletarAsync(Fornecedor fornecedor)
     {
-        if (fornecedor != null)
-        {
-            _context.Fornecedor.Remove(fornecedor);
-            await _context.SaveChangesAsync();
-        }
+        _context.Fornecedor.Remove(fornecedor);
+    }
+
+    public async Task<Fornecedor?> ObterPorIdComProdutosAsync(int id)
+    {
+        return await _context.Fornecedor
+            .Include(f => f.FornecedorProduto)
+            .ThenInclude(fp => fp.Produto)
+            .ThenInclude(p => p.Categoria)
+            .Include(f => f.FornecedorProduto)
+            .ThenInclude(fp => fp.Produto)
+            .ThenInclude(p => p.UnidadeMedida)
+            .FirstOrDefaultAsync(f => f.Id == id);
     }
 }

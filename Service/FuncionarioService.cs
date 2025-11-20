@@ -62,7 +62,10 @@ public class FuncionarioService : IFuncionarioService
 
     public async Task DeletarFuncionarioAsync(int id)
     {
-        await _uow.Funcionario.DeletarAsync(id);
+        var funcionario = await _uow.Funcionario.ObterPorIdAsync(id);
+        if (funcionario == null) throw new NotFoundExeption("O 'Funcionario' informado na requisição não existe");
+
+        await _uow.Funcionario.DeletarAsync(funcionario);
         await _uow.SaveChangesAsync();
     }
 }

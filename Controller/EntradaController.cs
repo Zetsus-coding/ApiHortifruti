@@ -71,12 +71,12 @@ public class EntradaController : ControllerBase
             entradaCriada);
     }
     // [Authorize(Roles = "put")]
-    [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarEntrada([Range(1, int.MaxValue)] int id, Entrada entrada)
-    {
-        await _entradaService.AtualizarEntradaAsync(id, entrada);
-        return NoContent();
-    }
+    // [HttpPut("{id}")]
+    // public async Task<IActionResult> AtualizarEntrada([Range(1, int.MaxValue)] int id, Entrada entrada)
+    // {
+    //     await _entradaService.AtualizarEntradaAsync(id, entrada);
+    //     return NoContent();
+    // }
 
     // [HttpDelete("{id}")]
     // public async Task<IActionResult> DeletarEntrada([Range(1, int.MaxValue)] int id) 

@@ -63,10 +63,10 @@ public class UnidadeMedidaController : ControllerBase
     }
     
     // Exclusão de uma unidade de medida existente
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarUnidadeMedida([Range(1, int.MaxValue)]int id) 
-    // { 
-    //     await _unidadeMedidaService.DeletarUnidadeMedidaAsync(id); 
-    //     return NoContent(); 
-    // }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarUnidadeMedida([Range(1, int.MaxValue)]int id)
+    {
+        await _unidadeMedidaService.DeletarUnidadeMedidaAsync(id);
+        return NoContent();
+    }
 }

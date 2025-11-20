@@ -10,7 +10,6 @@ public interface IEntradaRepository
     Task<decimal> ObterValorTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim);
     Task<IEnumerable<Entrada>> ObterRecentesAsync();
     Task AdicionarAsync(Entrada entrada);
-    Task AtualizarAsync(Entrada entrada);
-    Task DeletarAsync(int id);
-
+    // Task AtualizarAsync(Entrada entrada);
+    // Task DeletarAsync(Entrada entrada);
 }

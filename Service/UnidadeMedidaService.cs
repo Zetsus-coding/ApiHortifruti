@@ -51,8 +51,12 @@ public class UnidadeMedidaService : IUnidadeMedidaService
         await _uow.SaveChangesAsync();
     }
 
-    // public async Task DeletarUnidadeMedidaAsync(int id)
-    // {
-    //     await _unidadeMedidaRepository.DeletarAsync(id);
-    // }
+    public async Task DeletarUnidadeMedidaAsync(int id)
+    {
+        var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(id);
+        if (unidadeMedida == null) throw new NotFoundExeption("A 'Unidade de Medida' informada na requisição não existe");
+
+        await _uow.UnidadeMedida.DeletarAsync(unidadeMedida);
+        await _uow.SaveChangesAsync();
+    }
 }
