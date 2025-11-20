@@ -1,5 +1,7 @@
-namespace ApiHortifruti.Domain.DTO.Profiles;
+using ApiHortifruti.Domain;
 using AutoMapper;
+
+namespace ApiHortifruti.DTO.Profiles;
 
 public class ProdutoProfile : Profile
 {

@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-
 public class PostCategoriaDTO
 {
     [Required(ErrorMessage = "O nome da categoria é obrigatório")]

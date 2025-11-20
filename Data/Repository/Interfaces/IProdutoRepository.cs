@@ -10,6 +10,5 @@ public interface IProdutoRepository
     Task<IEnumerable<Produto>> ObterEstoqueCriticoAsync();
     Task<Produto> AdicionarAsync(Produto produto);
     Task AtualizarAsync(Produto produto);
-   
-    // Task DeletarAsync(int id);
+    Task DeletarAsync(Produto produto);
 }
