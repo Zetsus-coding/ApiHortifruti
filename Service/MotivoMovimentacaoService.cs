@@ -60,8 +60,11 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
 
     public async Task DeletarMotivoMovimentacaoAsync(int id)
     {
+        var motivoMovimentacao = await _uow.MotivoMovimentacao.ObterPorIdAsync(id);
+        if (motivoMovimentacao == null) throw new NotFoundExeption("O 'Motivo de Movimentação' informado na requisição não existe");
+
         // 1. Remove do contexto
-        await _uow.MotivoMovimentacao.DeletarAsync(id);
+        await _uow.MotivoMovimentacao.DeletarAsync(motivoMovimentacao);
         
         // 2. Salva no banco de dados
         await _uow.SaveChangesAsync();

@@ -55,10 +55,10 @@ public class FuncionarioController : ControllerBase
         return NoContent();
     }
     
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarFuncionario([Range(1, int.MaxValue)]int id) 
-    // { 
-    //     await _funcionarioService.DeletarFuncionarioAsync(id); 
-    //     return NoContent(); 
-    // }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarFuncionario([Range(1, int.MaxValue)]int id)
+    {
+        await _funcionarioService.DeletarFuncionarioAsync(id);
+        return NoContent();
+    }
 }

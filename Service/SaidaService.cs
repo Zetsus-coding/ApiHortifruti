@@ -98,7 +98,10 @@ public class SaidaService : ISaidaService
 
     // public async Task DeletarSaidaAsync(int id)
     // {
-    //     await _uow.Saida.DeletarAsync(id);
+    //     var saida = await _uow.Saida.ObterPorIdAsync(id);
+    //     if (saida == null) throw new NotFoundExeption("A 'Saida' informada na requisição não existe");
+
+    //     await _uow.Saida.DeletarAsync(saida);
     //     await _uow.SaveChangesAsync();
     // }
 }

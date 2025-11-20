@@ -35,13 +35,8 @@ public class FuncionarioRepository : IFuncionarioRepository
         _context.Entry(funcionario).State = EntityState.Modified;
     }
 
-    public async Task DeletarAsync(int id)
+    public async Task DeletarAsync(Funcionario funcionario)
     {
-        var funcionario = await ObterPorIdAsync(id);
-
-        if (funcionario != null)
-        {
-            _context.Funcionario.Remove(funcionario);
-        }
+        _context.Funcionario.Remove(funcionario);
     }
 }

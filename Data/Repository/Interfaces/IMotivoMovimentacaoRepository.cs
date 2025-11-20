@@ -8,5 +8,5 @@ public interface IMotivoMovimentacaoRepository
     Task<MotivoMovimentacao?> ObterPorIdAsync(int id);
     Task<MotivoMovimentacao> AdicionarAsync(MotivoMovimentacao motivoMovimentacao);
     Task AtualizarAsync(MotivoMovimentacao motivoMovimentacao);
-    Task DeletarAsync(int id);
+    Task DeletarAsync(MotivoMovimentacao motivoMovimentacao);
 }

@@ -55,8 +55,20 @@ public class FornecedorService : IFornecedorService
         throw new NotImplementedException();
     }
 
-    // public async Task DeletarFornecedorAsync(int id)
-    // {
-    //     await _uow.Fornecedor.DeletarAsync(id);
-    // }
+    public async Task<Fornecedor> ObterFornecedorComProdutosAsync(int id)
+    {
+        var fornecedor = await _uow.Fornecedor.ObterPorIdComProdutosAsync(id);
+        if (fornecedor == null) throw new NotFoundExeption("O 'Fornecedor' informado na requisição não existe");
+
+        return fornecedor;
+    }
+
+    public async Task DeletarFornecedorAsync(int id)
+    {
+        var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(id);
+        if (fornecedor == null) throw new NotFoundExeption("O 'Fornecedor' informado na requisição não existe");
+
+        await _uow.Fornecedor.DeletarAsync(fornecedor);
+        await _uow.SaveChangesAsync();
+    }
 }
