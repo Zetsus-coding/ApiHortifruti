@@ -27,14 +27,13 @@ public class FornecedorRepository : IFornecedorRepository
     public async Task<Fornecedor> AdicionarAsync(Fornecedor fornecedor)
     {
         _context.Fornecedor.Add(fornecedor);
-        await _context.SaveChangesAsync();
         return fornecedor;
     }
 
     public async Task AtualizarAsync(Fornecedor fornecedor)
     {
         _context.Entry(fornecedor).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
+        
     }
 
     public async Task DeletarAsync(Fornecedor fornecedor)

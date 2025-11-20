@@ -8,11 +8,14 @@ namespace ApiHortifruti.Service;
 public class ProdutoService : IProdutoService
 {
     private readonly IUnityOfWork _uow;
+    private readonly IDateTimeProvider _dateTimeProvider;
+
 
     // Construtor com injeção de dependência do repositório
-    public ProdutoService(IUnityOfWork uow)
+    public ProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider)
     {
         _uow = uow;
+        _dateTimeProvider = dateTimeProvider;
     }
 
     // Consulta de todos os produtos
@@ -89,6 +92,7 @@ public class ProdutoService : IProdutoService
     {
         await _uow.BeginTransactionAsync();
 
+
         try
         {
             if (id != produto.Id) throw new ArgumentException("O ID do produto na URL não corresponde ao ID no corpo da requisição.");
@@ -101,12 +105,13 @@ public class ProdutoService : IProdutoService
             // Cria um registro em historicoProduto com novo preço, se o preço foi alterado
             if (produtoExistente.Preco != produto.Preco)
             {
-                await _uow.HistoricoProduto.AdicionarAsync(new HistoricoProduto
+                var historico = new HistoricoProduto
                 {
-                    ProdutoId = produto.Id,
+                    ProdutoId = id,
                     PrecoProduto = produto.Preco,
-                    DataAlteracao = DateOnly.FromDateTime(DateTime.Now),
-                });
+                    DataAlteracao = _dateTimeProvider?.Today ?? DateOnly.FromDateTime(DateTime.Today)
+                };
+                await _uow.HistoricoProduto.AdicionarAsync(historico);
             }
 
             await _uow.SaveChangesAsync(); // Salva as alterações

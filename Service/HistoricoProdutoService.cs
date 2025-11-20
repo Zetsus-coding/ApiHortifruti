@@ -33,25 +33,30 @@ public class HistoricoProdutoService : IHistoricoProdutoService
 
     public async Task<HistoricoProduto> CriarHistoricoProdutoAsync(HistoricoProduto historicoProduto)
     {
-        return await _uow.HistoricoProduto.AdicionarAsync(historicoProduto);
+        var criado = await _uow.HistoricoProduto.AdicionarAsync(historicoProduto);
+
+        await _uow.SaveChangesAsync();
+
+        return criado;
     }
 
     public async Task AtualizarHistoricoProdutoAsync(int id, HistoricoProduto historicoProduto)
     {
         if (id != historicoProduto.Id)
         {
-            // Lançar erro/exceção
-            return;
+            throw new ArgumentException("O ID informado não é o mesmo que está sendo editado");
         }
         await _uow.HistoricoProduto.AtualizarAsync(historicoProduto);
+        await _uow.SaveChangesAsync();
     }
 
     public async Task DeletarHistoricoProdutoAsync(int id)
     {
         await _uow.HistoricoProduto.DeletarAsync(id);
+        await _uow.SaveChangesAsync();
     }
 
-    public Task<IEnumerable<HistoricoProduto>> ObterHistoricoProdutoPorProdutoIdAsync(int produtoId)
+    public async Task<IEnumerable<HistoricoProduto>> ObterHistoricoProdutoPorProdutoIdAsync(int produtoId)
     {
         throw new NotImplementedException();
     }

@@ -53,14 +53,16 @@ public class FuncionarioService : IFuncionarioService
     {
         if (id != funcionario.Id)
         {
-            // Lançar erro/exceção
-            return;
+            throw new ArgumentException("O ID informado não é o mesmo que está sendo editado");
         }
+        
         await _uow.Funcionario.AtualizarAsync(funcionario);
+        await _uow.SaveChangesAsync();
     }
 
     public async Task DeletarFuncionarioAsync(int id)
     {
         await _uow.Funcionario.DeletarAsync(id);
+        await _uow.SaveChangesAsync();
     }
 }

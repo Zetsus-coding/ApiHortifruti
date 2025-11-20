@@ -42,7 +42,6 @@ public class UnidadeMedidaRepository : IUnidadeMedidaRepository
     //     if (unidadeMedida != null)
     //     {
     //         _context.UnidadeMedida.Remove(unidadeMedida);
-    //         await _context.SaveChangesAsync();
     //     }
     // }
 }
