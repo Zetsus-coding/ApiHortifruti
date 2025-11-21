@@ -54,8 +54,10 @@ public class CategoriaController : ControllerBase
     // Atualização de uma categoria existente
     // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarCategoria([Range(1, int.MaxValue)] int id, Categoria categoria)
+    public async Task<IActionResult> AtualizarCategoria([Range(1, int.MaxValue)] int id, PutCategoriaDTO putCategoriaDTO)
     {
+        var categoria = _mapper.Map<Categoria>(putCategoriaDTO); // Conversão de DTO para entidade
+        
         await _categoriaService.AtualizarCategoriaAsync(id, categoria); // Chamada a camada de serviço para atualizar
         return NoContent();
     }

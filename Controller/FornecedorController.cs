@@ -42,13 +42,13 @@ public class FornecedorController : ControllerBase
         return Ok(fornecedor);
     }
 
-    // Operação de consulta de todos os fornecedores de um produto
-    // [Authorize(Roles = "get(id)")]
-    [HttpGet("produto/{produtoId}")]
-    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterFornecedoresPorProdutoId([Range(1, int.MaxValue)] int produtoId)
+    // Consulta de um fornecedor específico com a lista de produtos que ele fornece
+    [HttpGet("{id}/produtos")]
+    public async Task<ActionResult<FornecedorComListaProdutosDTO>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int id)
     {
-        var fornecedoresProduto = await _fornecedorService.ObterFornecedoresPorProdutoIdAsync(produtoId);
-        return Ok(fornecedoresProduto);
+        var fornecedor = await _fornecedorService.ObterProdutosPorFornecedorIdAsync(id);
+        var fornecedorDto = _mapper.Map<FornecedorComListaProdutosDTO>(fornecedor);
+        return Ok(fornecedorDto);
     }
 
     // Criação de um novo fornecedor
@@ -72,14 +72,6 @@ public class FornecedorController : ControllerBase
         return NoContent();
     }
     
-    // Exclusão de um fornecedor existente
-    [HttpGet("{id}/produtos")]
-    public async Task<ActionResult<FornecedorDetalhesComProdutosDTO>> ObterFornecedorComProdutos([Range(1, int.MaxValue)] int id)
-    {
-        var fornecedor = await _fornecedorService.ObterFornecedorComProdutosAsync(id);
-        var fornecedorDto = _mapper.Map<FornecedorDetalhesComProdutosDTO>(fornecedor);
-        return Ok(fornecedorDto);
-    }
 
     // Exclusão de um fornecedor existente
     [HttpDelete("{id}")]

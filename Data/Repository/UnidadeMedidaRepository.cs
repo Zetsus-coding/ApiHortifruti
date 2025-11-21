@@ -37,6 +37,11 @@ public class UnidadeMedidaRepository : IUnidadeMedidaRepository
 
     public async Task DeletarAsync(UnidadeMedida unidadeMedida)
     {
-        _context.UnidadeMedida.Remove(unidadeMedida);
+        if (unidadeMedida == null) throw new KeyNotFoundException("Unidade de medida informada na requisição não existe.");
+
+        if (unidadeMedida != null)
+        {
+            _context.UnidadeMedida.Remove(unidadeMedida);
+        }
     }
 }

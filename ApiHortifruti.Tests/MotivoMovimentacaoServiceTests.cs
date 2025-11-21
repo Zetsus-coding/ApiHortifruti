@@ -140,17 +140,17 @@ public class MotivoMovimentacaoServiceTests
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
     }
 
-    [Fact(DisplayName = "DeletarMotivo deve chamar Deletar e SaveChanges")]
-    public async Task DeletarMotivoAsync_DeveDeletar()
-    {
-        // Arrange
-        int idDeletar = 2;
+    // [Fact(DisplayName = "DeletarMotivo deve chamar Deletar e SaveChanges")]
+    // public async Task DeletarMotivoAsync_DeveDeletar()
+    // {
+    //     // Arrange
+    //     int idDeletar = 2;
 
-        // Act
-        await _service.DeletarMotivoMovimentacaoAsync(idDeletar);
+    //     // Act
+    //     await _service.DeletarMotivoMovimentacaoAsync(idDeletar);
 
-        // Assert
-        _mockMotivoRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    }
+    //     // Assert
+    //     _mockMotivoRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
+    //     _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    // }
 }

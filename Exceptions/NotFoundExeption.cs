@@ -1,10 +1,6 @@
 namespace ApiHortifruti.Exceptions
 {
-    public class NotFoundExeption : Exception
+    public class NotFoundException(string message) : Exception(message)
     {
-        public NotFoundExeption(string message) : base(message)
-        {
-            
-        }
     }
 }

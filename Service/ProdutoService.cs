@@ -42,18 +42,31 @@ public class ProdutoService : IProdutoService
         return await _uow.Produto.ObterEstoqueCriticoAsync();
     }
 
-    // Consulta de todos os produtos que um fornecedor fornece
-    public async Task<IEnumerable<FornecedorProduto>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
-    {
-        var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornecedorId);
-        if (fornecedor is null) throw new NotFoundExeption("O 'Fornecedor' informado na requisição não existe");
-
-        return await _uow.FornecedorProduto.ObterProdutosPorFornecedorIdAsync(fornecedorId);
-    }
-
     // Inserção de um novo produto
-    public async Task<Produto> CriarProdutoAsync(Produto produto)
+    public async Task<Produto> CriarProdutoAsync(PostProdutoDTO postProdutoDTO)
     {
+        // Conversão manual de DTO para entidade
+        var produto = new Produto
+        {
+            Nome = postProdutoDTO.Nome,
+            Codigo = postProdutoDTO.Codigo,
+            CategoriaId = postProdutoDTO.CategoriaId,
+            UnidadeMedidaId = postProdutoDTO.UnidadeMedidaId,
+            Preco = postProdutoDTO.Preco,
+            QuantidadeMinima = postProdutoDTO.QuantidadeMinima,
+            QuantidadeAtual = 0, // Inicializa o estoque atual como 0
+        };
+
+        // Inicializa o histórico de preços do produto
+        produto.HistoricoProduto = new List<HistoricoProduto>
+        {
+            new HistoricoProduto
+            {
+                PrecoProduto = produto.Preco,
+                DataAlteracao = _dateTimeProvider?.Today ?? DateOnly.FromDateTime(DateTime.Today) // Usa a data atual fornecida pelo IDateTimeProvider ou a data de hoje
+            }
+        };
+
         await _uow.BeginTransactionAsync();
         try
         {
@@ -69,12 +82,7 @@ public class ProdutoService : IProdutoService
             await _uow.Produto.AdicionarAsync(produto); // Chamada a camada de repositório (através do Unit of Work) para adicionar o produto
 
             // Cria um registro em historicoProduto com o preço inicial (informado no momento da criação do novo produto)
-            await _uow.HistoricoProduto.AdicionarAsync(new HistoricoProduto
-            {
-                ProdutoId = produto.Id,
-                PrecoProduto = produto.Preco,
-                DataAlteracao = DateOnly.FromDateTime(DateTime.Now),
-            });
+            await _uow.HistoricoProduto.AdicionarAsync(produto.HistoricoProduto.First());
 
             await _uow.SaveChangesAsync(); // Salva as alterações
             await _uow.CommitAsync(); // Confirma a transação
@@ -98,10 +106,13 @@ public class ProdutoService : IProdutoService
             var produtoExistente = await _uow.Produto.ObterPorIdAsync(id);
             if (produtoExistente is null) throw new KeyNotFoundException("Produto não encontrado."); // Valida se o produto existe
 
+            var precoAntigo = produtoExistente.Preco;
+            
+
             await _uow.Produto.AtualizarAsync(produto);
 
             // Cria um registro em historicoProduto com novo preço, se o preço foi alterado
-            if (produtoExistente.Preco != produto.Preco)
+            if (precoAntigo != produto.Preco)
             {
                 var historico = new HistoricoProduto
                 {
@@ -125,7 +136,7 @@ public class ProdutoService : IProdutoService
     public async Task DeletarProdutoAsync(int id)
     {
         var produto = await _uow.Produto.ObterPorIdAsync(id);
-        if (produto == null) throw new NotFoundExeption("O 'Produto' informado na requisição não existe");
+        if (produto == null) throw new NotFoundException("O 'Produto' informado na requisição não existe");
 
         await _uow.Produto.DeletarAsync(produto);
         await _uow.SaveChangesAsync();

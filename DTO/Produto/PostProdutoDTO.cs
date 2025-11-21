@@ -36,6 +36,6 @@ public class PostProdutoDTO
 
 
     [Required(ErrorMessage = "A quantidade mínima do produto é obrigatória")]
-    [Range(0, double.MaxValue, ErrorMessage = "A quantidade mínima não pode ser negativa")]
+    [Range(typeof(decimal), "0", "99999999,99", ErrorMessage = "A quantidade mínima não pode ser negativa")]
     public decimal QuantidadeMinima { get; set; }
 }

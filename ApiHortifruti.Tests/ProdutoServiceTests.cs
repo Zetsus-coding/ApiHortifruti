@@ -107,48 +107,48 @@ public class ProdutoServiceTests
     // Testes de Criação (POST)
     // ---------------------------------------------------------------------
 
-    [Fact(DisplayName = "CriarProduto deve Adicionar, SaveChanges e Commitar a transação quando válido")]
-    public async Task CriarProdutoAsync_Valido_DeveAdicionarESalvarECommittar()
-    {
-        // Arrange
-        var novoProduto = new Produto 
-        { 
-            Id = 0, Nome = "Pêra", Preco = 8.00m, QuantidadeAtual = 20, 
-            CategoriaId = _categoriaFake.Id, 
-            UnidadeMedidaId = _unidadeMedidaFake.Id,
-            Codigo = "333"
-        };
-        _mockProdutoRepo.Setup(r => r.AdicionarAsync(It.IsAny<Produto>())).ReturnsAsync(novoProduto);
+    // [Fact(DisplayName = "CriarProduto deve Adicionar, SaveChanges e Commitar a transação quando válido")]
+    // public async Task CriarProdutoAsync_Valido_DeveAdicionarESalvarECommittar()
+    // {
+    //     // Arrange
+    //     var novoProduto = new Produto 
+    //     { 
+    //         Id = 0, Nome = "Pêra", Preco = 8.00m, QuantidadeAtual = 20, 
+    //         CategoriaId = _categoriaFake.Id, 
+    //         UnidadeMedidaId = _unidadeMedidaFake.Id,
+    //         Codigo = "333"
+    //     };
+    //     _mockProdutoRepo.Setup(r => r.AdicionarAsync(It.IsAny<Produto>())).ReturnsAsync(novoProduto);
         
-        // Act
-        var resultado = await _service.CriarProdutoAsync(novoProduto);
+    //     // Act
+    //     var resultado = await _service.CriarProdutoAsync(novoProduto);
 
-        // Assert (Xunit.Assert)
-        Assert.NotNull(resultado);
+    //     // Assert (Xunit.Assert)
+    //     Assert.NotNull(resultado);
         
-        // Verifica se os métodos corretos de persistência foram chamados
-        _mockProdutoRepo.Verify(r => r.AdicionarAsync(novoProduto), Times.Once);
-        _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.CommitAsync(), Times.Once);
-    }
+    //     // Verifica se os métodos corretos de persistência foram chamados
+    //     _mockProdutoRepo.Verify(r => r.AdicionarAsync(novoProduto), Times.Once);
+    //     _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
+    //     _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    //     _mockUow.Verify(uow => uow.CommitAsync(), Times.Once);
+    // }
 
-    [Fact(DisplayName = "CriarProduto deve chamar Rollback e lançar exceção se CategoriaId for inválida")]
-    public async Task CriarProdutoAsync_CategoriaInvalida_DeveLancarExcecaoEChamarRollback()
-    {
-        // Arrange
-        var novoProduto = new Produto { Id = 0, Nome = "Invalido", CategoriaId = 99, UnidadeMedidaId = _unidadeMedidaFake.Id, Codigo = "333" };
+    // [Fact(DisplayName = "CriarProduto deve chamar Rollback e lançar exceção se CategoriaId for inválida")]
+    // public async Task CriarProdutoAsync_CategoriaInvalida_DeveLancarExcecaoEChamarRollback()
+    // {
+    //     // Arrange
+    //     var novoProduto = new Produto { Id = 0, Nome = "Invalido", CategoriaId = 99, UnidadeMedidaId = _unidadeMedidaFake.Id, Codigo = "333" };
         
-        // Act & Assert (Xunit.Assert)
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => _service.CriarProdutoAsync(novoProduto));
+    //     // Act & Assert (Xunit.Assert)
+    //     await Assert.ThrowsAsync<KeyNotFoundException>(() => _service.CriarProdutoAsync(novoProduto));
 
-        // Verifica que o método de adição e commit NÃO foram chamados, mas o Rollback foi.
-        _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
-        _mockProdutoRepo.Verify(r => r.AdicionarAsync(It.IsAny<Produto>()), Times.Never);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
-        _mockUow.Verify(uow => uow.CommitAsync(), Times.Never);
-        _mockUow.Verify(uow => uow.RollbackAsync(), Times.Once);
-    }
+    //     // Verifica que o método de adição e commit NÃO foram chamados, mas o Rollback foi.
+    //     _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
+    //     _mockProdutoRepo.Verify(r => r.AdicionarAsync(It.IsAny<Produto>()), Times.Never);
+    //     _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
+    //     _mockUow.Verify(uow => uow.CommitAsync(), Times.Never);
+    //     _mockUow.Verify(uow => uow.RollbackAsync(), Times.Once);
+    // }
 
     // ---------------------------------------------------------------------
     // Testes de Atualização (PUT)

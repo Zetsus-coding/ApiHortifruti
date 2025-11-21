@@ -24,4 +24,8 @@ public class ItemEntradaDTO
     [Required(ErrorMessage = "O preço do produto é obrigatório")] // Deve ser obrigatório?
     [ValidacaoCampoPreco()] // Preço deve ser maior ou igual a zero e com até duas casas decimais
     public decimal PrecoUnitario { get; set; }
+
+    // Campo de código do fornecedor (opcional), para ser usado durante a criação de entradas caso o registro em fornecedor produto não exista
+    [Required(ErrorMessage = "O código do fornecedor é obrigatório no item da entrada")]
+    public string CodigoFornecedor { get; set; }
 }

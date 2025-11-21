@@ -7,10 +7,9 @@ namespace ApiHortifruti.Service;
 public class FornecedorProdutoService : IFornecedorProdutoService
 {
     private readonly IUnityOfWork _uow;
-    // Altere o namespace para o local correto da sua interface
-    private readonly ApiHortifruti.Service.Interfaces.IDateTimeProvider _dateTimeProvider;
+    private readonly IDateTimeProvider _dateTimeProvider;
 
-    public FornecedorProdutoService(IUnityOfWork uow, ApiHortifruti.Service.Interfaces.IDateTimeProvider dateTimeProvider)
+    public FornecedorProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider)
     {
         _uow = uow;
         _dateTimeProvider = dateTimeProvider;

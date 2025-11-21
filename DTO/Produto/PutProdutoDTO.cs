@@ -2,9 +2,10 @@ using System.ComponentModel.DataAnnotations;
 
 public class PutProdutoDTO
 {
+    // O id é inserido pelo angular no corpo da requisição (e não pelo "usuário em si")
     [Required(ErrorMessage = "O ID do produto é obrigatório para atualizar o produto")]
     [Range(1, int.MaxValue, ErrorMessage = "Por favor, informe um ID de produto válido")]
-    public int Id { get; set; }
+    public int IdProduto { get; set; }
 
 
     [Required(ErrorMessage = "Por favor, informe uma categoria")]
@@ -38,7 +39,7 @@ public class PutProdutoDTO
 
 
     [Required(ErrorMessage = "A quantidade mínima do produto é obrigatória")]
-    [Range(0, double.MaxValue, ErrorMessage = "A quantidade mínima não pode ser negativa")]
+    [Range(typeof(decimal), "0", "99999999,99", ErrorMessage = "A quantidade mínima não pode ser negativa")]
     public decimal QuantidadeMinima { get; set; }
 
 

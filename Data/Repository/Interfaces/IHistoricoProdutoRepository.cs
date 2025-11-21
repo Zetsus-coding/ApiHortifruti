@@ -6,6 +6,7 @@ public interface IHistoricoProdutoRepository
 {
     Task<IEnumerable<HistoricoProduto>> ObterTodosAsync();
     Task<HistoricoProduto?> ObterPorIdAsync(int id);
+    Task<IEnumerable<HistoricoProduto>> ObterPorProdutoIdAsync(int produtoId);
     Task<HistoricoProduto> AdicionarAsync(HistoricoProduto historicoProduto);
     Task AtualizarAsync(HistoricoProduto historicoProduto);
     Task DeletarAsync(int id);

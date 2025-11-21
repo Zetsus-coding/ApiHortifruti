@@ -1,5 +1,6 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
@@ -63,7 +64,7 @@ public class FuncionarioService : IFuncionarioService
     public async Task DeletarFuncionarioAsync(int id)
     {
         var funcionario = await _uow.Funcionario.ObterPorIdAsync(id);
-        if (funcionario == null) throw new NotFoundExeption("O 'Funcionario' informado na requisição não existe");
+        if (funcionario == null) throw new NotFoundException("O 'Funcionario' informado na requisição não existe");
 
         await _uow.Funcionario.DeletarAsync(funcionario);
         await _uow.SaveChangesAsync();

@@ -13,18 +13,16 @@ namespace ApiHortifruti.Controller;
 public class EntradaController : ControllerBase
 {
     private readonly IEntradaService _entradaService;
-    private readonly IMapper _mapper;
 
     // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
-    public EntradaController(IEntradaService entradaService, IMapper mapper)
+    public EntradaController(IEntradaService entradaService)
     {
         _entradaService = entradaService;
-        _mapper = mapper;
     }
 
     // OPERAÇÕES
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Entrada>>> ObterTodasAsEntradas()
+    public async Task<ActionResult<IEnumerable<GetEntradaSimplesDTO>>> ObterTodasAsEntradas()
     {
         var entrada = await _entradaService.ObterTodasAsEntradasAsync();
         return Ok(entrada);
@@ -32,7 +30,7 @@ public class EntradaController : ControllerBase
 
     [HttpGet("{id}")]
     // [Authorize(Roles = "get(id)")]
-    public async Task<ActionResult<Entrada>> ObterEntradaPorId([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<GetEntradaSimplesDTO>> ObterEntradaPorId([Range(1, int.MaxValue)] int id)
     {
         var entrada = await _entradaService.ObterEntradaPorIdAsync(id);
 
@@ -41,17 +39,17 @@ public class EntradaController : ControllerBase
     }
 
     [HttpGet("entradas-recentes")]
-    public async Task<ActionResult<IEnumerable<Entrada>>> ObterEntradasRecentes()
+    public async Task<ActionResult<IEnumerable<GetEntradaSimplesDTO>>> ObterEntradasRecentes()
     {
         try
         {
             var entradas = await _entradaService.ObterEntradasRecentesAsync();
-            
+
             if (entradas == null || !entradas.Any())
             {
                 return NoContent();
             }
-            
+
             return Ok(entradas);
         }
         catch (Exception ex)
@@ -64,24 +62,24 @@ public class EntradaController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Entrada>> CriarEntrada(PostEntradaDTO postEntradaDTO)
     {
-        var entrada = _mapper.Map<Entrada>(postEntradaDTO);
+        var entradaCriada = await _entradaService.CriarEntradaAsync(postEntradaDTO);
 
-        var entradaCriada = await _entradaService.CriarEntradaAsync(entrada);
         return CreatedAtAction(nameof(ObterTodasAsEntradas), new { id = entradaCriada.Id },
             entradaCriada);
     }
-    // [Authorize(Roles = "put")]
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> AtualizarEntrada([Range(1, int.MaxValue)] int id, Entrada entrada)
-    // {
-    //     await _entradaService.AtualizarEntradaAsync(id, entrada);
-    //     return NoContent();
-    // }
-
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarEntrada([Range(1, int.MaxValue)] int id) 
-    // { 
-    //     await _entradaService.DeletarEntradaAsync(id); 
-    //     return NoContent(); 
-    // } 
 }
+
+// [Authorize(Roles = "put")]
+// [HttpPut("{id}")]
+// public async Task<IActionResult> AtualizarEntrada([Range(1, int.MaxValue)] int id, Entrada entrada)
+// {
+//     await _entradaService.AtualizarEntradaAsync(id, entrada);
+//     return NoContent();
+// }
+
+// [HttpDelete("{id}")]
+// public async Task<IActionResult> DeletarEntrada([Range(1, int.MaxValue)] int id) 
+// { 
+//     await _entradaService.DeletarEntradaAsync(id); 
+//     return NoContent(); 
+// } 

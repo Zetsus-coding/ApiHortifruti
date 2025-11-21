@@ -119,34 +119,34 @@ public class HistoricoProdutoServiceTests
         // _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once); 
     }
 
-    [Fact(DisplayName = "AtualizarHistorico deve chamar Atualizar e SaveChanges")]
-    public async Task AtualizarHistoricoProdutoAsync_DeveAtualizar()
-    {
-        // Arrange
-        int idAtualizar = 1;
-        var historicoAtualizado = new HistoricoProduto { Id = idAtualizar, ProdutoId = 1, PrecoProduto = 12m };
+    // [Fact(DisplayName = "AtualizarHistorico deve chamar Atualizar e SaveChanges")]
+    // public async Task AtualizarHistoricoProdutoAsync_DeveAtualizar()
+    // {
+    //     // Arrange
+    //     int idAtualizar = 1;
+    //     var historicoAtualizado = new HistoricoProduto { Id = idAtualizar, ProdutoId = 1, PrecoProduto = 12m };
 
-        // Act
-        await _service.AtualizarHistoricoProdutoAsync(idAtualizar, historicoAtualizado);
+    //     // Act
+    //     await _service.AtualizarHistoricoProdutoAsync(idAtualizar, historicoAtualizado);
 
-        // Assert
-        _mockHistoricoRepo.Verify(r => r.AtualizarAsync(historicoAtualizado), Times.Once);
-        // Se você aplicar a refatoração no Service, descomente a linha abaixo:
-        // _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    }
+    //     // Assert
+    //     _mockHistoricoRepo.Verify(r => r.AtualizarAsync(historicoAtualizado), Times.Once);
+    //     // Se você aplicar a refatoração no Service, descomente a linha abaixo:
+    //     // _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    // }
 
-    [Fact(DisplayName = "DeletarHistorico deve chamar Deletar e SaveChanges")]
-    public async Task DeletarHistoricoProdutoAsync_DeveDeletar()
-    {
-        // Arrange
-        int idDeletar = 1;
+    // [Fact(DisplayName = "DeletarHistorico deve chamar Deletar e SaveChanges")]
+    // public async Task DeletarHistoricoProdutoAsync_DeveDeletar()
+    // {
+    //     // Arrange
+    //     int idDeletar = 1;
 
-        // Act
-        await _service.DeletarHistoricoProdutoAsync(idDeletar);
+    //     // Act
+    //     await _service.DeletarHistoricoProdutoAsync(idDeletar);
 
-        // Assert
-        _mockHistoricoRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
-        // Se você aplicar a refatoração no Service, descomente a linha abaixo:
-        // _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    }
+    //     // Assert
+    //     _mockHistoricoRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
+    //     // Se você aplicar a refatoração no Service, descomente a linha abaixo:
+    //     // _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    // }
 }

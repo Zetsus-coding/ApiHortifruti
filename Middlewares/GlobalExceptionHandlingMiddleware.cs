@@ -41,7 +41,7 @@ public class GlobalExceptionHandlingMiddleware
             status = HttpStatusCode.InternalServerError;
             stackTrace = exception.StackTrace;
         }
-        else if (exceptionType == typeof(NotFoundExeption))
+        else if (exceptionType == typeof(NotFoundException))
         {
             mensagem = exception.Message;
             status = HttpStatusCode.NotFound;
