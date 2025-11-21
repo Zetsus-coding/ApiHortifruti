@@ -23,7 +23,7 @@ builder.Services.AddCors(options =>
                           policy.WithOrigins("http://localhost:4200") // Substitua pelo(s) domínio(s) permitido(s)
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
-                                // .AllowCredentials(); // Caso seja necessário enviar cookies ou credenciais de autenticação (keycloak?)
+                          // .AllowCredentials(); // Caso seja necessário enviar cookies ou credenciais de autenticação (keycloak?)
                       });
 });
 
@@ -33,7 +33,17 @@ var serverVersion = new MySqlServerVersion(new Version(8, 0, 44));
 
 // Conexão com o banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, serverVersion));
+    options.UseMySql(connectionString, serverVersion,
+    
+        mysqlOptions =>
+        {
+            mysqlOptions.EnableRetryOnFailure(
+                maxRetryCount: 5,               // Tenta 5 vezes
+                maxRetryDelay: TimeSpan.FromSeconds(10), // Espera até 10s entre tentativas
+                errorNumbersToAdd: null);
+        }
+    )
+);
 
 // Configurações do keycloak no appsettings
 var keycloakConfig = builder.Configuration.GetSection("Keycloak");
@@ -51,7 +61,8 @@ builder.Services.AddAuthentication(options =>
         options.Audience = keycloakConfig["Audience"];
 
         // A Web API não precisa de um segredo (Client Secret) para validar o token
-        options.RequireHttpsMetadata = builder.Environment.IsProduction(); // Requer HTTPS em produção
+        //options.RequireHttpsMetadata = builder.Environment.IsProduction(); // Requer HTTPS em produção
+        options.RequireHttpsMetadata = false;
 
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -118,6 +129,21 @@ builder.Services.AddApplicationServices(); // Faz o AddScoped automático do ser
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    try
+    {
+        dbContext.Database.Migrate(); // Aplica as tabelas se não existirem
+    }
+    catch (Exception ex)
+    {
+        // Loga o erro caso o banco não esteja pronto ainda
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Ocorreu um erro ao migrar o banco de dados.");
+    }
+}
+
 app.UseHttpsRedirection();
 app.UseRouting();
 
@@ -141,3 +167,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.Run();
+
+
+//para os testes enxergarem a api
+public partial class Program { }

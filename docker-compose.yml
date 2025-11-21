@@ -1,0 +1,56 @@
+services:
+  #Banco de Dados MySQL
+  db:
+    image: mysql:8.0
+    container_name: hortifruti-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+    ports:
+      - "3307:3306" # Porta externa 3307 para não conflitar se você tiver mysql no PC
+    volumes:
+      - mysql_data:/var/lib/mysql # Volume para não perder dados quando desligar
+
+  #Keycloak
+  keycloak:
+    image: quay.io/keycloak/keycloak:26.0
+    container_name: hortifruti-keycloak
+    command: start-dev # Modo dev: HTTP e banco em memória
+    environment:
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      # Habilita acesso HTTP (sem SSL)
+      KC_HTTP_ENABLED: true
+    ports:
+      - "8080:8080" # Acessível em http://localhost:8080
+    restart: on-failure
+
+  #API .NET
+  api:
+    image: littleanjel/hortifruti:latest
+    container_name: hortifruti-api
+    restart: on-failure
+    ports:
+      - "5030:8080" #A documentação da API ficará acessível em http://localhost:5030/scalar
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=db;Database=${DB_NAME};User=root;Password=${DB_PASSWORD};
+      # Configuração do Keycloak
+      - Keycloak__Authority=${KEYCLOAK_URL}
+    depends_on:
+      - db
+
+  #Angular
+  frontend:
+    image: angular-hortifruti:latest
+    container_name: hortifruti-web
+    restart: on-failure
+    pull_policy: never
+    ports:
+      - "4200:80" #Sua API ficará acessível em http://localhost:4200/homepage
+    depends_on:
+      - api
+
+volumes:
+  mysql_data:
