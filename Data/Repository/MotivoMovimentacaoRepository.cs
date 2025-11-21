@@ -34,13 +34,8 @@ public class MotivoMovimentacaoRepository : IMotivoMovimentacaoRepository
         _context.Entry(motivoMovimentacao).State = EntityState.Modified;
     }
 
-    public async Task DeletarAsync(int id)
+    public async Task DeletarAsync(MotivoMovimentacao motivoMovimentacao)
     {
-        var motivoMovimentacao = await ObterPorIdAsync(id);
-        
-        if (motivoMovimentacao != null)
-        {
-            _context.MotivoMovimentacao.Remove(motivoMovimentacao);
-        }
+        _context.MotivoMovimentacao.Remove(motivoMovimentacao);
     }
 }

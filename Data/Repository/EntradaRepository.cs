@@ -47,18 +47,13 @@ public class EntradaRepository : IEntradaRepository
         _context.Entrada.Add(entrada);
     }
 
-    public async Task AtualizarAsync(Entrada entrada)
-    {
-        _context.Entry(entrada).State = EntityState.Modified;
-    }
+    // public async Task AtualizarAsync(Entrada entrada)
+    // {
+    //     _context.Entry(entrada).State = EntityState.Modified;
+    // }
 
-    public async Task DeletarAsync(int id)
-    {
-        var entrada = await ObterPorIdAsync(id);
-        
-        if (entrada != null)
-        {
-            _context.Entrada.Remove(entrada);
-        }
-    }
+    // public async Task DeletarAsync(Entrada entrada)
+    // {
+    //     _context.Entrada.Remove(entrada);
+    // }
 }

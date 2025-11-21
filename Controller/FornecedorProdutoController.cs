@@ -45,24 +45,6 @@ public class FornecedorProdutoController : ControllerBase
         return Ok(getIdFornecedorProduto);
     }
 
-    // Operação de consulta de todos os produtos de um fornecedor
-    // [Authorize(Roles = "get(id)")]
-    [HttpGet("fornecedor/{fornecedorId}")]
-    public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
-    {
-        var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
-        return Ok(produtosFornecedor);
-    }
-
-    // Operação de consulta de todos os produtos de um fornecedor
-    // [Authorize(Roles = "get(id)")]
-    // [HttpGet("fornecedor/{fornecedorId}")]
-    // public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
-    // {
-    //     var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
-    //     return Ok(produtosFornecedor);
-    // }
-
     // Operação de criação do registro na tabela
     // [Authorize(Roles = "post")]
     [HttpPost]
@@ -108,3 +90,21 @@ public class FornecedorProdutoController : ControllerBase
         return NoContent();
     }
 }
+
+// Operação de consulta de todos os produtos de um fornecedor (movido para FornecedorController)
+    // [Authorize(Roles = "get(id)")]
+    // [HttpGet("fornecedor/{fornecedorId}")]
+    // public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
+    // {
+    //     var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
+    //     return Ok(produtosFornecedor);
+    // }
+
+    // Operação de consulta de todos os produtos de um fornecedor (movido para ProdutoController)
+    // [Authorize(Roles = "get(id)")]
+    // [HttpGet("fornecedor/{fornecedorId}")]
+    // public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
+    // {
+    //     var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
+    //     return Ok(produtosFornecedor);
+    // }

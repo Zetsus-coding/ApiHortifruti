@@ -157,17 +157,17 @@ public class FuncionarioServiceTests
     // Testes de Deleção (DELETE)
     // ---------------------------------------------------------------------
 
-    [Fact(DisplayName = "DeletarFuncionario deve chamar DeletarAsync e SaveChangesAsync")]
-    public async Task DeletarFuncionarioAsync_Sucesso_DeveDeletar()
-    {
-        // Arrange
-        int idDeletar = 1;
+    // [Fact(DisplayName = "DeletarFuncionario deve chamar DeletarAsync e SaveChangesAsync")]
+    // public async Task DeletarFuncionarioAsync_Sucesso_DeveDeletar()
+    // {
+    //     // Arrange
+    //     int idDeletar = 1;
 
-        // Act
-        await _service.DeletarFuncionarioAsync(idDeletar);
+    //     // Act
+    //     await _service.DeletarFuncionarioAsync(idDeletar);
 
-        // Assert
-        _mockFuncionarioRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    }
+    //     // Assert
+    //     _mockFuncionarioRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
+    //     _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    // }
 }

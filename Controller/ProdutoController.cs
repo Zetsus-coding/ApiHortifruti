@@ -58,14 +58,21 @@ public class ProdutoController : ControllerBase
         return Ok(produto);
     }
 
+    // Operação de consulta de todos os fornecedores que fornecem um determinado produto
+    // // [Authorize(Roles = "get(id)")]
+    // [HttpGet("produto/{produtoId}")]
+    // public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterFornecedoresPorProdutoIdAsync([Range(1, int.MaxValue)] int produtoId)
+    // {
+    //     var fornecedoresProduto = await _fornecedorService.ObterFornecedoresPorProdutoIdAsync(produtoId);
+    //     return Ok(fornecedoresProduto);
+    // }
+
     // Criação de um novo produto
     // [Authorize(Roles = "post")]
     [HttpPost]
     public async Task<ActionResult<Produto>> CriarProduto(PostProdutoDTO postProdutoDTO)
     {
-        var produto = _mapper.Map<Produto>(postProdutoDTO); // Conversão de DTO para entidade
-
-        var produtoCriada = await _produtoService.CriarProdutoAsync(produto); // Chamada a camada de serviço para criar
+        var produtoCriada = await _produtoService.CriarProdutoAsync(postProdutoDTO); // Chamada a camada de serviço para criar
         return CreatedAtAction(nameof(ObterTodosOsProdutos), new { id = produtoCriada.Id },
             produtoCriada);
     }
@@ -75,17 +82,18 @@ public class ProdutoController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarProduto([Range(1, int.MaxValue)] int id, PutProdutoDTO putProdutoDTO)
     {
-        var produto = _mapper.Map<Produto>(putProdutoDTO);
+        var produto = _mapper.Map<Produto>(putProdutoDTO); // Conversão de DTO para entidade
+
         await _produtoService.AtualizarProdutoAsync(id, produto); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
 
     // Exclusão de um produto existente
-    //// [Authorize(Roles = "delete")]
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarProduto([Range(1, int.MaxValue)]int id) 
-    // { 
-    //     await _produtoService.DeletarProdutoAsync(id); // Chamada a camada de serviço para deletar
-    //     return NoContent(); 
-    // } 
+    // [Authorize(Roles = "delete")]
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarProduto([Range(1, int.MaxValue)]int id) 
+    { 
+        await _produtoService.DeletarProdutoAsync(id); // Chamada a camada de serviço para deletar
+        return NoContent(); 
+    } 
 }
