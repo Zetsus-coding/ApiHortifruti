@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Data.Repository;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
@@ -15,14 +14,11 @@ public class FornecedorProdutoController : ControllerBase
 {
     private readonly IFornecedorProdutoService _fornecedorProdutoService;
     private readonly IMapper _mapper;
-    private readonly IProdutoService _produtoService;
 
     // Construtor com injeção de dependência do serviço e do mapper
-
-    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService, IProdutoService produtoService, IMapper mapper)
+    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService, IMapper mapper)
     {
         _fornecedorProdutoService = fornecedorProdutoService;
-        _produtoService = produtoService;
         _mapper = mapper;
     }
 
@@ -66,7 +62,6 @@ public class FornecedorProdutoController : ControllerBase
         var fornecedorProdutos = _mapper.Map<List<FornecedorProduto>>(fornecedorProdutoDTOs);
 
         var fornecedorProdutosCriadas = await _fornecedorProdutoService.CriarVariosFornecedorProdutosAsync(fornecedorProdutos);
-
         return fornecedorProdutosCriadas;
     }
 
@@ -90,21 +85,3 @@ public class FornecedorProdutoController : ControllerBase
         return NoContent();
     }
 }
-
-// Operação de consulta de todos os produtos de um fornecedor (movido para FornecedorController)
-    // [Authorize(Roles = "get(id)")]
-    // [HttpGet("fornecedor/{fornecedorId}")]
-    // public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
-    // {
-    //     var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
-    //     return Ok(produtosFornecedor);
-    // }
-
-    // Operação de consulta de todos os produtos de um fornecedor (movido para ProdutoController)
-    // [Authorize(Roles = "get(id)")]
-    // [HttpGet("fornecedor/{fornecedorId}")]
-    // public async Task<ActionResult<IEnumerable<Produto>>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int fornecedorId)
-    // {
-    //     var produtosFornecedor = await _produtoService.ObterProdutosPorFornecedorIdAsync(fornecedorId);
-    //     return Ok(produtosFornecedor);
-    // }
