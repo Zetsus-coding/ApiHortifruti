@@ -18,8 +18,8 @@ services:
     container_name: hortifruti-keycloak
     command: start-dev # Modo dev: HTTP e banco em memória
     environment:
-      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN_USER}
-      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+      KEYCLOAK_ADMIN: ${KC_BOOTSTRAP_ADMIN_USERNAME}
+      KEYCLOAK_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
       # Habilita acesso HTTP (sem SSL)
       KC_HTTP_ENABLED: true
     ports:
@@ -43,10 +43,10 @@ services:
 
   #Angular
   frontend:
-    image: angular-hortifruti:latest
-    container_name: hortifruti-web
+    image: littleanjel/angular-hortifruti:latest
+    container_name: angular-hortifruti
     restart: on-failure
-    pull_policy: never
+    pull_policy: always
     ports:
       - "4200:80" #Sua API ficará acessível em http://localhost:4200/homepage
     depends_on:

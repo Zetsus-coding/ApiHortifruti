@@ -17,14 +17,7 @@ public class FornecedorProdutoService : IFornecedorProdutoService
 
     public async Task<IEnumerable<FornecedorProduto>> ObterTodosOsFornecedorProdutoAsync()
     {
-        try
-        {
             return await _uow.FornecedorProduto.ObterTodosAsync();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
     }
 
     public async Task<FornecedorProduto?> ObterFornecedorProdutoPorIdAsync(int fornecedorId, int produtoId)
@@ -39,11 +32,12 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         try
         {
             var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornecedorProduto.FornecedorId);
-            var produto = await _uow.Produto.ObterPorIdAsync(fornecedorProduto.ProdutoId);
-            var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorProduto.FornecedorId, fornecedorProduto.ProdutoId);
-
             if (fornecedor == null) throw new KeyNotFoundException("Fornecedor não encontrado.");
+            
+            var produto = await _uow.Produto.ObterPorIdAsync(fornecedorProduto.ProdutoId);
             if (produto == null) throw new KeyNotFoundException("Produto não encontrado.");
+            
+            var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorProduto.FornecedorId, fornecedorProduto.ProdutoId);
             if (existente != null) throw new InvalidOperationException("A relação entre o fornecedor e o produto já existe."); // Mudado para InvalidOperationException (mais semântico para conflito)
 
             fornecedorProduto.Disponibilidade = true;
@@ -88,9 +82,9 @@ public class FornecedorProdutoService : IFornecedorProdutoService
                 var produto = await _uow.Produto.ObterPorIdAsync(fornProd.ProdutoId);
                 var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornProd.FornecedorId, fornProd.ProdutoId);
 
-                if (fornecedor == null) throw new KeyNotFoundException($"Fornecedor com Id {fornProd.FornecedorId} não encontrado.");
-                if (produto == null) throw new KeyNotFoundException($"Produto com Id {fornProd.ProdutoId} não encontrado.");
-                if (existente != null) throw new InvalidOperationException($"A relação para o FornecedorId {fornProd.FornecedorId} e ProdutoId {fornProd.ProdutoId} já existe.");
+                if (fornecedor == null) throw new KeyNotFoundException($"Fornecedor não encontrado.");
+                if (produto == null) throw new KeyNotFoundException($"Produto não encontrado.");
+                if (existente != null) throw new InvalidOperationException($"A relação para o fornecedorId {fornProd.FornecedorId} e produtoId {fornProd.ProdutoId} já existe.");
 
                 fornProd.Disponibilidade = true;
                 fornProd.DataRegistro = _dateTimeProvider.Today; // Usando provider

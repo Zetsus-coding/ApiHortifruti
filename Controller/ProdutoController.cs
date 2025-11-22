@@ -37,6 +37,7 @@ public class ProdutoController : ControllerBase
     public async Task<ActionResult<IEnumerable<GetProdutoEstoqueCriticoDTO>>> ObterProdutosComEstoqueCritico()
     {
         var produtos = await _produtoService.ObterProdutosEstoqueCriticoAsync();
+        
         var produtosDTO = _mapper.Map<IEnumerable<GetProdutoEstoqueCriticoDTO>>(produtos);
         return Ok(produtosDTO);
     }
