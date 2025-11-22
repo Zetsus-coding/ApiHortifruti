@@ -160,4 +160,44 @@ public class FornecedorServiceTests
         _mockFornecedorRepo.Verify(r => r.AtualizarAsync(It.IsAny<Fornecedor>()), Times.Never);
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
     }
+
+    // ---------------------------------------------------------------------
+    // Testes de Exclusão (DELETE)
+    // ---------------------------------------------------------------------
+
+    [Fact(DisplayName = "DeletarFornecedor com ID existente deve chamar Deletar e SaveChanges")]
+    public async Task DeletarFornecedorAsync_ComIdExistente_DeveChamarDeletarESaveChanges()
+    {
+        // Arrange
+        int idParaDeletar = 1; // ID que existe na lista _fornecedoresFake
+        var fornecedorEsperado = _fornecedoresFake.First(f => f.Id == idParaDeletar);
+
+        // Act
+        await _service.DeletarFornecedorAsync(idParaDeletar);
+
+        // Assert
+        // Verifica se buscou o fornecedor antes
+        _mockFornecedorRepo.Verify(r => r.ObterPorIdAsync(idParaDeletar), Times.Once);
+
+        // Verifica se chamou o método de deletar passando o objeto correto
+        _mockFornecedorRepo.Verify(r => r.DeletarAsync(fornecedorEsperado), Times.Once);
+
+        // Verifica se salvou as alterações no banco
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    }
+
+    [Fact(DisplayName = "DeletarFornecedor com ID inexistente deve lançar NotFoundException")]
+    public async Task DeletarFornecedorAsync_ComIdInexistente_DeveLancarNotFoundException()
+    {
+        // Arrange
+        int idInexistente = 99; // ID que não está na lista _fornecedoresFake
+
+        // Act & Assert
+        await Assert.ThrowsAsync<ApiHortifruti.Exceptions.NotFoundException>(
+            () => _service.DeletarFornecedorAsync(idInexistente));
+
+        // Verifica se NÃO tentou deletar nem salvar
+        _mockFornecedorRepo.Verify(r => r.DeletarAsync(It.IsAny<Fornecedor>()), Times.Never);
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
+    }
 }

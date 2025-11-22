@@ -24,7 +24,7 @@ public class CategoriaService : ICategoriaService
     }
 
     // Consulta de categoria por ID
-    public async Task<Categoria?> ObterCategoriaPorIdAsync([Range(1, int.MaxValue)] int id)
+    public async Task<Categoria?> ObterCategoriaPorIdAsync(int id)
     {
         return await _uow.Categoria.ObterPorIdAsync(id);
     }
@@ -39,7 +39,7 @@ public class CategoriaService : ICategoriaService
     }
 
     // Atualização de uma categoria existente
-    public async Task AtualizarCategoriaAsync([Range(1, int.MaxValue)] int id, Categoria categoria) // TODO: PutCategoriaDTO
+    public async Task AtualizarCategoriaAsync(int id, Categoria categoria) // TODO: PutCategoriaDTO
     {
         if (id != categoria.Id) throw new ArgumentException("O ID da categoria na URL não corresponde ao ID no corpo da requisição.");
         
@@ -51,7 +51,7 @@ public class CategoriaService : ICategoriaService
     public async Task DeletarCategoriaAsync(int id)
     {
         var categoria = await _uow.Categoria.ObterPorIdAsync(id);
-        if (categoria == null) throw new NotFoundExeption("A 'Categoria' informada na requisição não existe");
+        if (categoria == null) throw new NotFoundException("A 'Categoria' informada na requisição não existe");
         
         await _uow.Categoria.DeletarAsync(categoria);
         await _uow.SaveChangesAsync();

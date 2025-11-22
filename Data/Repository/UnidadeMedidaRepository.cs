@@ -35,13 +35,13 @@ public class UnidadeMedidaRepository : IUnidadeMedidaRepository
         _context.Entry(unidadeMedida).State = EntityState.Modified;
     }
 
-    // public async Task DeletarAsync(int id)
-    // {
-    //     var unidadeMedida = await ObterPorIdAsync(id);
+    public async Task DeletarAsync(UnidadeMedida unidadeMedida)
+    {
+        if (unidadeMedida == null) throw new KeyNotFoundException("Unidade de medida informada na requisição não existe.");
 
-    //     if (unidadeMedida != null)
-    //     {
-    //         _context.UnidadeMedida.Remove(unidadeMedida);
-    //     }
-    // }
+        if (unidadeMedida != null)
+        {
+            _context.UnidadeMedida.Remove(unidadeMedida);
+        }
+    }
 }

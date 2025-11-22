@@ -36,6 +36,9 @@ public class CategoriaRepository : ICategoriaRepository
     
     public async Task DeletarAsync(Categoria categoria)
     {
-        _context.Categoria.Remove(categoria);
+        if (categoria != null)
+        {
+           _context.Categoria.Remove(categoria);
+        }
     }
 }

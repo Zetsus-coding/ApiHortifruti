@@ -25,13 +25,9 @@ public class FornecedorProdutoRepository : IFornecedorProdutoRepository
             fp.FornecedorId == fornecedorId && fp.ProdutoId == produtoId);
     }
 
-    public async Task<IEnumerable<FornecedorProduto>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
+    public async Task<IEnumerable<FornecedorComListaProdutosDTO>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
     {
-        // return await _context.FornecedorProduto
-        //     .Where(fp => fp.FornecedorId == fornecedorId)
-        //     .Select(fp => fp.Produto) // <--- Aqui está a mágica
-        //     .ToListAsync();
-        throw new NotImplementedException();
+        throw new NotImplementedException();   
     }
 
     public async Task<FornecedorProduto> AdicionarAsync(FornecedorProduto fornecedorProduto)

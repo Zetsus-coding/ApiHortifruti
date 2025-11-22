@@ -23,6 +23,13 @@ public class HistoricoProdutoRepository : IHistoricoProdutoRepository
         return await _context.HistoricoProduto.FindAsync(id);
     }
 
+    public async Task<IEnumerable<HistoricoProduto>> ObterPorProdutoIdAsync(int produtoId)
+    {
+        return await _context.HistoricoProduto
+            .Where(hp => hp.ProdutoId == produtoId)
+            .ToListAsync();
+    }
+
     public async Task<HistoricoProduto> AdicionarAsync(HistoricoProduto historicoProduto)
     {
         _context.HistoricoProduto.Add(historicoProduto);

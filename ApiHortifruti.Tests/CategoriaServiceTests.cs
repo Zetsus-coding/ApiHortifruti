@@ -1,6 +1,7 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service;
+using ApiHortifruti.Exceptions;
 using Moq;
 using Xunit;
 
@@ -173,5 +174,49 @@ public class CategoriaServiceTests
 
         _mockUow.Verify(uow => uow.Categoria.AtualizarAsync(It.IsAny<Categoria>()), Times.Never);
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
+    }
+
+    // ---------------------------------------------------------------------
+    // Testes para DeletarCategoriaAsync
+    // ---------------------------------------------------------------------
+
+    [Fact(DisplayName = "DeletarCategoria com ID existente deve chamar Deletar e SaveChanges")]
+    public async Task DeletarCategoriaAsync_ComIdExistente_DeveChamarDeletarESaveChanges()
+    {
+        // Arrange
+        int idParaDeletar = 1; // ID que já existe na lista _categoriasFake (Frutas)
+        
+        // Precisamos pegar a referência do objeto que o Mock vai retornar para garantir que é o mesmo passado para o Deletar
+        var categoriaEsperada = _categoriasFake.First(c => c.Id == idParaDeletar);
+
+        // Act
+        await _service.DeletarCategoriaAsync(idParaDeletar);
+
+        // Assert
+        // Verifica se o serviço buscou a categoria pelo ID antes de deletar
+        _mockUow.Verify(uow => uow.Categoria.ObterPorIdAsync(idParaDeletar), Times.Once);
+
+        // Verifica se o método DeletarAsync foi chamado passando exatamente o objeto retornado
+        _mockUow.Verify(uow => uow.Categoria.DeletarAsync(categoriaEsperada), Times.Once);
+
+        // Verifica se as alterações foram persistidas
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    }
+
+    [Fact(DisplayName = "DeletarCategoria com ID inexistente deve lançar NotFoundException")]
+    public async Task DeletarCategoriaAsync_ComIdInexistente_DeveLancarNotFoundException()
+    {
+        // Arrange
+        int idInexistente = 99; // Um ID que não está na lista _categoriasFake
+
+        // Act & Assert
+        // Verifica se lança a exceção personalizada NotFoundException
+        await Assert.ThrowsAsync<ApiHortifruti.Exceptions.NotFoundException>(
+            () => _service.DeletarCategoriaAsync(idInexistente));
+
+        // Verificações de segurança para garantir que nada foi alterado no banco
+        _mockUow.Verify(uow => uow.Categoria.ObterPorIdAsync(idInexistente), Times.Once); // Tentou buscar
+        _mockUow.Verify(uow => uow.Categoria.DeletarAsync(It.IsAny<Categoria>()), Times.Never); // NÃO tentou deletar
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never); // NÃO tentou salvar
     }
 }

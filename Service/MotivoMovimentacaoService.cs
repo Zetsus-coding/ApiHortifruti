@@ -1,5 +1,6 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
@@ -34,10 +35,10 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
     {
         motivoMovimentacao.Ativo = true;
         
-        // 1. Adiciona ao contexto
+        // Adiciona ao contexto
         var criado = await _uow.MotivoMovimentacao.AdicionarAsync(motivoMovimentacao);
         
-        // 2. Salva no banco de dados (Unit of Work)
+        // Salva no banco de dados (Unit of Work)
         await _uow.SaveChangesAsync(); 
 
         return criado;
@@ -51,19 +52,22 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
             throw new ArgumentException("O ID informado na URL não corresponde ao ID do corpo da requisição.");
         }
 
-        // 1. Atualiza no contexto
+        // Atualiza no contexto
         await _uow.MotivoMovimentacao.AtualizarAsync(motivoMovimentacao);
         
-        // 2. Salva no banco de dados
+        // Salva no banco de dados
         await _uow.SaveChangesAsync();
     }
 
     public async Task DeletarMotivoMovimentacaoAsync(int id)
     {
-        // 1. Remove do contexto
-        await _uow.MotivoMovimentacao.DeletarAsync(id);
+        var motivoMovimentacao = await _uow.MotivoMovimentacao.ObterPorIdAsync(id);
+        if (motivoMovimentacao == null) throw new NotFoundException("O 'Motivo de Movimentação' informado na requisição não existe");
+
+        // Remove do contexto
+        await _uow.MotivoMovimentacao.DeletarAsync(motivoMovimentacao);
         
-        // 2. Salva no banco de dados
+        // Salva no banco de dados
         await _uow.SaveChangesAsync();
     }
 }

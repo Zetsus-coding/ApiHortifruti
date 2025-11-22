@@ -36,18 +36,13 @@ public class SaidaRepository : ISaidaRepository
         return saida;
     }
 
-    public async Task AtualizarAsync(Saida saida)
-    {
-        _context.Entry(saida).State = EntityState.Modified;
-    }
+    // public async Task AtualizarAsync(Saida saida)
+    // {
+    //     _context.Entry(saida).State = EntityState.Modified;
+    // }
 
-    public async Task DeletarAsync(int id)
-    {
-        var saida = await ObterPorIdAsync(id);
-        
-        if (saida != null)
-        {
-            _context.Saida.Remove(saida);
-        }
-    }
+    // public async Task DeletarAsync(Saida saida)
+    // {
+    //     _context.Saida.Remove(saida);
+    // }
 }

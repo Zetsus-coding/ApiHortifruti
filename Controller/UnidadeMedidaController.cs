@@ -56,17 +56,19 @@ public class UnidadeMedidaController : ControllerBase
     // Atualiza uma unidade de medida existente
     // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarUnidadeMedida([Range(1, int.MaxValue)] int id, UnidadeMedida unidadeMedida)
+    public async Task<IActionResult> AtualizarUnidadeMedida([Range(1, int.MaxValue)] int id, PutUnidadeMedidaDTO putUnidadeMedidaDTO)
     {
+        var unidadeMedida = _mapper.Map<UnidadeMedida>(putUnidadeMedidaDTO); // Conversão de DTO para entidade
+        
         await _unidadeMedidaService.AtualizarUnidadeMedidaAsync(id, unidadeMedida); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
     
     // Exclusão de uma unidade de medida existente
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarUnidadeMedida([Range(1, int.MaxValue)]int id) 
-    // { 
-    //     await _unidadeMedidaService.DeletarUnidadeMedidaAsync(id); 
-    //     return NoContent(); 
-    // }
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> DeletarUnidadeMedida([Range(1, int.MaxValue)]int id)
+    {
+        await _unidadeMedidaService.DeletarUnidadeMedidaAsync(id);
+        return NoContent();
+    }
 }

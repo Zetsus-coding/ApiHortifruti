@@ -43,7 +43,15 @@ public class ProdutoRepository : IProdutoRepository
 
     public async Task AtualizarAsync(Produto produto)
     {
-       _context.Entry(produto).State = EntityState.Modified;
+        var existing = _context.Produto.Local.FirstOrDefault(p => p.Id == produto.Id);
+        if (existing != null)
+        {
+            _context.Entry(existing).CurrentValues.SetValues(produto);
+        }
+        else
+        {
+            _context.Entry(produto).State = EntityState.Modified;
+        }
     }
 
     public async Task DeletarAsync(Produto produto)

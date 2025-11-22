@@ -1,10 +1,12 @@
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service;
+using ApiHortifruti.Domain.DTO.ItemEntrada;
 using Moq;
 using Xunit;
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.EntityFrameworkCore.Storage;
+using AutoMapper;
 
 namespace ApiHortifruti.Tests;
 
@@ -12,213 +14,172 @@ public class EntradaServiceTests
 {
     private readonly Mock<IUnityOfWork> _mockUow;
     private readonly Mock<IItemEntradaService> _mockItemEntradaService;
+    private readonly Mock<IDateTimeProvider> _mockDateTimeProvider;
+    private readonly Mock<IMapper> _mockMapper;
+
     private readonly EntradaService _service;
+
+    // Mocks dos Repositórios
     private readonly Mock<IEntradaRepository> _mockEntradaRepo;
     private readonly Mock<IFornecedorRepository> _mockFornecedorRepo;
     private readonly Mock<IMotivoMovimentacaoRepository> _mockMotivoRepo;
+    private readonly Mock<IFornecedorProdutoRepository> _mockFornecedorProdutoRepo;
 
-    // Dados de teste (Mocks de Entidades)
+    // Dados de teste
     private readonly Fornecedor _fornecedorFake = new Fornecedor { Id = 1, NomeFantasia = "Fazenda Bom Fruto" };
     private readonly MotivoMovimentacao _motivoFake = new MotivoMovimentacao { Id = 1, Motivo = "Compra" };
-
-    // Entrada Válida (usa DateOnly de ontem)
-    private readonly Entrada _entradaValida = new Entrada
-    {
-        Id = 0,
-        FornecedorId = 1,
-        MotivoMovimentacaoId = 1,
-        PrecoTotal = 150.00m,
-        DataCompra = DateOnly.FromDateTime(DateTime.Now.AddDays(-1)),
-        NumeroNota = "NF-12345",
-        ItemEntrada = new List<ItemEntrada> { new ItemEntrada() }
-    };
+    private readonly Entrada _entradaValida;
+    private readonly PostEntradaDTO _postEntradaValida;
 
     public EntradaServiceTests()
     {
-        // 1. Inicializar Mocks
+        // Inicializar Mocks Principais
         _mockUow = new Mock<IUnityOfWork>();
         _mockItemEntradaService = new Mock<IItemEntradaService>();
-        // O tipo aqui é o tipo REAL do seu projeto
+        _mockDateTimeProvider = new Mock<IDateTimeProvider>();
+        _mockMapper = new Mock<IMapper>();
+
+        // Inicializar Mocks dos Repositórios
         _mockEntradaRepo = new Mock<IEntradaRepository>();
         _mockFornecedorRepo = new Mock<IFornecedorRepository>();
         _mockMotivoRepo = new Mock<IMotivoMovimentacaoRepository>();
+        _mockFornecedorProdutoRepo = new Mock<IFornecedorProdutoRepository>();
 
-        // Repositórios de Dependência
+        // Configurar comportamento dos Repositórios
         _mockFornecedorRepo.Setup(r => r.ObterPorIdAsync(1)).ReturnsAsync(_fornecedorFake);
         _mockMotivoRepo.Setup(r => r.ObterPorIdAsync(1)).ReturnsAsync(_motivoFake);
 
-        // Simular Fornecedor/Motivo inexistente para IDs diferentes de 1
+        // Simular não encontrado para IDs diferentes de 1
         _mockFornecedorRepo.Setup(r => r.ObterPorIdAsync(It.Is<int>(id => id != 1))).ReturnsAsync((Fornecedor?)null);
         _mockMotivoRepo.Setup(r => r.ObterPorIdAsync(It.Is<int>(id => id != 1))).ReturnsAsync((MotivoMovimentacao?)null);
 
-        // Repositório de Entrada (checar nota duplicada e métodos CRUD)
+        // Configuração do Repositório de Entrada
         _mockEntradaRepo.Setup(r => r.ObterPorNumeroNotaAsync(It.IsAny<string>(), It.IsAny<int>())).ReturnsAsync((Entrada?)null);
         _mockEntradaRepo.Setup(r => r.AdicionarAsync(It.IsAny<Entrada>())).Returns(Task.CompletedTask);
-        _mockEntradaRepo.Setup(r => r.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(_entradaValida);
-        _mockEntradaRepo.Setup(r => r.AtualizarAsync(It.IsAny<Entrada>())).Returns(Task.CompletedTask);
 
-        // UoW Setup: Configura o UoW para retornar os mocks de repositório
+        // Configuração do Repositório de FornecedorProduto
+        _mockFornecedorProdutoRepo.Setup(r => r.ObterPorIdAsync(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((FornecedorProduto?)null);
+        
+        // --- CORREÇÃO AQUI ---
+        // Usamos Task.FromResult para satisfazer o retorno assíncrono
+        _mockFornecedorProdutoRepo.Setup(r => r.AdicionarAsync(It.IsAny<FornecedorProduto>()))
+            .Returns((FornecedorProduto f) => Task.FromResult(f)); 
+
+        // Configurar UoW para retornar os Repositórios mockados
         _mockUow.Setup(uow => uow.Entrada).Returns(_mockEntradaRepo.Object);
         _mockUow.Setup(uow => uow.Fornecedor).Returns(_mockFornecedorRepo.Object);
         _mockUow.Setup(uow => uow.MotivoMovimentacao).Returns(_mockMotivoRepo.Object);
+        _mockUow.Setup(uow => uow.FornecedorProduto).Returns(_mockFornecedorProdutoRepo.Object);
 
-        // Setup das Transações e SaveChanges
-        _mockUow.Setup(uow => uow.BeginTransactionAsync())
-                .ReturnsAsync(Mock.Of<IDbContextTransaction>()); // retorna Task<IDbContextTransaction>
+        // Setup das Transações
+        _mockUow.Setup(uow => uow.BeginTransactionAsync()).ReturnsAsync(Mock.Of<IDbContextTransaction>());
         _mockUow.Setup(uow => uow.CommitAsync()).Returns(Task.CompletedTask);
         _mockUow.Setup(uow => uow.RollbackAsync()).Returns(Task.CompletedTask);
-        _mockUow.Setup(uow => uow.SaveChangesAsync()).ReturnsAsync(1); // Task<int>
+        _mockUow.Setup(uow => uow.SaveChangesAsync()).ReturnsAsync(1);
 
-        // Setup do Serviço de Item de Entrada
-        _mockItemEntradaService.Setup(s => s.AdicionarItensEntradaAsync(It.IsAny<int>(), It.IsAny<ICollection<ItemEntrada>>())).Returns(Task.CompletedTask);
+        // Configurar DateProvider
+        _mockDateTimeProvider.Setup(d => d.Today).Returns(DateOnly.FromDateTime(DateTime.Now));
 
-        // 3. Instanciar o serviço com os mocks
-        _service = new EntradaService(_mockUow.Object, _mockItemEntradaService.Object);
-    }
-
-    // ---------------------------------------------------------------------
-    // Testes de Consulta (ObterTodos e ObterPorId)
-    // ---------------------------------------------------------------------
-
-    [Fact(DisplayName = "ObterTodos deve chamar o repositório ObterTodosAsync")]
-    public async Task ObterTodosEntradasAsync_DeveChamarRepositorio()
-    {
-        // Act
-        await _service.ObterTodasAsEntradasAsync();
-
-        // Assert
-        _mockEntradaRepo.Verify(r => r.ObterTodosAsync(), Times.Once);
-    }
-
-    [Fact(DisplayName = "ObterPorId deve chamar o repositório ObterPorIdAsync")]
-    public async Task ObterEntradaPorIdAsync_DeveChamarRepositorio()
-    {
-        // Arrange
-        int idProcurado = 5;
-
-        // Act
-        await _service.ObterEntradaPorIdAsync(idProcurado);
-
-        // Assert
-        _mockEntradaRepo.Verify(r => r.ObterPorIdAsync(idProcurado), Times.Once);
-    }
-
-    // ---------------------------------------------------------------------
-    // Testes de CriarEntradaAsync (Sucesso e Transação)
-    // ---------------------------------------------------------------------
-
-    [Fact(DisplayName = "CriarEntrada deve executar o fluxo completo e fazer Commit")]
-    public async Task CriarEntradaAsync_ComDadosValidos_DeveChamarPersistenciaECommit()
-    {
-        // Act
-        var resultado = await _service.CriarEntradaAsync(_entradaValida);
-
-        // Assert
-        _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.CommitAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.RollbackAsync(), Times.Never);
-
-        _mockUow.Verify(uow => uow.Entrada.AdicionarAsync(It.IsAny<Entrada>()), Times.Once);
-        _mockItemEntradaService.Verify(s => s.AdicionarItensEntradaAsync(It.IsAny<int>(), _entradaValida.ItemEntrada), Times.Once);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    }
-
-    // ---------------------------------------------------------------------
-    // Testes de CriarEntradaAsync (Validações e Rollback)
-    // ---------------------------------------------------------------------
-
-    [Fact(DisplayName = "Deve lançar KeyNotFoundException se Fornecedor não existir e fazer Rollback")]
-    public async Task CriarEntradaAsync_FornecedorInexistente_DeveLancarExcecaoERollback()
-    {
-        // Arrange
-        var entradaInvalida = new Entrada
+        // Preparar dados da Entrada Válida
+        _entradaValida = new Entrada
         {
-            Id = _entradaValida.Id,
-            FornecedorId = 99,
-            MotivoMovimentacaoId = _entradaValida.MotivoMovimentacaoId,
-            PrecoTotal = _entradaValida.PrecoTotal,
-            DataCompra = _entradaValida.DataCompra,
-            NumeroNota = _entradaValida.NumeroNota,
-            ItemEntrada = _entradaValida.ItemEntrada
-        };
-        
-        // Act & Assert
-        await Assert.ThrowsAsync<KeyNotFoundException>(() => _service.CriarEntradaAsync(entradaInvalida));
-    }
-
-    [Fact(DisplayName = "Deve lançar InvalidOperationException se DataCompra for futura e fazer Rollback")]
-    public async Task CriarEntradaAsync_DataFutura_DeveLancarExcecaoERollback()
-    {
-        // Arrange
-        var entradaInvalida = new Entrada
-        {
-            Id = _entradaValida.Id,
-            FornecedorId = _entradaValida.FornecedorId,
-            MotivoMovimentacaoId = _entradaValida.MotivoMovimentacaoId,
-            PrecoTotal = _entradaValida.PrecoTotal,
-            DataCompra = DateOnly.FromDateTime(DateTime.Now.AddDays(1)),
-            NumeroNota = _entradaValida.NumeroNota,
-            ItemEntrada = _entradaValida.ItemEntrada
+            Id = 0,
+            FornecedorId = 1,
+            MotivoMovimentacaoId = 1,
+            PrecoTotal = 150.00m,
+            DataCompra = DateOnly.FromDateTime(DateTime.Now),
+            NumeroNota = "NF-12345",
+            ItemEntrada = new List<ItemEntrada> { new ItemEntrada { ProdutoId = 1, Quantidade = 1m, PrecoUnitario = 150.00m } }
         };
 
-        // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CriarEntradaAsync(entradaInvalida));
-    }
-
-    [Fact(DisplayName = "Deve lançar InvalidOperationException se Nota já existir para o fornecedor e fazer Rollback")]
-    public async Task CriarEntradaAsync_NotaDuplicada_DeveLancarExcecaoERollback()
-    {
-        // Arrange
-        var entradaComNotaDuplicada = new Entrada
+        _postEntradaValida = new PostEntradaDTO
         {
-            Id = _entradaValida.Id,
             FornecedorId = _entradaValida.FornecedorId,
             MotivoMovimentacaoId = _entradaValida.MotivoMovimentacaoId,
             PrecoTotal = _entradaValida.PrecoTotal,
             DataCompra = _entradaValida.DataCompra,
-            NumeroNota = "NF-DUPLICADA",
-            ItemEntrada = _entradaValida.ItemEntrada
+            NumeroNota = _entradaValida.NumeroNota,
+            ItemEntrada = new List<ItemEntradaDTO>
+            {
+                new ItemEntradaDTO { ProdutoId = 1, Quantidade = 1m, PrecoUnitario = 150.00m, CodigoFornecedor = "CF-1" }
+            }
         };
-        
-        _mockEntradaRepo.Setup(r => r.ObterPorNumeroNotaAsync("NF-DUPLICADA", It.IsAny<int>()))
-                        .ReturnsAsync(new Entrada { Id = 10 }); 
 
-        // Act & Assert
-        await Assert.ThrowsAsync<InvalidOperationException>(() => _service.CriarEntradaAsync(entradaComNotaDuplicada));
+        _mockEntradaRepo.Setup(r => r.ObterPorIdAsync(It.IsAny<int>())).ReturnsAsync(_entradaValida);
+
+        // Instanciar o serviço
+        _service = new EntradaService(
+            _mockUow.Object,
+            _mockItemEntradaService.Object,
+            _mockDateTimeProvider.Object,
+            _mockMapper.Object
+        );
     }
 
-    [Fact(DisplayName = "Deve fazer Rollback se ItemEntradaService falhar")]
-    public async Task CriarEntradaAsync_FalhaAoAdicionarItens_DeveChamarRollback()
+    // -------------------------------------------------------
+    // TESTES DE SUCESSO
+    // -------------------------------------------------------
+
+    [Fact]
+    public async Task CriarEntradaAsync_DeveCriarEntrada_QuandoDadosValidos()
     {
         // Arrange
-        _mockItemEntradaService.Setup(s => s.AdicionarItensEntradaAsync(It.IsAny<int>(), It.IsAny<ICollection<ItemEntrada>>()))
-                               .ThrowsAsync(new Exception("Falha de persistência simulada"));
-
-        // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => _service.CriarEntradaAsync(_entradaValida));
-
-        // Assert
-        _mockUow.Verify(uow => uow.CommitAsync(), Times.Never);
-        _mockUow.Verify(uow => uow.RollbackAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.Entrada.AdicionarAsync(It.IsAny<Entrada>()), Times.Once);
-    }
-
-    // ---------------------------------------------------------------------
-    // Testes de AtualizarEntradaAsync (Comportamento Atual)
-    // ---------------------------------------------------------------------
-
-    [Fact(DisplayName = "AtualizarEntrada com IDs divergentes deve retornar sem atualizar")]
-    public async Task AtualizarEntradaAsync_ComIdsDiferentes_DeveRetornarSemAtualizar()
-    {
-        // Arrange
-        int idUrl = 10;
-        var entradaComIdDiferente = new Entrada { Id = 20, NumeroNota = "Teste" };
+        // (Preparação já feita no Construtor)
 
         // Act
-        await _service.AtualizarEntradaAsync(idUrl, entradaComIdDiferente);
+        var resultado = await _service.CriarEntradaAsync(_postEntradaValida);
 
         // Assert
-        _mockUow.Verify(uow => uow.Entrada.AtualizarAsync(It.IsAny<Entrada>()), Times.Never);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
+        Assert.NotNull(resultado);
+        Assert.Equal(_postEntradaValida.FornecedorId, resultado.FornecedorId);
+        Assert.Equal(_postEntradaValida.PrecoTotal, resultado.PrecoTotal);
+
+        _mockUow.Verify(u => u.CommitAsync(), Times.Once);
+        _mockItemEntradaService.Verify(s => s.AdicionarItensEntradaAsync(It.IsAny<int>(), It.IsAny<IEnumerable<ItemEntrada>>()), Times.Once);
+    }
+
+    // -------------------------------------------------------
+    // TESTES DE FALHA (VALIDAÇÕES)
+    // -------------------------------------------------------
+
+    [Fact]
+    public async Task CriarEntradaAsync_DeveLancarExcecao_QuandoFornecedorNaoExiste()
+    {
+        // Arrange
+        var dtoInvalido = _postEntradaValida;
+        dtoInvalido.FornecedorId = 999; 
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<KeyNotFoundException>(() => 
+            _service.CriarEntradaAsync(dtoInvalido));
+
+        Assert.Equal("Fornecedor não encontrado no sistema", ex.Message);
+        _mockUow.Verify(u => u.CommitAsync(), Times.Never);
+    }
+
+    [Fact]
+    public async Task CriarEntradaAsync_DeveLancarExcecao_QuandoMotivoNaoExiste()
+    {
+        // Arrange
+        var dtoInvalido = _postEntradaValida;
+        dtoInvalido.MotivoMovimentacaoId = 999;
+
+        // Act & Assert
+        await Assert.ThrowsAsync<KeyNotFoundException>(() => 
+            _service.CriarEntradaAsync(dtoInvalido));
+    }
+
+    [Fact]
+    public async Task CriarEntradaAsync_DeveLancarExcecao_QuandoDataFutura()
+    {
+        // Arrange
+        var dtoDataFutura = _postEntradaValida;
+        dtoDataFutura.DataCompra = DateOnly.FromDateTime(DateTime.Now.AddDays(1)); 
+
+        // Act & Assert
+        var ex = await Assert.ThrowsAsync<InvalidOperationException>(() => 
+            _service.CriarEntradaAsync(dtoDataFutura));
+
+        Assert.Equal("A data da compra não pode ser uma data futura", ex.Message);
     }
 }

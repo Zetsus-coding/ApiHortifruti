@@ -1,5 +1,6 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
@@ -15,23 +16,21 @@ public class FornecedorService : IFornecedorService
 
     public async Task<IEnumerable<Fornecedor>> ObterTodosOsFornecedoresAsync()
     {
-        try
-        {
-            return await _uow.Fornecedor.ObterTodosAsync();
-        }
-        catch (Exception)
-        {
-            throw;
-        }
+        return await _uow.Fornecedor.ObterTodosAsync();
     }
 
     public async Task<Fornecedor?> ObterFornecedorPorIdAsync(int id)
     {
         return await _uow.Fornecedor.ObterPorIdAsync(id);
+    }
 
-        // Precisa lançar exceção se o id não for encontrado?
-        // if (fornecedor == null)
-        //     throw new KeyNotFoundException("Fornecedor não encontrado.");
+    // Consulta de todos os produtos que um fornecedor fornece
+    public async Task<IEnumerable<FornecedorComListaProdutosDTO>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
+    {
+        var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornecedorId);
+        if (fornecedor is null) throw new NotFoundException("O 'Fornecedor' informado na requisição não existe");
+        
+        return await _uow.FornecedorProduto.ObterProdutosPorFornecedorIdAsync(fornecedorId);
     }
 
     public async Task<Fornecedor> CriarFornecedorAsync(Fornecedor fornecedor)
@@ -55,8 +54,20 @@ public class FornecedorService : IFornecedorService
         throw new NotImplementedException();
     }
 
-    // public async Task DeletarFornecedorAsync(int id)
-    // {
-    //     await _uow.Fornecedor.DeletarAsync(id);
-    // }
+    public async Task<Fornecedor> ObterFornecedorComProdutosAsync(int id)
+    {
+        var fornecedor = await _uow.Fornecedor.ObterPorIdComProdutosAsync(id);
+        if (fornecedor == null) throw new NotFoundException("O 'Fornecedor' informado na requisição não existe");
+
+        return fornecedor;
+    }
+
+    public async Task DeletarFornecedorAsync(int id)
+    {
+        var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(id);
+        if (fornecedor == null) throw new NotFoundException("O 'Fornecedor' informado na requisição não existe");
+
+        await _uow.Fornecedor.DeletarAsync(fornecedor);
+        await _uow.SaveChangesAsync();
+    }
 }

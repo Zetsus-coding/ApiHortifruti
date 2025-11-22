@@ -2,11 +2,7 @@ using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service;
 using Moq;
-using Xunit;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Linq;
+using ApiHortifruti.Exceptions;
 
 namespace ApiHortifruti.Tests;
 
@@ -140,17 +136,47 @@ public class MotivoMovimentacaoServiceTests
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
     }
 
-    [Fact(DisplayName = "DeletarMotivo deve chamar Deletar e SaveChanges")]
-    public async Task DeletarMotivoAsync_DeveDeletar()
+    // ---------------------------------------------------------------------
+    // Testes de Exclusão (DELETE)
+    // ---------------------------------------------------------------------
+
+    [Fact(DisplayName = "DeletarMotivo com ID existente deve chamar Deletar e SaveChanges")]
+    public async Task DeletarMotivoAsync_ComIdExistente_DeveDeletar()
     {
         // Arrange
-        int idDeletar = 2;
+        int idDeletar = 1; // ID existente na lista _motivosFake
+        
+        // Recuperamos o objeto da lista fake para garantir que é exatamente a mesma instância
+        var motivoEsperado = _motivosFake.First(m => m.Id == idDeletar);
 
         // Act
         await _service.DeletarMotivoMovimentacaoAsync(idDeletar);
 
         // Assert
-        _mockMotivoRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
+        //Verifica se buscou pelo ID
+        _mockMotivoRepo.Verify(r => r.ObterPorIdAsync(idDeletar), Times.Once);
+
+        //Verifica se chamou o DeletarAsync passando o OBJETO (não o ID)
+        _mockMotivoRepo.Verify(r => r.DeletarAsync(motivoEsperado), Times.Once);
+        
+        //Verifica se salvou
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    }
+
+    [Fact(DisplayName = "DeletarMotivo com ID inexistente deve lançar NotFoundException")]
+    public async Task DeletarMotivoAsync_ComIdInexistente_DeveLancarExcecao()
+    {
+        // Arrange
+        int idInexistente = 99; // ID que não está na lista _motivosFake
+
+        // Act & Assert
+        await Assert.ThrowsAsync<NotFoundException>(
+            () => _service.DeletarMotivoMovimentacaoAsync(idInexistente));
+
+        // Assert
+        // Verifica que buscou, mas NÃO deletou e NÃO salvou
+        _mockMotivoRepo.Verify(r => r.ObterPorIdAsync(idInexistente), Times.Once);
+        _mockMotivoRepo.Verify(r => r.DeletarAsync(It.IsAny<MotivoMovimentacao>()), Times.Never);
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
     }
 }

@@ -1,4 +1,4 @@
-public class FornecedorDetalhesComProdutosDTO
+public class FornecedorComListaProdutosDTO
 {
     public int Id { get; set; }
 

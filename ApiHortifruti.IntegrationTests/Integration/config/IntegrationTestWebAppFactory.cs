@@ -25,14 +25,14 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
     {
         builder.ConfigureTestServices(services =>
         {
-            // 1. REMOVER a configuração do banco original (appsettings)
+            // REMOVER a configuração do banco original (appsettings)
             var descriptor = services.SingleOrDefault(
                 d => d.ServiceType == typeof(DbContextOptions<AppDbContext>));
 
             if (descriptor != null)
                 services.Remove(descriptor);
 
-            // 2. ADICIONAR o banco do Container Docker
+            // ADICIONAR o banco do Container Docker
             var connectionString = _dbContainer.GetConnectionString();
             services.AddDbContext<AppDbContext>(options =>
             {
@@ -40,7 +40,7 @@ public class IntegrationTestWebAppFactory : WebApplicationFactory<Program>, IAsy
                 options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
             });
 
-            // 3. SOBRESCREVER a Autenticação para usar o Handler Fake
+            // SOBRESCREVER a Autenticação para usar o Handler Fake
             services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = "Test";

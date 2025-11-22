@@ -8,5 +8,5 @@ namespace ApiHortifruti.Data.Repository.Interfaces;
     Task<Funcionario?> ObterPorIdAsync(int id);
     Task<Funcionario> AdicionarAsync(Funcionario funcionario);
     Task AtualizarAsync(Funcionario funcionario);
-    Task DeletarAsync(int id);
+    Task DeletarAsync(Funcionario funcionario);
 }

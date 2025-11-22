@@ -152,4 +152,48 @@ public class UnidadeMedidaServiceTests
         _mockUnidadeRepo.Verify(r => r.AtualizarAsync(It.IsAny<UnidadeMedida>()), Times.Never);
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
     }
+
+    // ---------------------------------------------------------------------
+    // Testes de Exclusão (DELETE)
+    // ---------------------------------------------------------------------
+
+    [Fact(DisplayName = "DeletarUnidadeMedida com ID existente deve chamar Deletar e SaveChanges")]
+    public async Task DeletarUnidadeMedidaAsync_ComIdExistente_DeveChamarDeletarESaveChanges()
+    {
+        // Arrange
+        int idDeletar = 1; // ID existente na lista _unidadesFake ("Quilograma")
+        
+        // Recuperamos o objeto exato da lista fake para garantir que o Mock valide a instância correta
+        var unidadeEsperada = _unidadesFake.First(u => u.Id == idDeletar);
+
+        // Act
+        await _service.DeletarUnidadeMedidaAsync(idDeletar);
+
+        // Assert
+        //Verifica se o serviço buscou a unidade pelo ID antes de tentar deletar
+        _mockUnidadeRepo.Verify(r => r.ObterPorIdAsync(idDeletar), Times.Once);
+
+        //Verifica se o método DeletarAsync foi chamado passando o objeto correto
+        _mockUnidadeRepo.Verify(r => r.DeletarAsync(unidadeEsperada), Times.Once);
+
+        //Verifica se as alterações foram persistidas no banco
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    }
+
+    [Fact(DisplayName = "DeletarUnidadeMedida com ID inexistente deve lançar NotFoundException")]
+    public async Task DeletarUnidadeMedidaAsync_ComIdInexistente_DeveLancarNotFoundException()
+    {
+        // Arrange
+        int idInexistente = 99; // ID que não está na lista _unidadesFake
+
+        // Act & Assert
+        // Verifica se lança a exceção personalizada NotFoundException
+        await Assert.ThrowsAsync<ApiHortifruti.Exceptions.NotFoundException>(
+            () => _service.DeletarUnidadeMedidaAsync(idInexistente));
+
+        // Assert Side Effects (Garantir que nada foi alterado)
+        _mockUnidadeRepo.Verify(r => r.ObterPorIdAsync(idInexistente), Times.Once); // Tentou buscar
+        _mockUnidadeRepo.Verify(r => r.DeletarAsync(It.IsAny<UnidadeMedida>()), Times.Never); // NÃO tentou deletar
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never); // NÃO tentou salvar
+    }
 }
