@@ -7,6 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
       MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     ports:
       - "3307:3306" # Porta externa 3307 para não conflitar se você tiver mysql no PC
     volumes:
@@ -43,10 +44,10 @@ services:
 
   #Angular
   frontend:
-    image: angular-hortifruti:latest
+    image: littleanjel/angular-hortifruti:latest
     container_name: hortifruti-web
     restart: on-failure
-    pull_policy: never
+    pull_policy: always
     ports:
       - "4200:80" #Sua API ficará acessível em http://localhost:4200/homepage
     depends_on:
