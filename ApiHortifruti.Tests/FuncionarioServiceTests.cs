@@ -122,18 +122,51 @@ public class FuncionarioServiceTests
     // Testes de Atualização (PUT)
     // ---------------------------------------------------------------------
 
-    [Fact(DisplayName = "AtualizarFuncionario deve chamar AtualizarAsync e SaveChangesAsync")]
+    [Fact(DisplayName = "AtualizarFuncionario deve buscar pelo ID, atualizar campos permitidos e chamar AtualizarAsync")]
     public async Task AtualizarFuncionarioAsync_Sucesso_DeveAtualizar()
     {
         // Arrange
         int idAtualizar = 1;
-        var funcionarioAtualizado = new Funcionario { Id = idAtualizar, Nome = "João Atualizado" };
+        
+        // 1. O objeto que já "existe" no banco (Mock)
+        var funcionarioNoBanco = new Funcionario 
+        { 
+            Id = idAtualizar, 
+            Nome = "Nome Antigo", 
+            Cpf = "111.111.111-11", // CPF Original
+            Email = "antigo@email.com" 
+        };
+
+        // 2. Os novos dados que estamos enviando (sem CPF, pois o Service ignora ou valida IDs)
+        var funcionarioNovosDados = new Funcionario 
+        { 
+            Id = idAtualizar, 
+            Nome = "Nome Novo Editado", 
+            Email = "novo@email.com"
+            // Note que não importa se passamos CPF aqui ou não, a lógica do Service deve manter o do banco
+        };
+
+        // 3. Configurar o Mock para devolver o funcionário do banco quando buscado
+        _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(idAtualizar))
+                            .ReturnsAsync(funcionarioNoBanco);
 
         // Act
-        await _service.AtualizarFuncionarioAsync(idAtualizar, funcionarioAtualizado);
+        await _service.AtualizarFuncionarioAsync(idAtualizar, funcionarioNovosDados);
 
         // Assert
-        _mockFuncionarioRepo.Verify(r => r.AtualizarAsync(funcionarioAtualizado), Times.Once);
+        
+        // Verifica se o serviço chamou o ObterPorId primeiro
+        _mockFuncionarioRepo.Verify(r => r.ObterPorIdAsync(idAtualizar), Times.Once);
+
+        // Verifica se chamou o AtualizarAsync passando o objeto DO BANCO (que foi modificado na memória)
+        // Validamos se o Nome mudou para o novo, mas o ID se manteve
+        _mockFuncionarioRepo.Verify(r => r.AtualizarAsync(It.Is<Funcionario>(f => 
+            f.Id == idAtualizar && 
+            f.Nome == "Nome Novo Editado" &&
+            f.Cpf == "111.111.111-11" // Garante que manteve o CPF original
+        )), Times.Once);
+
+        // Verifica se salvou
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
     }
 

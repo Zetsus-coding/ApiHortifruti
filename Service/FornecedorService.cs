@@ -9,7 +9,7 @@ public class FornecedorService : IFornecedorService
 {
     private readonly IUnityOfWork _uow;
 
-    public FornecedorService( IUnityOfWork uow)
+    public FornecedorService(IUnityOfWork uow)
     {
         _uow = uow;
     }
@@ -29,14 +29,19 @@ public class FornecedorService : IFornecedorService
     {
         var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornecedorId);
         if (fornecedor is null) throw new NotFoundException("O 'Fornecedor' informado na requisição não existe");
-        
+
         return await _uow.FornecedorProduto.ObterProdutosPorFornecedorIdAsync(fornecedorId);
     }
 
     public async Task<Fornecedor> CriarFornecedorAsync(Fornecedor fornecedor)
     {
         fornecedor.DataRegistro = DateOnly.FromDateTime(DateTime.Now);
-        return await _uow.Fornecedor.AdicionarAsync(fornecedor);
+
+        // O erro estava aqui: Faltava o SaveChanges
+        await _uow.Fornecedor.AdicionarAsync(fornecedor);
+        await _uow.SaveChangesAsync(); // <--- ADICIONE ISSO
+
+        return fornecedor;
     }
 
     public async Task AtualizarFornecedorAsync(int id, Fornecedor fornecedor)

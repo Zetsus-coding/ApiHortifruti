@@ -46,8 +46,12 @@ public class FornecedorController : ControllerBase
     [HttpGet("{id}/produtos")]
     public async Task<ActionResult<FornecedorComListaProdutosDTO>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int id)
     {
-        var fornecedor = await _fornecedorService.ObterProdutosPorFornecedorIdAsync(id);
+        // CORREÇÃO: Usar o método que retorna a ENTIDADE (Fornecedor), não o DTO
+        var fornecedor = await _fornecedorService.ObterFornecedorComProdutosAsync(id);
+        
+        // Agora o AutoMapper consegue converter Fornecedor -> FornecedorComListaProdutosDTO
         var fornecedorDto = _mapper.Map<FornecedorComListaProdutosDTO>(fornecedor);
+        
         return Ok(fornecedorDto);
     }
 

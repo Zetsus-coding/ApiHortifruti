@@ -33,15 +33,15 @@ var serverVersion = new MySqlServerVersion(new Version(8, 0, 44));
 
 // Conexão com o banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseMySql(connectionString, serverVersion,
+    options.UseMySql(connectionString, serverVersion
     
-        mysqlOptions =>
-        {
-            mysqlOptions.EnableRetryOnFailure(
-                maxRetryCount: 5,               // Tenta 5 vezes
-                maxRetryDelay: TimeSpan.FromSeconds(10), // Espera até 10s entre tentativas
-                errorNumbersToAdd: null);
-        }
+        // mysqlOptions =>
+        // {
+        //     mysqlOptions.EnableRetryOnFailure(
+        //         maxRetryCount: 5,               // Tenta 5 vezes
+        //         maxRetryDelay: TimeSpan.FromSeconds(10), // Espera até 10s entre tentativas
+        //         errorNumbersToAdd: null);
+        // }
     )
 );
 
@@ -116,6 +116,7 @@ builder.Services.AddOpenApi(); // Adiciona o OpenApi
 builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddControllers()
+
 .AddJsonOptions(options =>
 {
     // Configura o serializador para usar o nome dos enums em vez do valor númerico

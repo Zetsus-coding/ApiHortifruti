@@ -1,6 +1,6 @@
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service;
-using ApiHortifruti.Domain.DTO.ItemEntrada;
+using ApiHortifruti.DTO.ItemEntrada;
 using Moq;
 using Xunit;
 using ApiHortifruti.Data.Repository.Interfaces;

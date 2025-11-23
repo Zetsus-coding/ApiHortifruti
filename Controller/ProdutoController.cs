@@ -85,6 +85,8 @@ public class ProdutoController : ControllerBase
     {
         var produto = _mapper.Map<Produto>(putProdutoDTO); // Conversão de DTO para entidade
 
+        produto.Id = id;
+
         await _produtoService.AtualizarProdutoAsync(id, produto); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
