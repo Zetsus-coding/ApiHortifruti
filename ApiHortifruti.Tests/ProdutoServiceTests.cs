@@ -5,6 +5,7 @@ using Moq;
 using Xunit;
 using Microsoft.EntityFrameworkCore.Storage;
 using ApiHortifruti.Service.Interfaces;
+using ApiHortifruti.Exceptions;
 
 namespace ApiHortifruti.Tests;
 
@@ -209,17 +210,17 @@ public class ProdutoServiceTests
 
         // Assert (Xunit.Assert)
         
-        // 1. Verifica se o Atualizar foi chamado
+        //Verifica se o Atualizar foi chamado
         _mockProdutoRepo.Verify(r => r.AtualizarAsync(produtoAtualizado), Times.Once);
         
-        // 2. Verifica se o HistoricoProduto foi criado com o novo preço e a data mockada
+        //Verifica se o HistoricoProduto foi criado com o novo preço e a data mockada
         _mockHistoricoProdutoRepo.Verify(r => r.AdicionarAsync(It.Is<HistoricoProduto>(
             h => h.ProdutoId == idAtualizar && 
                  h.PrecoProduto == novoPreco && 
                  h.DataAlteracao == _hojeFixo
         )), Times.Once); 
         
-        // 3. Verifica o fluxo da transação
+        //Verifica o fluxo da transação
         _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
         _mockUow.Verify(uow => uow.CommitAsync(), Times.Once);
@@ -245,5 +246,49 @@ public class ProdutoServiceTests
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
         _mockUow.Verify(uow => uow.CommitAsync(), Times.Never);
         _mockUow.Verify(uow => uow.RollbackAsync(), Times.Once);
+    }
+
+    // ---------------------------------------------------------------------
+    // Testes de Exclusão (DELETE)
+    // ---------------------------------------------------------------------
+
+    [Fact(DisplayName = "DeletarProduto com ID existente deve chamar Deletar e SaveChanges")]
+    public async Task DeletarProdutoAsync_ComIdExistente_DeveChamarDeletarESaveChanges()
+    {
+        // Arrange
+        int idDeletar = 1; // ID existente na lista _produtosFake (Maçã Fuji)
+        
+        // Recuperamos o objeto exato da lista fake para garantir que o Mock valide a instância correta
+        var produtoEsperado = _produtosFake.First(p => p.Id == idDeletar);
+
+        // Act
+        await _service.DeletarProdutoAsync(idDeletar);
+
+        // Assert
+        //Verifica se o serviço buscou o produto pelo ID antes de tentar deletar
+        _mockProdutoRepo.Verify(r => r.ObterPorIdAsync(idDeletar), Times.Once);
+
+        //Verifica se o método DeletarAsync foi chamado passando o objeto produto correto
+        _mockProdutoRepo.Verify(r => r.DeletarAsync(produtoEsperado), Times.Once);
+
+        //Verifica se as alterações foram persistidas no banco
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    }
+
+    [Fact(DisplayName = "DeletarProduto com ID inexistente deve lançar NotFoundException")]
+    public async Task DeletarProdutoAsync_ComIdInexistente_DeveLancarNotFoundException()
+    {
+        // Arrange
+        int idInexistente = 99; // ID que não está na lista _produtosFake
+
+        // Act & Assert
+        // Verifica se lança a exceção personalizada NotFoundException
+        await Assert.ThrowsAsync<NotFoundException>(
+            () => _service.DeletarProdutoAsync(idInexistente));
+
+        // Assert Side Effects (Garantir que nada foi alterado)
+        _mockProdutoRepo.Verify(r => r.ObterPorIdAsync(idInexistente), Times.Once); // Tentou buscar
+        _mockProdutoRepo.Verify(r => r.DeletarAsync(It.IsAny<Produto>()), Times.Never); // NÃO tentou deletar
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never); // NÃO tentou salvar
     }
 }

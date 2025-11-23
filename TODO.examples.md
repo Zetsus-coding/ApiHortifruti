@@ -8,7 +8,7 @@
 
         public Produto CriarNovoProduto(CriarProdutoDto dto)
         {
-            // 1. Validações de banco (ex: nome duplicado)
+            // Validações de banco (ex: nome duplicado)
             if (_produtoRepository.ExisteProdutoComNome(dto.Nome))
             {
                 throw new InvalidOperationException("Já existe um produto com este nome.");
@@ -18,7 +18,7 @@
             // Dentro do construtor teria validações da classe de domínio
             var novoProduto = _mapper.Map<Produto>(dto);
 
-            // 3. Persistência
+            // Persistência
             _produtoRepository.Adicionar(novoProduto);
 
             return novoProduto;

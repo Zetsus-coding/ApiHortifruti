@@ -64,17 +64,17 @@ public class ItemSaidaServiceTests
 
         // Assert
         
-        // 1. Verifica se o repositório de itens foi chamado
+        // Verifica se o repositório de itens foi chamado
         _mockItemSaidaRepo.Verify(r => r.AdicionarItensSaidaAsync(itensParaAdicionar), Times.Once);
 
-        // 2. Verifica se o estoque foi atualizado na memória fake
+        // Verifica se o estoque foi atualizado na memória fake
         var produto1 = _produtosFake.First(p => p.Id == 1);
         var produto2 = _produtosFake.First(p => p.Id == 2);
 
         Assert.Equal(80, produto1.QuantidadeAtual);
         Assert.Equal(5, produto2.QuantidadeAtual);
 
-        // 3. Verifica se o update do produto foi persistido
+        // Verifica se o update do produto foi persistido
         _mockProdutoRepo.Verify(r => r.AtualizarAsync(It.IsAny<Produto>()), Times.Exactly(2));
     }
 

@@ -54,6 +54,7 @@ public class EntradaService : IEntradaService
             MotivoMovimentacaoId = postEntradaDTO.MotivoMovimentacaoId,
             NumeroNota = postEntradaDTO.NumeroNota,
             DataCompra = postEntradaDTO.DataCompra,
+            PrecoTotal = postEntradaDTO.PrecoTotal,
             ItemEntrada = postEntradaDTO.ItemEntrada.Select(item => new ItemEntrada
             {
                 ProdutoId = item.ProdutoId,
@@ -117,22 +118,3 @@ public class EntradaService : IEntradaService
         }
     }
 }
-
-// public async Task AtualizarEntradaAsync(int id, Entrada entrada)
-// {
-//     if (id != entrada.Id) throw new ArgumentException("O ID da entrada na URL não corresponde ao ID no corpo da requisição.");
-
-//     await _uow.Entrada.AtualizarAsync(entrada);
-//     await _uow.SaveChangesAsync();
-// }
-
-
-
-// public async Task DeletarEntradaAsync(int id)
-// {
-//     var entrada = await _uow.Entrada.ObterPorIdAsync(id);
-//     if (entrada == null) throw new NotFoundException("A 'Entrada' informada na requisição não existe");
-
-//     await _uow.Entrada.DeletarAsync(entrada);
-//     await _uow.SaveChangesAsync();
-// }

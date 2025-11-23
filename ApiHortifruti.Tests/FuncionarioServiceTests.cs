@@ -84,13 +84,13 @@ public class FuncionarioServiceTests
     {
         // Arrange
         var novoFuncionario = new Funcionario { Id = 0, Nome = "Novo", Cpf = "333" };
-        
+
         // Act
         var resultado = await _service.CriarFuncionarioAsync(novoFuncionario);
 
         // Assert
         Assert.NotNull(resultado);
-        
+
         // Verifica fluxo da transação
         _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
         _mockFuncionarioRepo.Verify(r => r.AdicionarAsync(novoFuncionario), Times.Once);
@@ -104,7 +104,7 @@ public class FuncionarioServiceTests
     {
         // Arrange
         var novoFuncionario = new Funcionario { Id = 0, Nome = "Novo", Cpf = "333" };
-        
+
         // Simula erro ao adicionar
         _mockFuncionarioRepo.Setup(r => r.AdicionarAsync(It.IsAny<Funcionario>()))
                             .ThrowsAsync(new Exception("Erro de banco de dados"));
@@ -153,21 +153,30 @@ public class FuncionarioServiceTests
         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
     }
 
-    // ---------------------------------------------------------------------
-    // Testes de Deleção (DELETE)
-    // ---------------------------------------------------------------------
+    //---------------------------------------------------------------------
+    //Testes de Deleção (DELETE)
+    //---------------------------------------------------------------------
 
-    // [Fact(DisplayName = "DeletarFuncionario deve chamar DeletarAsync e SaveChangesAsync")]
-    // public async Task DeletarFuncionarioAsync_Sucesso_DeveDeletar()
-    // {
-    //     // Arrange
-    //     int idDeletar = 1;
+    [Fact(DisplayName = "DeletarFuncionario deve chamar DeletarAsync e SaveChangesAsync")]
+    public async Task DeletarFuncionarioAsync_Sucesso_DeveDeletar()
+    {
+        // Arrange
+        int idDeletar = 1;
 
-    //     // Act
-    //     await _service.DeletarFuncionarioAsync(idDeletar);
+        // Precisamos criar o objeto que o Mock vai "encontrar" no banco
+        var funcionarioEncontrado = new Funcionario { Id = idDeletar, Nome = "Funcionario Teste" };
 
-    //     // Assert
-    //     _mockFuncionarioRepo.Verify(r => r.DeletarAsync(idDeletar), Times.Once);
-    //     _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    // }
+        // Configura o mock para retornar esse objeto quando buscar pelo ID
+        _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(idDeletar))
+                            .ReturnsAsync(funcionarioEncontrado);
+
+        // Act
+        await _service.DeletarFuncionarioAsync(idDeletar);
+
+        // Assert
+        // CORREÇÃO: Verificamos se o método foi chamado passando o OBJETO funcionarioEncontrado
+        _mockFuncionarioRepo.Verify(r => r.DeletarAsync(funcionarioEncontrado), Times.Once);
+
+        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+    }
 }

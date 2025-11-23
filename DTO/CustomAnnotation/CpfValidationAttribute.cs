@@ -21,16 +21,16 @@ public class CpfValidationAttribute : ValidationAttribute
             return ValidationResult.Success;
         }
 
-        // 1. Limpa o CPF (remove pontos e traços)
+        // Limpa o CPF (remove pontos e traços)
         cpf = new string(cpf.Where(char.IsDigit).ToArray());
 
-        // 2. Validação básica de formato e repetição
+        // Validação básica de formato e repetição
         if (cpf.Length != 11 || TodosDigitosIguais(cpf))
         {
             return new ValidationResult(ErrorMessage);
         }
 
-        // 3. Calcula e verifica o primeiro Dígito Verificador (DV1)
+        // Calcula e verifica o primeiro Dígito Verificador (DV1)
         var tempCpf = cpf.Substring(0, 9);
         var dv1 = CalcularDigitoVerificador(tempCpf, 10);
         if (dv1.ToString() != cpf.Substring(9, 1))
@@ -38,7 +38,7 @@ public class CpfValidationAttribute : ValidationAttribute
             return new ValidationResult(ErrorMessage);
         }
 
-        // 4. Calcula e verifica o segundo Dígito Verificador (DV2)
+        // Calcula e verifica o segundo Dígito Verificador (DV2)
         tempCpf += dv1;
         var dv2 = CalcularDigitoVerificador(tempCpf, 11);
         if (dv2.ToString() != cpf.Substring(10, 1))
@@ -46,7 +46,7 @@ public class CpfValidationAttribute : ValidationAttribute
             return new ValidationResult(ErrorMessage);
         }
 
-        // 5. CPF Válido
+        // CPF Válido
         return ValidationResult.Success;
     }
 

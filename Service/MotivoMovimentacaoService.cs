@@ -35,10 +35,10 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
     {
         motivoMovimentacao.Ativo = true;
         
-        // 1. Adiciona ao contexto
+        // Adiciona ao contexto
         var criado = await _uow.MotivoMovimentacao.AdicionarAsync(motivoMovimentacao);
         
-        // 2. Salva no banco de dados (Unit of Work)
+        // Salva no banco de dados (Unit of Work)
         await _uow.SaveChangesAsync(); 
 
         return criado;
@@ -52,10 +52,10 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
             throw new ArgumentException("O ID informado na URL não corresponde ao ID do corpo da requisição.");
         }
 
-        // 1. Atualiza no contexto
+        // Atualiza no contexto
         await _uow.MotivoMovimentacao.AtualizarAsync(motivoMovimentacao);
         
-        // 2. Salva no banco de dados
+        // Salva no banco de dados
         await _uow.SaveChangesAsync();
     }
 
@@ -64,10 +64,10 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
         var motivoMovimentacao = await _uow.MotivoMovimentacao.ObterPorIdAsync(id);
         if (motivoMovimentacao == null) throw new NotFoundException("O 'Motivo de Movimentação' informado na requisição não existe");
 
-        // 1. Remove do contexto
+        // Remove do contexto
         await _uow.MotivoMovimentacao.DeletarAsync(motivoMovimentacao);
         
-        // 2. Salva no banco de dados
+        // Salva no banco de dados
         await _uow.SaveChangesAsync();
     }
 }
