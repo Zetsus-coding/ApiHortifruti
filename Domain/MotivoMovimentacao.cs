@@ -1,4 +1,4 @@
-﻿using System.Text.Json.Serialization;
+using System.Text.Json.Serialization;
 
 namespace ApiHortifruti.Domain;
 
@@ -6,7 +6,7 @@ public partial class MotivoMovimentacao
 {
     public int Id { get; set; }
 
-    public string Motivo { get; set; }
+    public string TipoMovimentacao { get; set; }
 
     public bool Ativo { get; set; }
 

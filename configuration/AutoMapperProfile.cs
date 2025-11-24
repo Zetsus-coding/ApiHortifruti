@@ -14,7 +14,7 @@ public class AutoMapperProfile : Profile
             // Mapeia o NomeFantasia do Fornecedor (Entidade -> DTO)
             .ForMember(dest => dest.NomeFantasiaFornecedor, opt => opt.MapFrom(src => src.Fornecedor.NomeFantasia))
             // Mapeia o Motivo (Entidade -> DTO)
-            .ForMember(dest => dest.Motivo, opt => opt.MapFrom(src => src.MotivoMovimentacao.Motivo));
+            .ForMember(dest => dest.Motivo, opt => opt.MapFrom(src => src.MotivoMovimentacao.TipoMovimentacao));
 
         // --- Mapeamentos de FORNECEDOR ---
         CreateMap<PostFornecedorDTO, Fornecedor>();
@@ -50,8 +50,10 @@ public class AutoMapperProfile : Profile
         CreateMap<PutFuncionarioDTO, Funcionario>();
 
         // Mapeamento de Motivo
-        CreateMap<PostMotivoMovimentacaoDTO, MotivoMovimentacao>();
-        CreateMap<PutMotivoMovimentacaoDTO, MotivoMovimentacao>();
+        CreateMap<PostMotivoMovimentacaoDTO, MotivoMovimentacao>()
+            .ForMember(dest => dest.TipoMovimentacao, opt => opt.MapFrom(src => src.Motivo));
+        CreateMap<PutMotivoMovimentacaoDTO, MotivoMovimentacao>()
+            .ForMember(dest => dest.TipoMovimentacao, opt => opt.MapFrom(src => src.Motivo));
 
         // --- PRODUTO ---
         CreateMap<PostProdutoDTO, Produto>();
