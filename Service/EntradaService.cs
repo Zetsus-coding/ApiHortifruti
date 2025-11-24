@@ -147,7 +147,8 @@ public class EntradaService : IEntradaService
     }
 }
 
-// // Removido:
+
+// Removido:
 // // A princípio, não é possível atualizar ou deletar uma entrada
 // public async Task AtualizarEntradaAsync(int id, Entrada entrada)
 // {

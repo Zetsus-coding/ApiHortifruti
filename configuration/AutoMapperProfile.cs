@@ -1,8 +1,6 @@
 using AutoMapper;
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.ItemEntrada;
 using ApiHortifruti.DTO.PutFuncionarioDTO;
-using ApiHortifruti.DTO.ItemSaida;
 
 namespace ApiHortifruti.Configuration;
 
