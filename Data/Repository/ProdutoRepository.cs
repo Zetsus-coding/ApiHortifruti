@@ -13,21 +13,31 @@ public class ProdutoRepository : IProdutoRepository
         _context = context;
     }
     
+    // SELECT * FROM Produto
     public async Task<IEnumerable<Produto>> ObterTodosAsync()
     {
-        return await _context.Produto.ToListAsync();
+        return await _context.Produto
+            .Include(p => p.Categoria)
+            .Include(p => p.UnidadeMedida)
+            .ToListAsync();
     }
 
+    // SELECT * FROM Produto WHERE Id = {id}
     public async Task<Produto?> ObterPorIdAsync(int id)
     {
-        return await _context.Produto.FindAsync(id);
+        return await _context.Produto
+            .Include(p => p.Categoria)
+            .Include(p => p.UnidadeMedida)
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
     
+    // SELECT * FROM Produto WHERE Codigo = {codigo}
     public async Task<Produto?> ObterProdutoPorCodigoAsync(string codigo)
     {
         return await _context.Produto.FirstOrDefaultAsync(p => p.Codigo == codigo);
     }
 
+    // SELECT * FROM Produto WHERE QuantidadeAtual <= QuantidadeMinima
     public async Task<IEnumerable<Produto>> ObterEstoqueCriticoAsync()
     {
         return await _context.Produto
@@ -35,12 +45,14 @@ public class ProdutoRepository : IProdutoRepository
             .ToListAsync();
     }
 
+    // INSERT INTO Produto (...)
     public async Task<Produto> AdicionarAsync(Produto produto)
     {
         _context.Produto.Add(produto);
         return produto;
     }
 
+    // UPDATE Produto SET ... WHERE Id = {produto.Id}
     public async Task AtualizarAsync(Produto produto)
     {
         var existing = _context.Produto.Local.FirstOrDefault(p => p.Id == produto.Id);
@@ -54,6 +66,7 @@ public class ProdutoRepository : IProdutoRepository
         }
     }
 
+    // DELETE FROM Produto WHERE Id = {produto.Id}
     public async Task DeletarAsync(Produto produto)
     {   
         if (produto != null)

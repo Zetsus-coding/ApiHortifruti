@@ -2,6 +2,7 @@ using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 
 namespace ApiHortifruti.Service;
 
@@ -9,41 +10,47 @@ public class ProdutoService : IProdutoService
 {
     private readonly IUnityOfWork _uow;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IMapper _mapper;
 
 
     // Construtor com injeção de dependência do repositório
-    public ProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider)
+    public ProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider, IMapper mapper)
     {
         _uow = uow;
         _dateTimeProvider = dateTimeProvider;
+        _mapper = mapper;
     }
 
     // Consulta de todos os produtos
-    public async Task<IEnumerable<Produto>> ObterTodosOsProdutosAsync()
+    public async Task<IEnumerable<GetProdutoDTO>> ObterTodosOsProdutosAsync()
     {
-        return await _uow.Produto.ObterTodosAsync();
+        var produtos = await _uow.Produto.ObterTodosAsync(); // Acessa a camada (através do Unit of Work) repository para fazer a consulta
+        return _mapper.Map<IEnumerable<GetProdutoDTO>>(produtos); // Mapeia de entidade para DTO e retorna
     }
 
     // Consulta de produto por ID
-    public async Task<Produto?> ObterProdutoPorIdAsync(int id)
+    public async Task<GetProdutoDTO?> ObterProdutoPorIdAsync(int id)
     {
-        return await _uow.Produto.ObterPorIdAsync(id); // Chamada a camada de repositório (através do Unit of Work) para consultar por ID    
+        var produtoPorId = await _uow.Produto.ObterPorIdAsync(id); // Acessa a camada (através do Unit of Work) repository para fazer a consulta
+        return _mapper.Map<GetProdutoDTO>(produtoPorId); // Mapeia de entidade para DTO e retorna
     }
 
     // Consulta de produto por código
-    public async Task<Produto?> ObterProdutoPorCodigoAsync(string codigo)
+    public async Task<GetProdutoDTO?> ObterProdutoPorCodigoAsync(string codigo)
     {
-        return await _uow.Produto.ObterProdutoPorCodigoAsync(codigo); // Chamada a camada de repositório (através do Unit of Work) para consultar por código
+        var produtoPorCodigo = await _uow.Produto.ObterProdutoPorCodigoAsync(codigo); // Acessa a camada (através do Unit of Work) repository para fazer a consulta
+        return _mapper.Map<GetProdutoDTO>(produtoPorCodigo); // Mapeia de entidade para DTO e retorna
     }
 
     // Consulta de produtos com estoque crítico
-    public async Task<IEnumerable<Produto>> ObterProdutosEstoqueCriticoAsync()
+    public async Task<IEnumerable<GetProdutoEstoqueCriticoDTO>> ObterProdutosEstoqueCriticoAsync()
     {
-        return await _uow.Produto.ObterEstoqueCriticoAsync();
+        var produtosEstoqueCritico = await _uow.Produto.ObterEstoqueCriticoAsync(); // Acessa a camada (através do Unit of Work) repository para fazer a consulta
+        return _mapper.Map<IEnumerable<GetProdutoEstoqueCriticoDTO>>(produtosEstoqueCritico); // Mapeia de entidade para DTO e retorna
     }
 
     // Inserção de um novo produto
-    public async Task<Produto> CriarProdutoAsync(PostProdutoDTO postProdutoDTO)
+    public async Task<GetProdutoDTO> CriarProdutoAsync(PostProdutoDTO postProdutoDTO)
     {
         // Conversão manual de DTO para entidade
         var produto = new Produto
@@ -67,70 +74,48 @@ public class ProdutoService : IProdutoService
             }
         };
 
-        await _uow.BeginTransactionAsync();
-        try
-        {
-            var categoria = await _uow.Categoria.ObterPorIdAsync(produto.CategoriaId); // Consulta de categoria por id
-            if (categoria is null) throw new KeyNotFoundException("A categoria informada não existe."); // Valida se a categoria existe
+        var categoria = await _uow.Categoria.ObterPorIdAsync(produto.CategoriaId); // Consulta de categoria por id
+        if (categoria is null) throw new KeyNotFoundException("A categoria informada não existe."); // Valida se a categoria existe
 
-            var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(produto.UnidadeMedidaId); // Consulta de unidade de medida por id
-            if (unidadeMedida is null) throw new KeyNotFoundException("A unidade de medida informada não existe."); // Valida se a unidade de medida existe
+        var unidadeMedida = await _uow.UnidadeMedida.ObterPorIdAsync(produto.UnidadeMedidaId); // Consulta de unidade de medida por id
+        if (unidadeMedida is null) throw new KeyNotFoundException("A unidade de medida informada não existe."); // Valida se a unidade de medida existe
 
-            var codigoExistente = await _uow.Produto.ObterProdutoPorCodigoAsync(produto.Codigo); // Consulta de produto por código
-            if (codigoExistente is not null) throw new ArgumentException("Esse código de produto já existe."); // Valida se o código do produto já existe
+        var codigoExistente = await _uow.Produto.ObterProdutoPorCodigoAsync(produto.Codigo); // Consulta de produto por código
+        if (codigoExistente is not null) throw new ArgumentException("Esse código de produto já existe."); // Valida se o código do produto já existe
 
-            await _uow.Produto.AdicionarAsync(produto); // Chamada a camada de repositório (através do Unit of Work) para adicionar o produto
+        var produtoCriado = await _uow.Produto.AdicionarAsync(produto);
 
-            // Cria um registro em historicoProduto com o preço inicial (informado no momento da criação do novo produto)
-            await _uow.HistoricoProduto.AdicionarAsync(produto.HistoricoProduto.First());
-
-            await _uow.SaveChangesAsync(); // Salva as alterações
-            await _uow.CommitAsync(); // Confirma a transação
-            return produto;
-        }
-        catch
-        {
-            await _uow.RollbackAsync();
-            throw;
-        }
+        await _uow.SaveChangesAsync(); // Salva as alterações
+        return _mapper.Map<GetProdutoDTO>(produtoCriado); // Mapeia de entidade para DTO e retorna
     }
 
     // Atualização de um produto existente
-    public async Task AtualizarProdutoAsync(int id, Produto produto)
+    public async Task AtualizarProdutoAsync(int id, PutProdutoDTO putProdutoDTO)
     {
-        await _uow.BeginTransactionAsync();
-        try
+        var produto = _mapper.Map<Produto>(putProdutoDTO); // Mapeia de DTO para entidade
+
+        if (id != produto.Id) throw new ArgumentException("O ID do produto na URL não corresponde ao ID no corpo da requisição.");
+
+        var produtoExistente = await _uow.Produto.ObterPorIdAsync(id); // Consulta do produto por id
+        if (produtoExistente is null) throw new KeyNotFoundException("Produto não encontrado."); // Valida se o produto existe
+
+        var precoAntigo = produtoExistente.Preco;
+
+        await _uow.Produto.AtualizarAsync(produto); // Atualiza o produto (atráves da Unit of Work para acessar o repository)
+
+        // Cria um registro em historicoProduto com novo preço, se o preço foi alterado
+        if (precoAntigo != produto.Preco)
         {
-            if (id != produto.Id) throw new ArgumentException("O ID do produto na URL não corresponde ao ID no corpo da requisição.");
-
-            var produtoExistente = await _uow.Produto.ObterPorIdAsync(id);
-            if (produtoExistente is null) throw new KeyNotFoundException("Produto não encontrado."); // Valida se o produto existe
-
-            var precoAntigo = produtoExistente.Preco;
-            
-
-            await _uow.Produto.AtualizarAsync(produto);
-
-            // Cria um registro em historicoProduto com novo preço, se o preço foi alterado
-            if (precoAntigo != produto.Preco)
+            var historico = new HistoricoProduto
             {
-                var historico = new HistoricoProduto
-                {
-                    ProdutoId = id,
-                    PrecoProduto = produto.Preco,
-                    DataAlteracao = _dateTimeProvider?.Today ?? DateOnly.FromDateTime(DateTime.Today)
-                };
-                await _uow.HistoricoProduto.AdicionarAsync(historico);
-            }
+                ProdutoId = id,
+                PrecoProduto = produto.Preco,
+                DataAlteracao = _dateTimeProvider?.Today ?? DateOnly.FromDateTime(DateTime.Today)
+            };
+            await _uow.HistoricoProduto.AdicionarAsync(historico); // Necessário chamar o AdicioanarAsync pois o EF não rastreia automaticamente aqui
+        }
 
-            await _uow.SaveChangesAsync(); // Salva as alterações
-            await _uow.CommitAsync(); // Confirma a transação
-        }
-        catch
-        {
-            await _uow.RollbackAsync();
-            throw;
-        }
+        await _uow.SaveChangesAsync(); // Salva as alterações
     }
 
     public async Task DeletarProdutoAsync(int id)

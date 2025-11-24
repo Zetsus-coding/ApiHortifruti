@@ -9,6 +9,7 @@ public class ProdutoProfile : Profile
     {
         CreateMap<PostProdutoDTO, Produto>().ReverseMap();
         CreateMap<GetProdutoEstoqueCriticoDTO, Produto>().ReverseMap();
+        CreateMap<GetProdutoDTO, Produto>().ReverseMap();
         
         CreateMap<PutProdutoDTO, Produto>()
         .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdProduto))

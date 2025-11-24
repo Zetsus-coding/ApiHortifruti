@@ -6,8 +6,8 @@ namespace ApiHortifruti.Data.Repository.Interfaces;
 {
     Task<IEnumerable<Fornecedor>> ObterTodosAsync();
     Task<Fornecedor?> ObterPorIdAsync(int id);
+    Task<Fornecedor> ObterFornecedorComListaDeProdutosAtravesDeFornecedorIdAsync(int fornecedorId);
     Task<Fornecedor> AdicionarAsync(Fornecedor fornecedor);
     Task AtualizarAsync(Fornecedor fornecedor);
     Task DeletarAsync(Fornecedor fornecedor);
-    Task<Fornecedor?> ObterPorIdComProdutosAsync(int id);
 }
