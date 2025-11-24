@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiHortifruti.Domain.DTO.CustomAnnotation;
+namespace ApiHortifruti.DTO.CustomAnnotation;
 
 public class DataNaoFuturaAttribute : ValidationAttribute
 {

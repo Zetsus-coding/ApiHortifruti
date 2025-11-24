@@ -1,5 +1,5 @@
-using ApiHortifruti.Domain.DTO.CustomAnnotation;
-using ApiHortifruti.Domain.DTO.ItemSaida;
+using ApiHortifruti.DTO.CustomAnnotation;
+using ApiHortifruti.DTO.ItemSaida;
 using System.ComponentModel.DataAnnotations;
 
 public partial class PostSaidaDTO

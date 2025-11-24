@@ -1,5 +1,6 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
+using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 
 namespace ApiHortifruti.Service;
@@ -23,6 +24,16 @@ public class FornecedorProdutoService : IFornecedorProdutoService
     public async Task<FornecedorProduto?> ObterFornecedorProdutoPorIdAsync(int fornecedorId, int produtoId)
     {
         return await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorId, produtoId);
+    }
+
+    public async Task<Fornecedor> ObterFornecedorComProdutosAsync(int id)
+    {
+        // Este método usa o repositório que faz os .Include()
+        var fornecedor = await _uow.Fornecedor.ObterPorIdComProdutosAsync(id);
+        
+        if (fornecedor == null) throw new NotFoundException("O 'Fornecedor' informado na requisição não existe");
+
+        return fornecedor;
     }
 
     public async Task<FornecedorProduto> CriarFornecedorProdutoAsync(FornecedorProduto fornecedorProduto)

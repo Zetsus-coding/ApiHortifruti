@@ -116,6 +116,7 @@ builder.Services.AddOpenApi(); // Adiciona o OpenApi
 builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddControllers()
+
 .AddJsonOptions(options =>
 {
     // Configura o serializador para usar o nome dos enums em vez do valor númerico

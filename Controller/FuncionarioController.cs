@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.PutFuncionarioDTO;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -48,9 +49,17 @@ public class FuncionarioController : ControllerBase
             funcionarioCriado);
     }
     // [Authorize(Roles = "put")]
+    // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarFuncionario([Range(1, int.MaxValue)] int id, Funcionario funcionario)
+    public async Task<IActionResult> AtualizarFuncionario([Range(1, int.MaxValue)] int id, PutFuncionarioDTO putFuncionarioDTO)
     {
+        // Mapeia o DTO para uma nova instância de Funcionario ou usa um método de serviço que aceite DTO
+        // Como seu serviço espera 'Funcionario', vamos mapear:
+        var funcionario = _mapper.Map<Funcionario>(putFuncionarioDTO);
+        
+        // Importante: O DTO não tem ID, então garantimos que a entidade tenha o ID da URL
+        funcionario.Id = id; 
+
         await _funcionarioService.AtualizarFuncionarioAsync(id, funcionario);
         return NoContent();
     }

@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain.DTO.CustomAnnotation;
+using ApiHortifruti.DTO.CustomAnnotation;
 
-namespace ApiHortifruti.Domain.DTO.ItemSaida;
+namespace ApiHortifruti.DTO.ItemSaida;
 
 public class ItemSaidaDTO
 {

@@ -1,4 +1,6 @@
-namespace ApiHortifruti.Domain.DTO.Profiles;
+namespace ApiHortifruti.DTO.Profiles;
+
+using ApiHortifruti.Domain;
 using AutoMapper;
 
 public class FuncionarioProfile : Profile

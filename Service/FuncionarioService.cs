@@ -50,14 +50,36 @@ public class FuncionarioService : IFuncionarioService
         }
     }
 
-    public async Task AtualizarFuncionarioAsync(int id, Funcionario funcionario)
+    public async Task AtualizarFuncionarioAsync(int id, Funcionario funcionarioDadosNovos)
     {
-        if (id != funcionario.Id)
+        if (id != funcionarioDadosNovos.Id)
         {
             throw new ArgumentException("O ID informado não é o mesmo que está sendo editado");
         }
         
-        await _uow.Funcionario.AtualizarAsync(funcionario);
+        // 1. Busca o funcionário ORIGINAL no banco (com CPF e RG preenchidos)
+        var funcionarioExistente = await _uow.Funcionario.ObterPorIdAsync(id);
+        
+        if (funcionarioExistente == null)
+        {
+            throw new NotFoundException("Funcionário não encontrado.");
+        }
+
+        // 2. Atualiza APENAS os campos permitidos
+        // O Entity Framework vai rastrear essas mudanças automaticamente
+        funcionarioExistente.Nome = funcionarioDadosNovos.Nome;
+        funcionarioExistente.Telefone = funcionarioDadosNovos.Telefone;
+        funcionarioExistente.TelefoneExtra = funcionarioDadosNovos.TelefoneExtra;
+        funcionarioExistente.Email = funcionarioDadosNovos.Email;
+        funcionarioExistente.ContaBancaria = funcionarioDadosNovos.ContaBancaria;
+        funcionarioExistente.AgenciaBancaria = funcionarioDadosNovos.AgenciaBancaria;
+        funcionarioExistente.Ativo = funcionarioDadosNovos.Ativo;
+
+        // IMPORTANTE: NÃO mexemos no funcionarioExistente.Cpf nem no Rg.
+        // Eles continuam com os valores antigos do banco.
+
+        // 3. Manda salvar as alterações no objeto rastreado
+        await _uow.Funcionario.AtualizarAsync(funcionarioExistente);
         await _uow.SaveChangesAsync();
     }
 
