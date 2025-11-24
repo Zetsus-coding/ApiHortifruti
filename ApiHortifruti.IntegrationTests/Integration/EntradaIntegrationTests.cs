@@ -71,7 +71,7 @@ public class EntradaIntegrationTests : BaseIntegrationTest
             db.Fornecedor.Add(fornecedor);
 
             // 1.4 Criar Motivo de Movimentação
-            var motivo = new MotivoMovimentacao { TipoMovimentacao = "Compra Estoque", Ativo = true };
+            var motivo = new MotivoMovimentacao { Motivo = "Compra Estoque", Ativo = true };
             db.MotivoMovimentacao.Add(motivo);
 
             await db.SaveChangesAsync();

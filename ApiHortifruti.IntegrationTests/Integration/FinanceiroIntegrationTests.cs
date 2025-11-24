@@ -33,7 +33,7 @@ public class FinanceiroIntegrationTests : BaseIntegrationTest
             // =================================================================
 
             // Agora criamos os dados limpos para este teste
-            var motivo = new MotivoMovimentacao { TipoMovimentacao = "Compra Estoque", Ativo = true };
+            var motivo = new MotivoMovimentacao { Motivo = "Compra Estoque", Ativo = true };
             db.MotivoMovimentacao.Add(motivo);
 
             var fornecedor = new Fornecedor 

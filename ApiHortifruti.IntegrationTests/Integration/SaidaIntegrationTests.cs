@@ -53,7 +53,7 @@ public class SaidaIntegrationTests : BaseIntegrationTest
             db.Produto.Add(produto);
 
             // 1.3 Criar Motivo
-            var motivo = new MotivoMovimentacao { TipoMovimentacao = "Venda ao Consumidor", Ativo = true };
+            var motivo = new MotivoMovimentacao { Motivo = "Venda ao Consumidor", Ativo = true };
             db.MotivoMovimentacao.Add(motivo);
 
             await db.SaveChangesAsync();
