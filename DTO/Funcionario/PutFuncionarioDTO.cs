@@ -4,6 +4,10 @@ namespace ApiHortifruti.DTO.PutFuncionarioDTO;
 
 public class PutFuncionarioDTO
 {
+    [Required(ErrorMessage = "O ID é obrigatório")]
+    [Range(1, int.MaxValue, ErrorMessage = "O ID deve ser um número válido e positivo")]
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "O nome é obrigatório")]
     [StringLength(100, ErrorMessage = "O nome não pode exceder 100 caracteres")]
     public string Nome { get; set; }
@@ -28,6 +32,6 @@ public class PutFuncionarioDTO
     [Required(ErrorMessage = "A agência bancária é obrigatória")]
     [StringLength(20, ErrorMessage = "A agência bancária não pode exceder 20 caracteres")]
     public string AgenciaBancaria { get; set; }
-
+    
     public bool Ativo { get; set; }
 }

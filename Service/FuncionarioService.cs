@@ -42,20 +42,11 @@ public class FuncionarioService : IFuncionarioService
     {
         var funcionario = _mapper.Map<Funcionario>(postFuncionarioDTO);
 
-        await _uow.BeginTransactionAsync();
-        try
-        {
-            await _uow.Funcionario.AdicionarAsync(funcionario);
-            
-            await _uow.SaveChangesAsync();
-            await _uow.CommitAsync();
-            return _mapper.Map<GetFuncionarioDTO>(funcionario);
-        }
-        catch
-        {
-            await _uow.RollbackAsync();
-            throw;
-        }
+        funcionario.Ativo = true; // Define o funcionário como ativo por padrão
+        await _uow.Funcionario.AdicionarAsync(funcionario);
+
+        await _uow.SaveChangesAsync();
+        return _mapper.Map<GetFuncionarioDTO>(funcionario);
     }
 
     public async Task AtualizarFuncionarioAsync(int id, PutFuncionarioDTO putFuncionarioDTO)
@@ -67,7 +58,7 @@ public class FuncionarioService : IFuncionarioService
         
         // 1. Busca o funcionário ORIGINAL no banco
         var funcionarioExistente = await _uow.Funcionario.ObterPorIdAsync(id);
-        
+
         if (funcionarioExistente == null)
         {
             throw new NotFoundException("Funcionário não encontrado.");
