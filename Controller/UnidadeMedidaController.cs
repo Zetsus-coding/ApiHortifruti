@@ -1,9 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using System.Data;
 using ApiHortifruti.Domain;
-using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,18 +12,16 @@ namespace ApiHortifruti.Controllers;
 public class UnidadeMedidaController : ControllerBase
 {
     private readonly IUnidadeMedidaService _unidadeMedidaService;
-    private readonly IMapper _mapper;
 
     // Construtor com injeção de dependência do serviço e do mapper
-    public UnidadeMedidaController(IUnidadeMedidaService unidadeMedidaService, IMapper mapper)
+    public UnidadeMedidaController(IUnidadeMedidaService unidadeMedidaService)
     {
         _unidadeMedidaService = unidadeMedidaService;
-        _mapper = mapper;
     }
 
     // Consulta todas as unidades de medida
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UnidadeMedida>>> ObterTodasAsUnidadesMedida()
+    public async Task<ActionResult<IEnumerable<GetUnidadeMedidaDTO>>> ObterTodasAsUnidadesMedida()
     {
         var unidadeMedida = await _unidadeMedidaService.ObterTodasAsUnidadesMedidaAsync(); // Chamada a camada de serviço para obter todos
         return Ok(unidadeMedida);
@@ -35,7 +30,7 @@ public class UnidadeMedidaController : ControllerBase
     // Consulta uma unidade de medida pelo ID
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<UnidadeMedida>> ObterUnidadeMedidaPorId([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<GetUnidadeMedidaDTO>> ObterUnidadeMedidaPorId([Range(1, int.MaxValue)] int id)
     {
         var getIdUnidadeMedida = await _unidadeMedidaService.ObterUnidadeMedidaPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(getIdUnidadeMedida);
@@ -44,11 +39,9 @@ public class UnidadeMedidaController : ControllerBase
     // Cria uma nova unidade de medida
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<UnidadeMedida>> CriarUnidadeMedida(PostUnidadeMedidaDTO postUnidadeMedidaDTO)
+    public async Task<ActionResult<GetUnidadeMedidaDTO>> CriarUnidadeMedida(PostUnidadeMedidaDTO postUnidadeMedidaDTO)
     {
-        var unidadeMedida = _mapper.Map<UnidadeMedida>(postUnidadeMedidaDTO); // Conversão de DTO para entidade
-
-        var unidadeMedidaCriada = await _unidadeMedidaService.CriarUnidadeMedidaAsync(unidadeMedida); // Chamada a camada de serviço para criar
+        var unidadeMedidaCriada = await _unidadeMedidaService.CriarUnidadeMedidaAsync(postUnidadeMedidaDTO); // Chamada a camada de serviço para criar
         return CreatedAtAction(nameof(ObterTodasAsUnidadesMedida), new { unidadeMedidaCriada.Id },
             unidadeMedidaCriada);
     }
@@ -58,9 +51,7 @@ public class UnidadeMedidaController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarUnidadeMedida([Range(1, int.MaxValue)] int id, PutUnidadeMedidaDTO putUnidadeMedidaDTO)
     {
-        var unidadeMedida = _mapper.Map<UnidadeMedida>(putUnidadeMedidaDTO); // Conversão de DTO para entidade
-        
-        await _unidadeMedidaService.AtualizarUnidadeMedidaAsync(id, unidadeMedida); // Chamada a camada de serviço para atualizar
+        await _unidadeMedidaService.AtualizarUnidadeMedidaAsync(id, putUnidadeMedidaDTO); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
     

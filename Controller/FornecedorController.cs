@@ -15,64 +15,55 @@ namespace ApiHortifruti.Controller;
 public class FornecedorController : ControllerBase
 {
     private readonly IFornecedorService _fornecedorService;
-    private readonly IMapper _mapper;
 
     // Construtor com injeção de dependência do serviço e do mapper
-    public FornecedorController(IFornecedorService fornecedorService, IMapper mapper)
+    public FornecedorController(IFornecedorService fornecedorService)
     {
         _fornecedorService = fornecedorService;
-        _mapper = mapper;
     }
 
     // Consulta de todos os fornecedores
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Fornecedor>>> ObterTodosOsFornecedores()
+    public async Task<ActionResult<IEnumerable<GetFornecedorDTO>>> ObterTodosOsFornecedores()
     {
         var fornecedor = await _fornecedorService.ObterTodosOsFornecedoresAsync(); // Chamada a camada de serviço para obter todos
-        return Ok(fornecedor);
+        return Ok(fornecedor); // Retorna a lista de fornecedores
     }
 
     // Consulta de um fornecedor por ID
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Fornecedor>> ObterFornecedorPorId([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<GetFornecedorDTO>> ObterFornecedorPorId([Range(1, int.MaxValue)] int id)
     {
         var fornecedor = await _fornecedorService.ObterFornecedorPorIdAsync(id); // Chamada a camada de serviço para obter por ID
 
-        return Ok(fornecedor);
+        return Ok(fornecedor); // Retorna o DTO do fornecedor
     }
 
     // Consulta de um fornecedor específico com a lista de produtos que ele fornece
     [HttpGet("{id}/produtos")]
-    public async Task<ActionResult<FornecedorComListaProdutosDTO>> ObterProdutosPorFornecedorId([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<FornecedorComListaProdutosDTO>> ObterPorFornecedorIdSuaListaDeProdutos([Range(1, int.MaxValue)] int id)
     {
-        // CORREÇÃO: Usar o método que retorna a ENTIDADE (Fornecedor), não o DTO
-        var fornecedor = await _fornecedorService.ObterFornecedorComProdutosAsync(id);
-        
-        // Agora o AutoMapper consegue converter Fornecedor -> FornecedorComListaProdutosDTO
-        var fornecedorDto = _mapper.Map<FornecedorComListaProdutosDTO>(fornecedor);
-        
-        return Ok(fornecedorDto);
+        var fornecedorComListaProdutosDTO = await _fornecedorService.ObterProdutosPorFornecedorIdAsync(id); // Chamada a camada de serviço para obter os produtos do fornecedor
+        return Ok(fornecedorComListaProdutosDTO); // Retorna o DTO com a lista de produtos
     }
 
     // Criação de um novo fornecedor
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<Fornecedor>> CriarFornecedor(PostFornecedorDTO postFornecedorDTO)
+    public async Task<ActionResult<GetFornecedorDTO>> CriarFornecedor(PostFornecedorDTO postFornecedorDTO)
     {
-        var fornecedor = _mapper.Map<Fornecedor>(postFornecedorDTO); // Conversão de DTO para entidade
-
-        var fornecedorCriado = await _fornecedorService.CriarFornecedorAsync(fornecedor); // Chamada a camada de serviço para criar
-        return CreatedAtAction(nameof(ObterTodosOsFornecedores), new { fornecedorCriado.Id },
-            fornecedorCriado);
+        var fornecedorCriado = await _fornecedorService.CriarFornecedorAsync(postFornecedorDTO); // Chamada a camada de serviço para criar
+        return CreatedAtAction(nameof(ObterFornecedorPorId), new { fornecedorCriado.Id },
+            fornecedorCriado); // Retorna o status 201 com a localização do novo recurso
     }
 
     // Atualização de um fornecedor existente
     // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarFornecedor([Range(1, int.MaxValue)] int id, Fornecedor fornecedor)
+    public async Task<IActionResult> AtualizarFornecedor([Range(1, int.MaxValue)] int id, PutFornecedorDTO putFornecedorDTO)
     {
-        await _fornecedorService.AtualizarFornecedorAsync(id, fornecedor); // Chamada a camada de serviço para atualizar
+        await _fornecedorService.AtualizarFornecedorAsync(id, putFornecedorDTO); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
     

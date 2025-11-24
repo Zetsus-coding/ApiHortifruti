@@ -16,7 +16,8 @@ public class FornecedorProdutoProfile : Profile
             
             // Mapeamento da coleção "aninhada" 
             // (o automapper usará o profile do inner dto da lista de produtos com informações de fornecimento)
-            .ForMember(dest => dest.Produtos, opt => opt.MapFrom(src => src.FornecedorProduto));
+            .ForMember(dest => dest.Produtos, opt => opt.MapFrom(src => src.FornecedorProduto))
+            .ReverseMap();
 
 
         // Inner dto de buscar lista de produtos com detalhes de fornecimento
@@ -33,6 +34,7 @@ public class FornecedorProdutoProfile : Profile
             .ForMember(dest => dest.PrecoAtual, opt => opt.MapFrom(src => src.Produto.Preco))
             .ForMember(dest => dest.NomeCategoria, opt => opt.MapFrom(src => src.Produto.Categoria.Nome))
             .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Produto.Codigo))
-            .ForMember(dest => dest.AbreviacaoUnidadeMedida, opt => opt.MapFrom(src => src.Produto.UnidadeMedida.Abreviacao));
+            .ForMember(dest => dest.AbreviacaoUnidadeMedida, opt => opt.MapFrom(src => src.Produto.UnidadeMedida.Abreviacao))
+            .ReverseMap();
     }
  }

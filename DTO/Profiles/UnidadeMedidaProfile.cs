@@ -9,5 +9,6 @@ public class UnidadeMedidaProfile : Profile
     {
         CreateMap<PostUnidadeMedidaDTO, UnidadeMedida>().ReverseMap();
         CreateMap<PutUnidadeMedidaDTO, UnidadeMedida>().ReverseMap();
+        CreateMap<UnidadeMedida, GetUnidadeMedidaDTO>().ReverseMap();
     }
 }

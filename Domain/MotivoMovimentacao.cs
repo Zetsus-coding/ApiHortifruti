@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using ApiHortifruti.Domain.Enum;
 
 namespace ApiHortifruti.Domain;
 

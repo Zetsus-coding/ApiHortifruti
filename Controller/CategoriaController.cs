@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,18 +12,16 @@ namespace ApiHortifruti.Controller;
 public class CategoriaController : ControllerBase
 {
     private readonly ICategoriaService _categoriaService;
-    private readonly IMapper _mapper;
 
     // Construtor com injeção de dependência do serviço e do mapper
-    public CategoriaController(ICategoriaService categoriaService, IMapper mapper)
+    public CategoriaController(ICategoriaService categoriaService)
     {
         _categoriaService = categoriaService;
-        _mapper = mapper;
     }
 
     // Consulta de todas as categorias
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Categoria>>> ObterTodasAsCategorias()
+    public async Task<ActionResult<IEnumerable<GetCategoriaDTO>>> ObterTodasAsCategorias()
     {
         var categoria = await _categoriaService.ObterTodasAsCategoriasAsync(); // Chamada a camada de serviço para obter todos
         return Ok(categoria);
@@ -33,7 +30,7 @@ public class CategoriaController : ControllerBase
     // Consulta de categoria por id
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Categoria>> ObterCategoriaPorId([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<GetCategoriaDTO>> ObterCategoriaPorId([Range(1, int.MaxValue)] int id)
     {
         var categoria = await _categoriaService.ObterCategoriaPorIdAsync(id); // Chamada a camada de serviço para obter por ID
         return Ok(categoria);
@@ -42,23 +39,19 @@ public class CategoriaController : ControllerBase
     // Criação de categoria
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<Categoria>> CriarCategoria(PostCategoriaDTO postCategoriaDTO)
+    public async Task<ActionResult<GetCategoriaDTO>> CriarCategoria(PostCategoriaDTO postCategoriaDTO)
     {
-        var categoria = _mapper.Map<Categoria>(postCategoriaDTO); // Conversão de DTO para entidade
-
-        var categoriaCriada = await _categoriaService.CriarCategoriaAsync(categoria); // Chamada a camada de serviço para criar
-        return CreatedAtAction(nameof(ObterTodasAsCategorias), new { id = categoriaCriada.Id },
-            categoriaCriada);
+        var categoriaCriada = await _categoriaService.CriarCategoriaAsync(postCategoriaDTO); // Chamada a camada de serviço para criar
+        return CreatedAtAction(nameof(ObterCategoriaPorId), new { id = categoriaCriada.Id },
+            categoriaCriada); // Retorna 201 com a nova categoria criada e sua localização (url)
     }
 
     // Atualização de uma categoria existente
     // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarCategoria([Range(1, int.MaxValue)] int id, PutCategoriaDTO putCategoriaDTO)
-    {
-        var categoria = _mapper.Map<Categoria>(putCategoriaDTO); // Conversão de DTO para entidade
-        
-        await _categoriaService.AtualizarCategoriaAsync(id, categoria); // Chamada a camada de serviço para atualizar
+    {   
+        await _categoriaService.AtualizarCategoriaAsync(id, putCategoriaDTO); // Chamada a camada de serviço para atualizar
         return NoContent();
     }
 

@@ -20,9 +20,7 @@ public partial class Fornecedor
 
     public bool Ativo { get; set; }
 
-    [JsonIgnore]
     public virtual ICollection<Entrada> Entrada { get; set; } = new List<Entrada>();
 
-    [JsonIgnore]
     public virtual ICollection<FornecedorProduto> FornecedorProduto { get; set; } = new List<FornecedorProduto>();
 }
