@@ -33,21 +33,12 @@ public class FuncionarioService : IFuncionarioService
 
     public async Task<Funcionario> CriarFuncionarioAsync(Funcionario funcionario)
     {
+        funcionario.Ativo = true; // Define o funcionário como ativo por padrão
 
-        await _uow.BeginTransactionAsync();
-        try
-        {
-            await _uow.Funcionario.AdicionarAsync(funcionario);
-            
-            await _uow.SaveChangesAsync();
-            await _uow.CommitAsync();
-            return funcionario;
-        }
-        catch
-        {
-            await _uow.RollbackAsync();
-            throw;
-        }
+        await _uow.Funcionario.AdicionarAsync(funcionario);
+
+        await _uow.SaveChangesAsync();
+        return funcionario;
     }
 
     public async Task AtualizarFuncionarioAsync(int id, Funcionario funcionarioDadosNovos)
@@ -56,10 +47,10 @@ public class FuncionarioService : IFuncionarioService
         {
             throw new ArgumentException("O ID informado não é o mesmo que está sendo editado");
         }
-        
+
         // 1. Busca o funcionário ORIGINAL no banco (com CPF e RG preenchidos)
         var funcionarioExistente = await _uow.Funcionario.ObterPorIdAsync(id);
-        
+
         if (funcionarioExistente == null)
         {
             throw new NotFoundException("Funcionário não encontrado.");

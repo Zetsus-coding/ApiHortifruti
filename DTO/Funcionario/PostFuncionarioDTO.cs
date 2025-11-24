@@ -12,7 +12,6 @@ public partial class PostFuncionarioDTO
 
     [Required(ErrorMessage = "Informe o rg do funcionário")]
     [StringLength(20, ErrorMessage = "O RG não pode exceder 20 caracteres.")]
-    [RegularExpression(@"^(\d{1,2}\.?\d{3}\.?\d{3}-?[\dX]|[0-9]{9})$", ErrorMessage = "O formato do RG é inválido. Use DD.DDD.DDD-X ou apenas números.")]
     public string Rg { get; set; } = null!;
 
 
@@ -42,11 +41,7 @@ public partial class PostFuncionarioDTO
 
 
     [Required(ErrorMessage = "Informe a agencia bancaria do funcionário")]
-    [StringLength(4, ErrorMessage = "A agência bancária deve ter 4 caracteres.")]
+    [StringLength(10, ErrorMessage = "A agência bancária deve ter 10 caracteres.")]
     public string AgenciaBancaria { get; set; } = null!;
 
-
-    [Required(ErrorMessage = "É necessário informar se o usuário está ativo")]
-    public bool Ativo { get; set; }
-    
 }

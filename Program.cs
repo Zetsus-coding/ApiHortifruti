@@ -151,7 +151,11 @@ if (args.Contains("--migrate"))
     }
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsProduction())
+{
+    //app.UseHttpsRedirection();
+}
+
 app.UseRouting();
 
 app.UseMiddleware(typeof(GlobalExceptionHandlingMiddleware)); // Middleware de tratamento global de exceções

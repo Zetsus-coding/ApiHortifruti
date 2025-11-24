@@ -42,7 +42,7 @@ public class EntradaService : IEntradaService
     {
         return _mapper.Map<IEnumerable<GetEntradaSimplesDTO>>(await _uow.Entrada.ObterRecentesAsync());
     }
-
+    
     public async Task<Entrada> CriarEntradaAsync(PostEntradaDTO postEntradaDTO)
     {
         // Conversão manual de DTO para entidade

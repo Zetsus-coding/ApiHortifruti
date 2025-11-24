@@ -2,3 +2,6 @@
 obj/
 .git/
 .vs/
+*Tests/
+TestResults/
+IntegrationTests/
