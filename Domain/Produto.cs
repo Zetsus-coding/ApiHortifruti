@@ -28,16 +28,12 @@ public partial class Produto
  
     public virtual UnidadeMedida? UnidadeMedida { get; set; }
 
-    [JsonIgnore]
     public virtual ICollection<FornecedorProduto> FornecedorProduto { get; set; } = new List<FornecedorProduto>();
 
-    [JsonIgnore]
     public virtual ICollection<HistoricoProduto> HistoricoProduto { get; set; } = new List<HistoricoProduto>();
 
-    [JsonIgnore]
     public virtual ICollection<ItemEntrada> ItemEntrada { get; set; } = new List<ItemEntrada>();
 
-    [JsonIgnore]
     public virtual ICollection<ItemSaida> ItemSaida { get; set; } = new List<ItemSaida>();
     
 }

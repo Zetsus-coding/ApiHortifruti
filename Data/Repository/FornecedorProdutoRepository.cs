@@ -25,11 +25,6 @@ public class FornecedorProdutoRepository : IFornecedorProdutoRepository
             fp.FornecedorId == fornecedorId && fp.ProdutoId == produtoId);
     }
 
-    public async Task<IEnumerable<FornecedorComListaProdutosDTO>> ObterProdutosPorFornecedorIdAsync(int fornecedorId)
-    {
-        throw new NotImplementedException();   
-    }
-
     public async Task<FornecedorProduto> AdicionarAsync(FornecedorProduto fornecedorProduto)
     {
         _context.FornecedorProduto.Add(fornecedorProduto);

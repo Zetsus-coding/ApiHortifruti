@@ -1,14 +1,8 @@
-﻿using System.Text.Json.Serialization;
-
 namespace ApiHortifruti.Domain;
 
-public class UnidadeMedida
+public class GetUnidadeMedidaDTO
 {
     public int Id { get; set; }
-
     public string Nome { get; set; } = null!;
-
     public string Abreviacao { get; set; } = null!;
-
-    public virtual ICollection<Produto> Produto { get; set; } = new List<Produto>();
 }

@@ -7,6 +7,7 @@ public class CategoriaProfile : Profile
     {
         CreateMap<PostCategoriaDTO, Categoria>().ReverseMap();
         CreateMap<PutCategoriaDTO, Categoria>().ReverseMap();
+        CreateMap<Categoria, GetCategoriaDTO>();
     }
 }
 

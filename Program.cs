@@ -34,7 +34,7 @@ var serverVersion = new MySqlServerVersion(new Version(8, 0, 44));
 // Conexão com o banco de dados
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseMySql(connectionString, serverVersion,
-    
+
         mysqlOptions =>
         {
             mysqlOptions.EnableRetryOnFailure(
@@ -129,18 +129,24 @@ builder.Services.AddApplicationServices(); // Faz o AddScoped automático do ser
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
+if (args.Contains("--migrate"))
 {
-    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    try
+    using (var scope = app.Services.CreateScope())
     {
-        dbContext.Database.Migrate(); // Aplica as tabelas se não existirem
-    }
-    catch (Exception ex)
-    {
-        // Loga o erro caso o banco não esteja pronto ainda
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Ocorreu um erro ao migrar o banco de dados.");
+        var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+        try
+        {
+            if (dbContext.Database.GetPendingMigrations().Any())
+            {
+                dbContext.Database.Migrate(); // Aplica as tabelas se não existirem
+            }
+        }
+        catch (Exception ex)
+        {
+            // Loga o erro caso o banco não esteja pronto ainda
+            var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
+            logger.LogError(ex, "Ocorreu um erro ao migrar o banco de dados.");
+        }
     }
 }
 

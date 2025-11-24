@@ -14,14 +14,18 @@ public class ItemEntradaRepository : IItemEntradaRepository
         _context = context;
     }
 
-    // Métodos da interface
-    public async Task AdicionarItensEntradaAsync(IEnumerable<ItemEntrada> itens)
+    // ???
+    public Task<IEnumerable<ItemEntrada>> ObterTodosDeUmaEntradaAsync(int idEntrada)
     {
-       await _context.ItemEntrada.AddRangeAsync(itens); // Adiciona no context a "lista" de itens (ou item se só tiver 1 item na list)
-    }
-
-    public Task ObterTodosDeUmaEntradaAsync(int idEntrada)
-    {
-        throw new NotImplementedException();
+        return Task.FromResult(_context.ItemEntrada
+            .Where(ie => ie.EntradaId == idEntrada)
+            .AsEnumerable());
     }
 }
+
+// Removido:
+
+// public async Task AdicionarItensEntradaAsync(IEnumerable<ItemEntrada> itens)
+// {
+//    await _context.ItemEntrada.AddRangeAsync(itens); // Adiciona no context a "lista" de itens (ou item se só tiver 1 item na list)
+// }

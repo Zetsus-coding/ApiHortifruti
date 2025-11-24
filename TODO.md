@@ -96,3 +96,19 @@ REPOSITORIES: DOING
 CLASSES DE DOMÍNIO (NS)
 RELACIONAMENTOS (NS)
 DTOs (NS)
+
+// ------------------------------------------------------ //
+
+# CHECAGEM
+
+    CLASSE    |      CONTROLLER SERVICE REPOSITORY DTO DOMINIO
+
+Categoria     ->        ok
+Unid. med.    ->
+Produto       ->
+Hist. prod.   ->
+Fornecedor    ->
+Forn. prod.   ->
+Funcionario   ->
+Saida         ->
+Entrada       ->

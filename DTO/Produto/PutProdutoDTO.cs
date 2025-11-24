@@ -5,8 +5,7 @@ public class PutProdutoDTO
     // O id é inserido pelo angular no corpo da requisição (e não pelo "usuário em si")
     [Required(ErrorMessage = "O ID do produto é obrigatório para atualizar o produto")]
     [Range(1, int.MaxValue, ErrorMessage = "Por favor, informe um ID de produto válido")]
-    public int IdProduto { get; set; }
-
+    public int Id { get; set; }
 
     [Required(ErrorMessage = "Por favor, informe uma categoria")]
     [Range(1, int.MaxValue, ErrorMessage = "Por favor, informe uma categoria válida")]
