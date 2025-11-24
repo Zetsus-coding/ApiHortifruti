@@ -38,13 +38,13 @@ public class MotivoMovimentacaoIntegrationTests : BaseIntegrationTest
         var motivoCriado = await responsePost.Content.ReadFromJsonAsync<MotivoMovimentacao>();
         motivoCriado.Should().NotBeNull();
         motivoCriado!.Id.Should().BeGreaterThan(0);
-        motivoCriado.Motivo.Should().Be("Venda Balcão");
+        motivoCriado.TipoMovimentacao.Should().Be("Venda Balcão");
 
         // Verifica no banco se gravou
         DbContext.ChangeTracker.Clear();
         var motivoNoBanco = await DbContext.MotivoMovimentacao.FindAsync(motivoCriado.Id);
         motivoNoBanco.Should().NotBeNull();
-        motivoNoBanco!.Motivo.Should().Be("Venda Balcão");
+        motivoNoBanco!.TipoMovimentacao.Should().Be("Venda Balcão");
 
         // ====================================================================
         // 2. GET (CONSULTAR)
@@ -56,7 +56,7 @@ public class MotivoMovimentacaoIntegrationTests : BaseIntegrationTest
         var motivoRetornado = await responseGet.Content.ReadFromJsonAsync<MotivoMovimentacao>();
         
         motivoRetornado.Should().NotBeNull();
-        motivoRetornado!.Motivo.Should().Be("Venda Balcão");
+        motivoRetornado!.TipoMovimentacao.Should().Be("Venda Balcão");
 
         // ====================================================================
         // 3. UPDATE (PUT)
@@ -82,7 +82,7 @@ public class MotivoMovimentacaoIntegrationTests : BaseIntegrationTest
         DbContext.ChangeTracker.Clear();
         var motivoAtualizado = await DbContext.MotivoMovimentacao.FindAsync(motivoCriado.Id);
         
-        motivoAtualizado!.Motivo.Should().Be("Venda Online");
+        motivoAtualizado!.TipoMovimentacao.Should().Be("Venda Online");
         motivoAtualizado.Ativo.Should().BeFalse(); // Confere se inativou
 
         // ====================================================================
