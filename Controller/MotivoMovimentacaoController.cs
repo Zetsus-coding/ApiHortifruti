@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.MotivoMovimentacao;
 using ApiHortifruti.Service.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,18 +12,16 @@ namespace ApiHortifruti.Controller;
 public class MotivoMovimentacaoController : ControllerBase
 {
     private readonly IMotivoMovimentacaoService _motivoMovimentacaoService;
-    private readonly IMapper _mapper;
 
     // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
-    public MotivoMovimentacaoController(IMotivoMovimentacaoService motivoMovimentacaoService, IMapper mapper)
+    public MotivoMovimentacaoController(IMotivoMovimentacaoService motivoMovimentacaoService)
     {
         _motivoMovimentacaoService = motivoMovimentacaoService;
-        _mapper = mapper;
     }
 
     // OPERAÇÕES
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MotivoMovimentacao>>> ObterTodosOsMotivosMovimentacao()
+    public async Task<ActionResult<IEnumerable<GetMotivoMovimentacaoDTO>>> ObterTodosOsMotivosMovimentacao()
     {
         var motivoMovimentacao = await _motivoMovimentacaoService.ObterTodosOsMotivosMovimentacaoAsync();
         return Ok(motivoMovimentacao);
@@ -32,7 +29,7 @@ public class MotivoMovimentacaoController : ControllerBase
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<MotivoMovimentacao>> ObterMotivoMovimentacaoPorId([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<GetMotivoMovimentacaoDTO>> ObterMotivoMovimentacaoPorId([Range(1, int.MaxValue)] int id)
     {
         var getIdMotivoMovimentacao = await _motivoMovimentacaoService.ObterMotivoMovimentacaoPorIdAsync(id);
 
@@ -40,16 +37,12 @@ public class MotivoMovimentacaoController : ControllerBase
         return Ok(getIdMotivoMovimentacao);
     }
 
-    // get produtos associados a motivoMovimentacao (aqui [/motivoMovimentacao/idmotivoMovimentacao/produtos] ou em produtos [/produtos?motivoMovimentacao=x])?
-
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<MotivoMovimentacao>> CriarMotivoMovimentacao(PostMotivoMovimentacaoDTO postMotivoMovimentacaoDTO)
+    public async Task<ActionResult<GetMotivoMovimentacaoDTO>> CriarMotivoMovimentacao(PostMotivoMovimentacaoDTO postMotivoMovimentacaoDTO)
     {
-        var motivoMovimentacao = _mapper.Map<MotivoMovimentacao>(postMotivoMovimentacaoDTO); // Mapeamento DTO -> Domain
-
-        var motivoMovimentacaoCriada = await _motivoMovimentacaoService.CriarMotivoMovimentacaoAsync(motivoMovimentacao);
-        return CreatedAtAction(nameof(ObterTodosOsMotivosMovimentacao), new { id = motivoMovimentacaoCriada.Id },
+        var motivoMovimentacaoCriada = await _motivoMovimentacaoService.CriarMotivoMovimentacaoAsync(postMotivoMovimentacaoDTO);
+        return CreatedAtAction(nameof(ObterMotivoMovimentacaoPorId), new { id = motivoMovimentacaoCriada.Id },
             motivoMovimentacaoCriada);
     }
 
@@ -57,13 +50,8 @@ public class MotivoMovimentacaoController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarMotivoMovimentacao([Range(1, int.MaxValue)] int id, PutMotivoMovimentacaoDTO dto)
     {
-        // Mapeia o DTO para a entidade
-        var motivoMovimentacao = _mapper.Map<MotivoMovimentacao>(dto);
-        
-        // Garante que o ID da entidade seja o mesmo da URL
-        motivoMovimentacao.Id = id;
-
-        await _motivoMovimentacaoService.AtualizarMotivoMovimentacaoAsync(id, motivoMovimentacao);
+        dto.Id = id;
+        await _motivoMovimentacaoService.AtualizarMotivoMovimentacaoAsync(id, dto);
         return NoContent();
     }
 

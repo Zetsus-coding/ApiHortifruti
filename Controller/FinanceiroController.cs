@@ -1,4 +1,4 @@
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Financeiro;
 using Microsoft.AspNetCore.Mvc;
 using SuaApi.Services;
 
@@ -18,7 +18,7 @@ public class FinanceiroController : ControllerBase
 
     /// <returns>Valor do lucro semanal</returns>
     [HttpGet("lucro-semanal")]
-    public async Task<ActionResult<decimal>> ObterLucroSemanal()
+    public async Task<ActionResult<GetLucroSemanalDTO>> ObterLucroSemanal()
     {
         try
         {
@@ -32,7 +32,7 @@ public class FinanceiroController : ControllerBase
     }
 
     [HttpGet("gastos-mensais")]
-    public async Task<ActionResult<decimal>> ObterGastosMensais()
+    public async Task<ActionResult<GetGastosMensaisDTO>> ObterGastosMensais()
     {
         try
         {
@@ -46,7 +46,7 @@ public class FinanceiroController : ControllerBase
     }
 
     [HttpGet("vendas-diarias")]
-    public async Task<ActionResult<decimal>> ObterVendasDiarias()
+    public async Task<ActionResult<GetVendasDiariasDTO>> ObterVendasDiarias()
     {
         try
         {

@@ -1,8 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Entrada;
 using ApiHortifruti.Service.Interfaces;
-using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -30,7 +28,7 @@ public class EntradaController : ControllerBase
 
     [HttpGet("{id}")]
     // [Authorize(Roles = "get(id)")]
-    public async Task<ActionResult<GetEntradaSimplesDTO>> ObterEntradaPorId([Range(1, int.MaxValue)] int id)
+    public async Task<ActionResult<GetEntradaDTO>> ObterEntradaPorId([Range(1, int.MaxValue)] int id)
     {
         var entrada = await _entradaService.ObterEntradaPorIdAsync(id);
 
@@ -57,26 +55,11 @@ public async Task<ActionResult<IEnumerable<GetEntradaSimplesDTO>>> ObterEntradas
 
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<Entrada>> CriarEntrada(PostEntradaDTO postEntradaDTO)
+    public async Task<ActionResult<GetEntradaDTO>> CriarEntrada(PostEntradaDTO postEntradaDTO)
     {
         var entradaCriada = await _entradaService.CriarEntradaAsync(postEntradaDTO);
 
-        return CreatedAtAction(nameof(ObterTodasAsEntradas), new { id = entradaCriada.Id },
+        return CreatedAtAction(nameof(ObterEntradaPorId), new { id = entradaCriada.Id },
             entradaCriada);
     }
 }
-
-// [Authorize(Roles = "put")]
-// [HttpPut("{id}")]
-// public async Task<IActionResult> AtualizarEntrada([Range(1, int.MaxValue)] int id, Entrada entrada)
-// {
-//     await _entradaService.AtualizarEntradaAsync(id, entrada);
-//     return NoContent();
-// }
-
-// [HttpDelete("{id}")]
-// public async Task<IActionResult> DeletarEntrada([Range(1, int.MaxValue)] int id) 
-// { 
-//     await _entradaService.DeletarEntradaAsync(id); 
-//     return NoContent(); 
-// } 

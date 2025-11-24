@@ -1,10 +1,10 @@
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Financeiro;
 
 namespace SuaApi.Services;
 
 public interface IFinanceiroService
 {
-    Task<decimal> CalcularLucroSemanalAsync();
-    Task<decimal> CalcularGastosDoMesAsync();
-    Task<decimal> CalcularVendasDoDiaAsync();
+    Task<GetLucroSemanalDTO> CalcularLucroSemanalAsync();
+    Task<GetGastosMensaisDTO> CalcularGastosDoMesAsync();
+    Task<GetVendasDiariasDTO> CalcularVendasDoDiaAsync();
 }

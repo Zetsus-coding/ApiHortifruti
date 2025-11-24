@@ -1,11 +1,16 @@
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.FornecedorProduto;
 using AutoMapper;
+
+namespace ApiHortifruti.DTO.Profiles;
 
 public class FornecedorProdutoProfile : Profile
  {
      public FornecedorProdutoProfile()
     {
         CreateMap<PostFornecedorProdutoDTO, FornecedorProduto>().ReverseMap();
+        CreateMap<PutFornecedorProdutoDTO, FornecedorProduto>().ReverseMap();
+        CreateMap<FornecedorProduto, GetFornecedorProdutoDTO>().ReverseMap();
 
         CreateMap<Fornecedor, FornecedorComListaProdutosDTO>()
             // Mapeamento das propriedades de fornecedor

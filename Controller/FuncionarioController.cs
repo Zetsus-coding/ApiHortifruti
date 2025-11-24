@@ -1,8 +1,7 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Funcionario;
 using ApiHortifruti.DTO.PutFuncionarioDTO;
 using ApiHortifruti.Service.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,16 +13,14 @@ namespace ApiHortifruti.Controller;
 public class FuncionarioController : ControllerBase
 {
     private readonly IFuncionarioService _funcionarioService;
-    private readonly IMapper _mapper;
 
-    public FuncionarioController(IFuncionarioService funcionarioService, IMapper mapper)
+    public FuncionarioController(IFuncionarioService funcionarioService)
     {
         _funcionarioService = funcionarioService;
-        _mapper = mapper;
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Funcionario>>> ObterTodosOsFuncionarios()
+    public async Task<ActionResult<IEnumerable<GetFuncionarioDTO>>> ObterTodosOsFuncionarios()
     {
         var funcionario = await _funcionarioService.ObterTodosOsFuncionariosAsync();
         return Ok(funcionario);
@@ -31,7 +28,7 @@ public class FuncionarioController : ControllerBase
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Funcionario>> ObteFuncionarioPorId([Range(1, int.MaxValue)]int id)
+    public async Task<ActionResult<GetFuncionarioDTO>> ObterFuncionarioPorId([Range(1, int.MaxValue)]int id)
     {
         var funcionario = await _funcionarioService.ObterFuncionarioPorIdAsync(id);
 
@@ -40,27 +37,19 @@ public class FuncionarioController : ControllerBase
     }
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<Funcionario>> CriarFuncionario(PostFuncionarioDTO postFuncionarioDTO)
+    public async Task<ActionResult<GetFuncionarioDTO>> CriarFuncionario(PostFuncionarioDTO postFuncionarioDTO)
     {
-        var funcionario = _mapper.Map<Funcionario>(postFuncionarioDTO); // Conversão de DTO para entidade
-        
-        var funcionarioCriado = await _funcionarioService.CriarFuncionarioAsync(funcionario);
-        return CreatedAtAction(nameof(ObterTodosOsFuncionarios), new { funcionarioCriado.Id },
+        var funcionarioCriado = await _funcionarioService.CriarFuncionarioAsync(postFuncionarioDTO);
+        return CreatedAtAction(nameof(ObterFuncionarioPorId), new { id = funcionarioCriado.Id },
             funcionarioCriado);
     }
-    // [Authorize(Roles = "put")]
+
     // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
     public async Task<IActionResult> AtualizarFuncionario([Range(1, int.MaxValue)] int id, PutFuncionarioDTO putFuncionarioDTO)
     {
-        // Mapeia o DTO para uma nova instância de Funcionario ou usa um método de serviço que aceite DTO
-        // Como seu serviço espera 'Funcionario', vamos mapear:
-        var funcionario = _mapper.Map<Funcionario>(putFuncionarioDTO);
-        
-        // Importante: O DTO não tem ID, então garantimos que a entidade tenha o ID da URL
-        funcionario.Id = id; 
-
-        await _funcionarioService.AtualizarFuncionarioAsync(id, funcionario);
+        putFuncionarioDTO.Id = id;
+        await _funcionarioService.AtualizarFuncionarioAsync(id, putFuncionarioDTO);
         return NoContent();
     }
     

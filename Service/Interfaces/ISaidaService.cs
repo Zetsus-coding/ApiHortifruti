@@ -1,12 +1,11 @@
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Saida;
 
 namespace ApiHortifruti.Service.Interfaces;
 
 public interface ISaidaService
 {
-    Task<IEnumerable<Saida>> ObterTodasAsSaidasAsync();
-    Task<Saida?> ObterSaidaPorIdAsync(int id);
-    Task<Saida> CriarSaidaAsync(Saida saida);
-    // Task AtualizarSaidaAsync(int id, Saida saida);
-    // Task DeletarSaidaAsync(int id);
+    Task<IEnumerable<GetSaidaSimplesDTO>> ObterTodasAsSaidasAsync();
+    Task<GetSaidaDTO?> ObterSaidaPorIdAsync(int id);
+    Task<GetSaidaDTO> CriarSaidaAsync(PostSaidaDTO postSaidaDTO);
 }
