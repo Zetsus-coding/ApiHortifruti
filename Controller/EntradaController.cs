@@ -39,24 +39,21 @@ public class EntradaController : ControllerBase
     }
 
     [HttpGet("entradas-recentes")]
-    public async Task<ActionResult<IEnumerable<GetEntradaSimplesDTO>>> ObterEntradasRecentes()
+public async Task<ActionResult<IEnumerable<GetEntradaSimplesDTO>>> ObterEntradasPorDias([FromQuery] int dias = 7)
+{
+    try
     {
-        try
-        {
-            var entradas = await _entradaService.ObterEntradasRecentesAsync();
+        // Se o usuário mandar dias negativo, forçamos virar positivo ou zero
+        if (dias < 0) dias = 0;
 
-            if (entradas == null || !entradas.Any())
-            {
-                return NoContent();
-            }
-
-            return Ok(entradas);
-        }
-        catch (Exception ex)
-        {
-            return StatusCode(500, $"Erro ao buscar entradas recentes: {ex.Message}");
-        }
+        var resultado = await _entradaService.ObterEntradasRecentesAsync(dias);
+        return Ok(resultado);
     }
+    catch (Exception ex)
+    {
+        return StatusCode(500, $"Erro: {ex.Message}");
+    }
+}
 
     // [Authorize(Roles = "post")]
     [HttpPost]

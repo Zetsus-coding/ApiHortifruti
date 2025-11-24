@@ -38,9 +38,23 @@ public class EntradaService : IEntradaService
         return _mapper.Map<GetEntradaSimplesDTO?>(await _uow.Entrada.ObterPorIdAsync(id)); // Mapeia a entrada para DTO e retorna
     }
 
-    public async Task<IEnumerable<GetEntradaSimplesDTO>> ObterEntradasRecentesAsync()
+    public async Task<IEnumerable<GetEntradaDTO>> ObterEntradasRecentesAsync(int dias)
     {
-        return _mapper.Map<IEnumerable<GetEntradaSimplesDTO>>(await _uow.Entrada.ObterRecentesAsync());
+        // Calcula a data limite. Ex: Hoje (24) - 7 dias = Dia 17.
+    // Usamos DateOnly.FromDateTime porque seu banco usa DateOnly
+    var dataLimite = DateOnly.FromDateTime(DateTime.Now.AddDays(-dias));
+
+    var entradas = await _uow.Entrada.ObterRecentesAsync(dataLimite);
+
+    return entradas.Select(e => new GetEntradaDTO
+    {
+        numeroNota = e.NumeroNota,
+        NomeFantasiaFornecedor = e.Fornecedor.NomeFantasia,
+        Motivo = e.MotivoMovimentacao.Motivo,
+        DataCompra = e.DataCompra,
+        PrecoTotal = e.PrecoTotal,
+        item = e.ItemEntrada
+    });
     }
 
     public async Task<Entrada> CriarEntradaAsync(PostEntradaDTO postEntradaDTO)
