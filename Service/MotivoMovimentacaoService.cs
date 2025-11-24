@@ -1,6 +1,5 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.MotivoMovimentacao;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;

@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.DTO.Funcionario;
-using ApiHortifruti.DTO.PutFuncionarioDTO;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

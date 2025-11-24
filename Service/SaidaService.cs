@@ -1,5 +1,4 @@
 using ApiHortifruti.Data.Repository.Interfaces;
-using ApiHortifruti.DTO.Saida;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;

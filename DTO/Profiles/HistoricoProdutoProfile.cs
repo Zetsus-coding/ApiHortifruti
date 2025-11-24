@@ -1,5 +1,4 @@
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.HistoricoProduto;
 using AutoMapper;
 
 namespace ApiHortifruti.DTO.Profiles;

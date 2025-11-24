@@ -15,7 +15,10 @@ public class EntradaRepository : IEntradaRepository
 
     public async Task<IEnumerable<Entrada>> ObterTodosAsync()
     {
-        return await _context.Entrada.ToListAsync();
+        return await _context.Entrada
+            .Include(e => e.Fornecedor)
+            .Include(e => e.MotivoMovimentacao)
+            .ToListAsync();
     }
 
     public async Task<Entrada?> ObterPorIdAsync(int id)
@@ -40,9 +43,10 @@ public class EntradaRepository : IEntradaRepository
     {
         return await _context.Entrada
         .AsNoTracking()
-        .Include(e => e.Fornecedor)
-        
-        // AQUI ESTÁ A MUDANÇA: Filtra tudo que for MAIOR ou IGUAL a data de início
+        .Include(e => e.Fornecedor)           // Carrega o Fornecedor
+        .Include(e => e.MotivoMovimentacao)   // Carrega o Motivo
+        .Include(e => e.ItemEntrada)          // Carrega os Itens da Entrada
+
         .Where(e => e.DataCompra >= dataInicio) 
         .OrderByDescending(e => e.DataCompra)
         .ThenByDescending(e => e.Id)
@@ -55,9 +59,10 @@ public class EntradaRepository : IEntradaRepository
             .FirstOrDefaultAsync(e => e.NumeroNota == numeroNota && e.FornecedorId == fornecedorId);
     }
 
-    public async Task AdicionarAsync(Entrada entrada)
+    public async Task<Entrada> AdicionarAsync(Entrada entrada)
     {
-        _context.Entrada.Add(entrada);
+        await _context.Entrada.AddAsync(entrada);
+        return entrada;
     }
 
     // public async Task AtualizarAsync(Entrada entrada)

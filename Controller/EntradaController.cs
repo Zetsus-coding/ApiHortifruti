@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.DTO.Entrada;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,22 +35,13 @@ public class EntradaController : ControllerBase
         return Ok(entrada);
     }
 
+    
     [HttpGet("entradas-recentes")]
-public async Task<ActionResult<IEnumerable<GetEntradaSimplesDTO>>> ObterEntradasPorDias([FromQuery] int dias = 7)
-{
-    try
+    public async Task<ActionResult<IEnumerable<GetEntradaDTO>>> ObterEntradasRecentes()
     {
-        // Se o usuário mandar dias negativo, forçamos virar positivo ou zero
-        if (dias < 0) dias = 0;
-
-        var resultado = await _entradaService.ObterEntradasRecentesAsync(dias);
-        return Ok(resultado);
+        var entrada = await _entradaService.ObterEntradasRecentesAsync();
+        return Ok(entrada);
     }
-    catch (Exception ex)
-    {
-        return StatusCode(500, $"Erro: {ex.Message}");
-    }
-}
 
     // [Authorize(Roles = "post")]
     [HttpPost]

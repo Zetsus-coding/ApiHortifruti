@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.DTO.Saida;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 

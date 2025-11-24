@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
-
-namespace ApiHortifruti.Domain; // Ajuste o namespace se necessário
-
+using System.Text.Json.Serialization;
 public class PutMotivoMovimentacaoDTO
 {
+    [JsonIgnore]
+    public int Id { get; set; }
+
     [Required(ErrorMessage = "A descrição do motivo é obrigatória")]
     [StringLength(20, ErrorMessage = "O motivo não pode exceder 20 caracteres")]
     public string Motivo { get; set; }

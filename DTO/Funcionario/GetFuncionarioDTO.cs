@@ -1,5 +1,3 @@
-namespace ApiHortifruti.DTO.Funcionario;
-
 public class GetFuncionarioDTO
 {
     public int Id { get; set; }

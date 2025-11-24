@@ -1,7 +1,5 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.Funcionario;
-using ApiHortifruti.DTO.PutFuncionarioDTO;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;

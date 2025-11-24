@@ -1,6 +1,6 @@
 public class GetEntradaDTO
 {
-    // public int Id { get; set; }
+    public int Id { get; set; }
     public string NumeroNota { get; set; }
     public string NomeFantasiaFornecedor { get; set; }
     public int MotivoMovimentacaoId { get; set; }

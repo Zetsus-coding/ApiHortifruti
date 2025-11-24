@@ -1,5 +1,4 @@
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.MotivoMovimentacao;
 using AutoMapper;
 
 namespace ApiHortifruti.DTO.Profiles;

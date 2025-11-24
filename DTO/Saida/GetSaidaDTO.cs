@@ -1,7 +1,3 @@
-using ApiHortifruti.DTO.ItemSaida;
-
-namespace ApiHortifruti.DTO.Saida;
-
 public class GetSaidaDTO
 {
     public int Id { get; set; }

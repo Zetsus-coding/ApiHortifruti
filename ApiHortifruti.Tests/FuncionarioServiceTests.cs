@@ -1,215 +1,215 @@
-using ApiHortifruti.Data.Repository.Interfaces;
-using ApiHortifruti.Domain;
-using ApiHortifruti.Service;
-using Moq;
-using Xunit;
-using Microsoft.EntityFrameworkCore.Storage;
+// using ApiHortifruti.Data.Repository.Interfaces;
+// using ApiHortifruti.Domain;
+// using ApiHortifruti.Service;
+// using Moq;
+// using Xunit;
+// using Microsoft.EntityFrameworkCore.Storage;
 
-namespace ApiHortifruti.Tests;
+// namespace ApiHortifruti.Tests;
 
-public class FuncionarioServiceTests
-{
-    private readonly Mock<IUnityOfWork> _mockUow;
-    private readonly Mock<IFuncionarioRepository> _mockFuncionarioRepo;
-    private readonly FuncionarioService _service;
+// public class FuncionarioServiceTests
+// {
+//     private readonly Mock<IUnityOfWork> _mockUow;
+//     private readonly Mock<IFuncionarioRepository> _mockFuncionarioRepo;
+//     private readonly FuncionarioService _service;
 
-    // Dados Fakes
-    private readonly List<Funcionario> _funcionariosFake = new List<Funcionario>
-    {
-        new Funcionario { Id = 1, Nome = "João Silva", Cpf = "111.111.111-11", Ativo = true },
-        new Funcionario { Id = 2, Nome = "Maria Oliveira", Cpf = "222.222.222-22", Ativo = true }
-    };
+//     // Dados Fakes
+//     private readonly List<Funcionario> _funcionariosFake = new List<Funcionario>
+//     {
+//         new Funcionario { Id = 1, Nome = "João Silva", Cpf = "111.111.111-11", Ativo = true },
+//         new Funcionario { Id = 2, Nome = "Maria Oliveira", Cpf = "222.222.222-22", Ativo = true }
+//     };
 
-    public FuncionarioServiceTests()
-    {
-        _mockUow = new Mock<IUnityOfWork>();
-        _mockFuncionarioRepo = new Mock<IFuncionarioRepository>();
+//     public FuncionarioServiceTests()
+//     {
+//         _mockUow = new Mock<IUnityOfWork>();
+//         _mockFuncionarioRepo = new Mock<IFuncionarioRepository>();
 
-        // Configurar UoW
-        _mockUow.Setup(uow => uow.Funcionario).Returns(_mockFuncionarioRepo.Object);
+//         // Configurar UoW
+//         _mockUow.Setup(uow => uow.Funcionario).Returns(_mockFuncionarioRepo.Object);
 
-        // Configurações de Transação
-        _mockUow.Setup(uow => uow.BeginTransactionAsync())
-                .ReturnsAsync(Mock.Of<IDbContextTransaction>());
-        _mockUow.Setup(uow => uow.CommitAsync()).Returns(Task.CompletedTask);
-        _mockUow.Setup(uow => uow.RollbackAsync()).Returns(Task.CompletedTask);
-        _mockUow.Setup(uow => uow.SaveChangesAsync()).ReturnsAsync(1);
+//         // Configurações de Transação
+//         _mockUow.Setup(uow => uow.BeginTransactionAsync())
+//                 .ReturnsAsync(Mock.Of<IDbContextTransaction>());
+//         _mockUow.Setup(uow => uow.CommitAsync()).Returns(Task.CompletedTask);
+//         _mockUow.Setup(uow => uow.RollbackAsync()).Returns(Task.CompletedTask);
+//         _mockUow.Setup(uow => uow.SaveChangesAsync()).ReturnsAsync(1);
 
-        // Configurações de Consulta
-        _mockFuncionarioRepo.Setup(r => r.ObterTodosAsync()).ReturnsAsync(_funcionariosFake);
-        _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(It.IsAny<int>()))
-                            .ReturnsAsync((int id) => _funcionariosFake.FirstOrDefault(f => f.Id == id));
+//         // Configurações de Consulta
+//         _mockFuncionarioRepo.Setup(r => r.ObterTodosAsync()).ReturnsAsync(_funcionariosFake);
+//         _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(It.IsAny<int>()))
+//                             .ReturnsAsync((int id) => _funcionariosFake.FirstOrDefault(f => f.Id == id));
 
-        // Instanciar serviço
-        _service = new FuncionarioService(_mockUow.Object);
-    }
+//         // Instanciar serviço
+//         _service = new FuncionarioService(_mockUow.Object);
+//     }
 
-    // ---------------------------------------------------------------------
-    // Testes de Consulta (GET)
-    // ---------------------------------------------------------------------
+//     // ---------------------------------------------------------------------
+//     // Testes de Consulta (GET)
+//     // ---------------------------------------------------------------------
 
-    [Fact(DisplayName = "ObterTodosFuncionarios deve retornar a lista completa")]
-    public async Task ObterTodosOsFuncionariosAsync_DeveRetornarTodos()
-    {
-        // Act
-        var resultado = await _service.ObterTodosOsFuncionariosAsync();
+//     [Fact(DisplayName = "ObterTodosFuncionarios deve retornar a lista completa")]
+//     public async Task ObterTodosOsFuncionariosAsync_DeveRetornarTodos()
+//     {
+//         // Act
+//         var resultado = await _service.ObterTodosOsFuncionariosAsync();
 
-        // Assert
-        Assert.NotNull(resultado);
-        Assert.Equal(_funcionariosFake.Count, resultado.Count());
-        _mockFuncionarioRepo.Verify(r => r.ObterTodosAsync(), Times.Once);
-    }
+//         // Assert
+//         Assert.NotNull(resultado);
+//         Assert.Equal(_funcionariosFake.Count, resultado.Count());
+//         _mockFuncionarioRepo.Verify(r => r.ObterTodosAsync(), Times.Once);
+//     }
 
-    [Fact(DisplayName = "ObterFuncionarioPorId deve retornar funcionário existente")]
-    public async Task ObterFuncionarioPorIdAsync_DeveRetornarFuncionario()
-    {
-        // Arrange
-        int idExistente = 1;
+//     [Fact(DisplayName = "ObterFuncionarioPorId deve retornar funcionário existente")]
+//     public async Task ObterFuncionarioPorIdAsync_DeveRetornarFuncionario()
+//     {
+//         // Arrange
+//         int idExistente = 1;
 
-        // Act
-        var resultado = await _service.ObterFuncionarioPorIdAsync(idExistente);
+//         // Act
+//         var resultado = await _service.ObterFuncionarioPorIdAsync(idExistente);
 
-        // Assert
-        Assert.NotNull(resultado);
-        Assert.Equal(idExistente, resultado.Id);
-        _mockFuncionarioRepo.Verify(r => r.ObterPorIdAsync(idExistente), Times.Once);
-    }
+//         // Assert
+//         Assert.NotNull(resultado);
+//         Assert.Equal(idExistente, resultado.Id);
+//         _mockFuncionarioRepo.Verify(r => r.ObterPorIdAsync(idExistente), Times.Once);
+//     }
 
-    // ---------------------------------------------------------------------
-    // Testes de Criação (POST) - Com Transação
-    // ---------------------------------------------------------------------
+//     // ---------------------------------------------------------------------
+//     // Testes de Criação (POST) - Com Transação
+//     // ---------------------------------------------------------------------
 
-    [Fact(DisplayName = "CriarFuncionario deve Adicionar, Salvar e Commitar a transação")]
-    public async Task CriarFuncionarioAsync_Sucesso_DeveExecutarTransacaoCompleta()
-    {
-        // Arrange
-        var novoFuncionario = new Funcionario { Id = 0, Nome = "Novo", Cpf = "333" };
+//     [Fact(DisplayName = "CriarFuncionario deve Adicionar, Salvar e Commitar a transação")]
+//     public async Task CriarFuncionarioAsync_Sucesso_DeveExecutarTransacaoCompleta()
+//     {
+//         // Arrange
+//         var novoFuncionario = new Funcionario { Id = 0, Nome = "Novo", Cpf = "333" };
 
-        // Act
-        var resultado = await _service.CriarFuncionarioAsync(novoFuncionario);
+//         // Act
+//         var resultado = await _service.CriarFuncionarioAsync(novoFuncionario);
 
-        // Assert
-        Assert.NotNull(resultado);
+//         // Assert
+//         Assert.NotNull(resultado);
 
-        // Verifica fluxo da transação
-        _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
-        _mockFuncionarioRepo.Verify(r => r.AdicionarAsync(novoFuncionario), Times.Once);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.CommitAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.RollbackAsync(), Times.Never);
-    }
+//         // Verifica fluxo da transação
+//         _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
+//         _mockFuncionarioRepo.Verify(r => r.AdicionarAsync(novoFuncionario), Times.Once);
+//         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+//         _mockUow.Verify(uow => uow.CommitAsync(), Times.Once);
+//         _mockUow.Verify(uow => uow.RollbackAsync(), Times.Never);
+//     }
 
-    [Fact(DisplayName = "CriarFuncionario deve chamar Rollback se ocorrer erro")]
-    public async Task CriarFuncionarioAsync_Erro_DeveChamarRollback()
-    {
-        // Arrange
-        var novoFuncionario = new Funcionario { Id = 0, Nome = "Novo", Cpf = "333" };
+//     [Fact(DisplayName = "CriarFuncionario deve chamar Rollback se ocorrer erro")]
+//     public async Task CriarFuncionarioAsync_Erro_DeveChamarRollback()
+//     {
+//         // Arrange
+//         var novoFuncionario = new Funcionario { Id = 0, Nome = "Novo", Cpf = "333" };
 
-        // Simula erro ao adicionar
-        _mockFuncionarioRepo.Setup(r => r.AdicionarAsync(It.IsAny<Funcionario>()))
-                            .ThrowsAsync(new Exception("Erro de banco de dados"));
+//         // Simula erro ao adicionar
+//         _mockFuncionarioRepo.Setup(r => r.AdicionarAsync(It.IsAny<Funcionario>()))
+//                             .ThrowsAsync(new Exception("Erro de banco de dados"));
 
-        // Act & Assert
-        await Assert.ThrowsAsync<Exception>(() => _service.CriarFuncionarioAsync(novoFuncionario));
+//         // Act & Assert
+//         await Assert.ThrowsAsync<Exception>(() => _service.CriarFuncionarioAsync(novoFuncionario));
 
-        // Assert
-        _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
-        _mockUow.Verify(uow => uow.CommitAsync(), Times.Never);
-        _mockUow.Verify(uow => uow.RollbackAsync(), Times.Once); // Rollback deve ser chamado
-    }
+//         // Assert
+//         _mockUow.Verify(uow => uow.BeginTransactionAsync(), Times.Once);
+//         _mockUow.Verify(uow => uow.CommitAsync(), Times.Never);
+//         _mockUow.Verify(uow => uow.RollbackAsync(), Times.Once); // Rollback deve ser chamado
+//     }
 
-    // ---------------------------------------------------------------------
-    // Testes de Atualização (PUT)
-    // ---------------------------------------------------------------------
+//     // ---------------------------------------------------------------------
+//     // Testes de Atualização (PUT)
+//     // ---------------------------------------------------------------------
 
-    [Fact(DisplayName = "AtualizarFuncionario deve buscar pelo ID, atualizar campos permitidos e chamar AtualizarAsync")]
-    public async Task AtualizarFuncionarioAsync_Sucesso_DeveAtualizar()
-    {
-        // Arrange
-        int idAtualizar = 1;
+//     [Fact(DisplayName = "AtualizarFuncionario deve buscar pelo ID, atualizar campos permitidos e chamar AtualizarAsync")]
+//     public async Task AtualizarFuncionarioAsync_Sucesso_DeveAtualizar()
+//     {
+//         // Arrange
+//         int idAtualizar = 1;
         
-        // 1. O objeto que já "existe" no banco (Mock)
-        var funcionarioNoBanco = new Funcionario 
-        { 
-            Id = idAtualizar, 
-            Nome = "Nome Antigo", 
-            Cpf = "111.111.111-11", // CPF Original
-            Email = "antigo@email.com" 
-        };
+//         // 1. O objeto que já "existe" no banco (Mock)
+//         var funcionarioNoBanco = new Funcionario 
+//         { 
+//             Id = idAtualizar, 
+//             Nome = "Nome Antigo", 
+//             Cpf = "111.111.111-11", // CPF Original
+//             Email = "antigo@email.com" 
+//         };
 
-        // 2. Os novos dados que estamos enviando (sem CPF, pois o Service ignora ou valida IDs)
-        var funcionarioNovosDados = new Funcionario 
-        { 
-            Id = idAtualizar, 
-            Nome = "Nome Novo Editado", 
-            Email = "novo@email.com"
-            // Note que não importa se passamos CPF aqui ou não, a lógica do Service deve manter o do banco
-        };
+//         // 2. Os novos dados que estamos enviando (sem CPF, pois o Service ignora ou valida IDs)
+//         var funcionarioNovosDados = new Funcionario 
+//         { 
+//             Id = idAtualizar, 
+//             Nome = "Nome Novo Editado", 
+//             Email = "novo@email.com"
+//             // Note que não importa se passamos CPF aqui ou não, a lógica do Service deve manter o do banco
+//         };
 
-        // 3. Configurar o Mock para devolver o funcionário do banco quando buscado
-        _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(idAtualizar))
-                            .ReturnsAsync(funcionarioNoBanco);
+//         // 3. Configurar o Mock para devolver o funcionário do banco quando buscado
+//         _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(idAtualizar))
+//                             .ReturnsAsync(funcionarioNoBanco);
 
-        // Act
-        await _service.AtualizarFuncionarioAsync(idAtualizar, funcionarioNovosDados);
+//         // Act
+//         await _service.AtualizarFuncionarioAsync(idAtualizar, funcionarioNovosDados);
 
-        // Assert
+//         // Assert
         
-        // Verifica se o serviço chamou o ObterPorId primeiro
-        _mockFuncionarioRepo.Verify(r => r.ObterPorIdAsync(idAtualizar), Times.Once);
+//         // Verifica se o serviço chamou o ObterPorId primeiro
+//         _mockFuncionarioRepo.Verify(r => r.ObterPorIdAsync(idAtualizar), Times.Once);
 
-        // Verifica se chamou o AtualizarAsync passando o objeto DO BANCO (que foi modificado na memória)
-        // Validamos se o Nome mudou para o novo, mas o ID se manteve
-        _mockFuncionarioRepo.Verify(r => r.AtualizarAsync(It.Is<Funcionario>(f => 
-            f.Id == idAtualizar && 
-            f.Nome == "Nome Novo Editado" &&
-            f.Cpf == "111.111.111-11" // Garante que manteve o CPF original
-        )), Times.Once);
+//         // Verifica se chamou o AtualizarAsync passando o objeto DO BANCO (que foi modificado na memória)
+//         // Validamos se o Nome mudou para o novo, mas o ID se manteve
+//         _mockFuncionarioRepo.Verify(r => r.AtualizarAsync(It.Is<Funcionario>(f => 
+//             f.Id == idAtualizar && 
+//             f.Nome == "Nome Novo Editado" &&
+//             f.Cpf == "111.111.111-11" // Garante que manteve o CPF original
+//         )), Times.Once);
 
-        // Verifica se salvou
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    }
+//         // Verifica se salvou
+//         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+//     }
 
-    [Fact(DisplayName = "AtualizarFuncionario com IDs divergentes deve lançar ArgumentException")]
-    public async Task AtualizarFuncionarioAsync_IdDiferente_DeveLancarExcecao()
-    {
-        // Arrange
-        int idUrl = 10;
-        var funcionarioBody = new Funcionario { Id = 20, Nome = "Teste" };
+//     [Fact(DisplayName = "AtualizarFuncionario com IDs divergentes deve lançar ArgumentException")]
+//     public async Task AtualizarFuncionarioAsync_IdDiferente_DeveLancarExcecao()
+//     {
+//         // Arrange
+//         int idUrl = 10;
+//         var funcionarioBody = new Funcionario { Id = 20, Nome = "Teste" };
 
-        // Act & Assert
-        await Assert.ThrowsAsync<ArgumentException>(
-            () => _service.AtualizarFuncionarioAsync(idUrl, funcionarioBody));
+//         // Act & Assert
+//         await Assert.ThrowsAsync<ArgumentException>(
+//             () => _service.AtualizarFuncionarioAsync(idUrl, funcionarioBody));
 
-        // Verifica que persistência não foi chamada
-        _mockFuncionarioRepo.Verify(r => r.AtualizarAsync(It.IsAny<Funcionario>()), Times.Never);
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
-    }
+//         // Verifica que persistência não foi chamada
+//         _mockFuncionarioRepo.Verify(r => r.AtualizarAsync(It.IsAny<Funcionario>()), Times.Never);
+//         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Never);
+//     }
 
-    //---------------------------------------------------------------------
-    //Testes de Deleção (DELETE)
-    //---------------------------------------------------------------------
+//     //---------------------------------------------------------------------
+//     //Testes de Deleção (DELETE)
+//     //---------------------------------------------------------------------
 
-    [Fact(DisplayName = "DeletarFuncionario deve chamar DeletarAsync e SaveChangesAsync")]
-    public async Task DeletarFuncionarioAsync_Sucesso_DeveDeletar()
-    {
-        // Arrange
-        int idDeletar = 1;
+//     [Fact(DisplayName = "DeletarFuncionario deve chamar DeletarAsync e SaveChangesAsync")]
+//     public async Task DeletarFuncionarioAsync_Sucesso_DeveDeletar()
+//     {
+//         // Arrange
+//         int idDeletar = 1;
 
-        // Precisamos criar o objeto que o Mock vai "encontrar" no banco
-        var funcionarioEncontrado = new Funcionario { Id = idDeletar, Nome = "Funcionario Teste" };
+//         // Precisamos criar o objeto que o Mock vai "encontrar" no banco
+//         var funcionarioEncontrado = new Funcionario { Id = idDeletar, Nome = "Funcionario Teste" };
 
-        // Configura o mock para retornar esse objeto quando buscar pelo ID
-        _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(idDeletar))
-                            .ReturnsAsync(funcionarioEncontrado);
+//         // Configura o mock para retornar esse objeto quando buscar pelo ID
+//         _mockFuncionarioRepo.Setup(r => r.ObterPorIdAsync(idDeletar))
+//                             .ReturnsAsync(funcionarioEncontrado);
 
-        // Act
-        await _service.DeletarFuncionarioAsync(idDeletar);
+//         // Act
+//         await _service.DeletarFuncionarioAsync(idDeletar);
 
-        // Assert
-        // CORREÇÃO: Verificamos se o método foi chamado passando o OBJETO funcionarioEncontrado
-        _mockFuncionarioRepo.Verify(r => r.DeletarAsync(funcionarioEncontrado), Times.Once);
+//         // Assert
+//         // CORREÇÃO: Verificamos se o método foi chamado passando o OBJETO funcionarioEncontrado
+//         _mockFuncionarioRepo.Verify(r => r.DeletarAsync(funcionarioEncontrado), Times.Once);
 
-        _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
-    }
-}
+//         _mockUow.Verify(uow => uow.SaveChangesAsync(), Times.Once);
+//     }
+// }

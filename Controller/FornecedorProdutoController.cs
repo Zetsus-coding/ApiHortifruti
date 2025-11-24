@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.DTO.FornecedorProduto;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

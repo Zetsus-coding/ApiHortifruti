@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiHortifruti.DTO.PutFuncionarioDTO;
-
 public class PutFuncionarioDTO
 {
     [Required(ErrorMessage = "O ID é obrigatório")]

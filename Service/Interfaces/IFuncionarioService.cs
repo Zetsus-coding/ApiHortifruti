@@ -1,6 +1,4 @@
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.Funcionario;
-using ApiHortifruti.DTO.PutFuncionarioDTO;
 
 namespace ApiHortifruti.Service.Interfaces;
 

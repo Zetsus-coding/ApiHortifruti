@@ -1,5 +1,4 @@
 using ApiHortifruti.Data.Repository.Interfaces;
-using ApiHortifruti.DTO.Financeiro;
 using ApiHortifruti.Domain;
 using SuaApi.Services;
 
