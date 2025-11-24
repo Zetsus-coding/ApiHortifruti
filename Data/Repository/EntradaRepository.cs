@@ -12,7 +12,7 @@ public class EntradaRepository : IEntradaRepository
     {
         _context = context;
     }
-    
+
     public async Task<IEnumerable<Entrada>> ObterTodosAsync()
     {
         return await _context.Entrada.ToListAsync();
@@ -20,13 +20,20 @@ public class EntradaRepository : IEntradaRepository
 
     public async Task<Entrada?> ObterPorIdAsync(int id)
     {
-        return await _context.Entrada.FindAsync(id);
+        //O FindAsync sozinho NÃO traz os dados do Fornecedor nem do Motivo.
+        //Usa o Include para carregar as tabelas relacionadas.
+        
+        return await _context.Entrada
+            .Include(e => e.Fornecedor)           // <--- Carrega o Fornecedor para o DTO pegar o NomeFantasia
+            .Include(e => e.MotivoMovimentacao)   // <--- Carrega o Motivo para o DTO pegar a descrição
+            .Include(e => e.ItemEntrada)          // <--- Opcional: Carrega os itens caso precise no futuro
+            .FirstOrDefaultAsync(e => e.Id == id);
     }
 
     public async Task<decimal> ObterValorTotalPorPeriodoAsync(DateOnly dataInicio, DateOnly dataFim)
     {
         return await _context.Entrada
-            .Where(e => e.DataCompra >= dataInicio && e.DataCompra < dataFim)
+            .Where(e => e.DataCompra >= dataInicio && e.DataCompra <= dataFim)
             .SumAsync(e => e.PrecoTotal);
     }
     public async Task<IEnumerable<Entrada>> ObterRecentesAsync()

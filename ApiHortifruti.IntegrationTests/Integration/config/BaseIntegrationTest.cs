@@ -1,26 +1,27 @@
-using ApiHortifruti;
 using Microsoft.Extensions.DependencyInjection;
-using Xunit;
+using ApiHortifruti.Data;
 
-namespace ApiHortifruti.IntegrationTests.Integration.Config;
+namespace ApiHortifruti.IntegrationTests.Integration.config;
 
-[Collection("Integration Tests")] // Evita que testes de integração rodem em paralelo (opcional, mas seguro)
 public abstract class BaseIntegrationTest : IClassFixture<IntegrationTestWebAppFactory>
 {
-    private readonly IServiceScope _scope;
+    // --- ADICIONE ESTA PROPRIEDADE ---
+    protected readonly IServiceScopeFactory _scopeFactory; 
+    // ---------------------------------
+
+    protected readonly HttpClient HttpClient;
     protected readonly AppDbContext DbContext;
-    protected readonly HttpClient Client;
 
     protected BaseIntegrationTest(IntegrationTestWebAppFactory factory)
     {
-        // Cria um escopo para resolver serviços (Repositories, DbContext)
-        _scope = factory.Services.CreateScope();
-        DbContext = _scope.ServiceProvider.GetRequiredService<AppDbContext>();
-        
-        // Garante que o banco e tabelas existam no container antes de começar
-        DbContext.Database.EnsureCreated(); 
+        // --- INICIALIZE ELA AQUI ---
+        _scopeFactory = factory.Services.GetRequiredService<IServiceScopeFactory>();
+        // ---------------------------
 
-        // Cria o client HTTP que já vai enviar as credenciais do usuário fake
-        Client = factory.CreateClient();
+        var scope = factory.Services.CreateScope();
+        HttpClient = factory.CreateClient();
+        DbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+
+        DbContext.Database.EnsureCreated();
     }
 }

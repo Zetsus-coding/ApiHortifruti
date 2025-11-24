@@ -55,9 +55,14 @@ public class MotivoMovimentacaoController : ControllerBase
 
     // [Authorize(Roles = "put")]
     [HttpPut("{id}")]
-    public async Task<IActionResult> AtualizarMotivoMovimentacao([Range(1, int.MaxValue)] int id, MotivoMovimentacao motivoMovimentacao)
+    public async Task<IActionResult> AtualizarMotivoMovimentacao([Range(1, int.MaxValue)] int id, PutMotivoMovimentacaoDTO dto)
     {
-        if (id != motivoMovimentacao.Id) return BadRequest();
+        // Mapeia o DTO para a entidade
+        var motivoMovimentacao = _mapper.Map<MotivoMovimentacao>(dto);
+        
+        // Garante que o ID da entidade seja o mesmo da URL
+        motivoMovimentacao.Id = id;
+
         await _motivoMovimentacaoService.AtualizarMotivoMovimentacaoAsync(id, motivoMovimentacao);
         return NoContent();
     }
