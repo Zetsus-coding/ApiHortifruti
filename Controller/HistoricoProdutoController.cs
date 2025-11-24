@@ -1,5 +1,5 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.HistoricoProduto;
 using ApiHortifruti.Service.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +19,7 @@ public class HistoricoProdutoController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterTodosOsHistoricosProdutos()
+    public async Task<ActionResult<IEnumerable<GetHistoricoProdutoDTO>>> ObterTodosOsHistoricosProdutos()
     {
         var historicoProduto = await _historicoProdutoService.ObterTodosOsHistoricosProdutosAsync();
         return Ok(historicoProduto);
@@ -27,7 +27,7 @@ public class HistoricoProdutoController : ControllerBase
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<HistoricoProduto>> ObterHistoricoProdutoPorId([Range(1, int.MaxValue)] int id) // Faz sentido? Ou deveria ser por produto?
+    public async Task<ActionResult<GetHistoricoProdutoDTO>> ObterHistoricoProdutoPorId([Range(1, int.MaxValue)] int id)
     {
         var getIdHistoricoProduto = await _historicoProdutoService.ObterHistoricoProdutoPorIdAsync(id);
 
@@ -38,34 +38,11 @@ public class HistoricoProdutoController : ControllerBase
     // Consulta de histórico de produto por ID do produto
     // [Authorize(Roles = "id")]
     [HttpGet("produto/{produtoId}")]
-    public async Task<ActionResult<IEnumerable<HistoricoProduto>>> ObterHistoricoProdutoPorProdutoId([Range(1, int.MaxValue)] int produtoId)
+    public async Task<ActionResult<IEnumerable<GetHistoricoProdutoDTO>>> ObterHistoricoProdutoPorProdutoId([Range(1, int.MaxValue)] int produtoId)
     {
-        var historicoProduto = await _historicoProdutoService.ObterHistoricoProdutoPorProdutoIdAsync(produtoId); // MARCADO
+        var historicoProduto = await _historicoProdutoService.ObterHistoricoProdutoPorProdutoIdAsync(produtoId);
 
         if (historicoProduto == null || !historicoProduto.Any()) return NotFound();
         return Ok(historicoProduto);
     }
-
-    // [HttpPost]
-    // public async Task<ActionResult<HistoricoProduto>> CriarHistoricoProduto(HistoricoProduto historicoProduto)
-    // {
-    //     var produtoCriada = await _historicoProdutoService.CriarHistoricoProdutoAsync(historicoProduto);
-    //     return CreatedAtAction(nameof(ObterHistoricoProduto), new { id = produtoCriada.Id },
-    //         produtoCriada);
-    // }
-
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> AtualizarHistoricoProduto([Range(1, int.MaxValue)] int id, HistoricoProduto historicoProduto)
-    // {
-    //     if (id != historicoProduto.Id) return BadRequest();
-    //     await _historicoProdutoService.AtualizarHistoricoProdutoAsync(id, historicoProduto);
-    //     return NoContent();
-    // }
-
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarHistoricoProduto([Range(1, int.MaxValue)] int id) 
-    // { 
-    //     await _historicoProdutoService.DeletarHistoricoProdutoAsync(id); 
-    //     return NoContent(); 
-    // } 
 }
