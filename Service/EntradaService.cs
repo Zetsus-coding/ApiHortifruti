@@ -37,13 +37,13 @@ public class EntradaService : IEntradaService
         return _mapper.Map<GetEntradaDTO?>(await _uow.Entrada.ObterPorIdAsync(id));
     }
 
-    public async Task<GetEntradaDTO> ObterEntradasRecentesAsync()
+    public async Task<IEnumerable<GetEntradaDTO>> ObterEntradasRecentesAsync()
     {
         var dataLimite = DateOnly.FromDateTime(DateTime.Now);
 
         var entradas = await _uow.Entrada.ObterRecentesAsync(dataLimite);
 
-        return _mapper.Map<GetEntradaDTO>(entradas);
+        return _mapper.Map<IEnumerable<GetEntradaDTO>>(entradas);
     }
 
     public async Task<GetEntradaDTO> CriarEntradaAsync(PostEntradaDTO postEntradaDTO)

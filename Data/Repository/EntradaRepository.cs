@@ -47,7 +47,7 @@ public class EntradaRepository : IEntradaRepository
         .Include(e => e.MotivoMovimentacao)   // Carrega o Motivo
         .Include(e => e.ItemEntrada)          // Carrega os Itens da Entrada
 
-        .Where(e => e.DataCompra >= dataInicio) 
+        .Where(e => e.DataCompra == dataInicio)
         .OrderByDescending(e => e.DataCompra)
         .ThenByDescending(e => e.Id)
         .ToListAsync();
