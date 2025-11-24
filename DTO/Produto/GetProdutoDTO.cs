@@ -1,5 +1,3 @@
-using ApiHortifruti.Domain;
-
 public class GetProdutoDTO
 {
     public int Id { get; set; }

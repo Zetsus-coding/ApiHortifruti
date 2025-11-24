@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 public class GetEntradaSimplesDTO
 {
     public int Id { get; set; } // Identificação única da entrada

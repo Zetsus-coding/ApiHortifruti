@@ -57,13 +57,13 @@ public class ProdutoController : ControllerBase
     }
 
     // Operação de consulta de todos os fornecedores que fornecem um determinado produto
-    // // [Authorize(Roles = "get(id)")]
-    // [HttpGet("produto/{produtoId}")]
-    // public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterFornecedoresPorProdutoIdAsync([Range(1, int.MaxValue)] int produtoId)
-    // {
-    //     var fornecedoresProduto = await _fornecedorService.ObterFornecedoresPorProdutoIdAsync(produtoId);
-    //     return Ok(fornecedoresProduto);
-    // }
+    // [Authorize(Roles = "get(id)")]
+    [HttpGet("{produtoId}/fornecedores")]
+    public async Task<ActionResult<ProdutoComListaDeFornecedoresDTO>> ObterFornecedoresPorProdutoIdAsync([Range(1, int.MaxValue)] int produtoId)
+    {
+        var produtoComListaFornecedores = await _produtoService.ObterListaDeFornecedoresQueFornecemCertoProduto(produtoId);
+        return Ok(produtoComListaFornecedores);
+    }
 
     // Criação de um novo produto
     // [Authorize(Roles = "post")]

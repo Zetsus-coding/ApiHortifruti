@@ -1,8 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain.DTO.CustomAnnotation;
-
-namespace ApiHortifruti.Domain.DTO.ItemSaida;
-
 public class ItemSaidaDTO
 {
     [Required(ErrorMessage = "O ID do produto é obrigatório no item da saída")]

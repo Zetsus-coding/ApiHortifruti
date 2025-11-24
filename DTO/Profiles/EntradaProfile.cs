@@ -1,4 +1,4 @@
-namespace ApiHortifruti.Domain.DTO.Profiles;
+using ApiHortifruti.Domain;
 using AutoMapper;
 
 public class EntradaProfile : Profile

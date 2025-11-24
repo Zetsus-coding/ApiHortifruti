@@ -16,8 +16,7 @@ public class FornecedorProdutoProfile : Profile
             
             // Mapeamento da coleção "aninhada" 
             // (o automapper usará o profile do inner dto da lista de produtos com informações de fornecimento)
-            .ForMember(dest => dest.Produtos, opt => opt.MapFrom(src => src.FornecedorProduto))
-            .ReverseMap();
+            .ForMember(dest => dest.Produtos, opt => opt.MapFrom(src => src.FornecedorProduto));
 
 
         // Inner dto de buscar lista de produtos com detalhes de fornecimento
@@ -32,9 +31,17 @@ public class FornecedorProdutoProfile : Profile
             .ForMember(dest => dest.NomeProduto, opt => opt.MapFrom(src => src.Produto.Nome))
             .ForMember(dest => dest.DescricaoProduto, opt => opt.MapFrom(src => src.Produto.Descricao))
             .ForMember(dest => dest.PrecoAtual, opt => opt.MapFrom(src => src.Produto.Preco))
-            .ForMember(dest => dest.NomeCategoria, opt => opt.MapFrom(src => src.Produto.Categoria.Nome))
             .ForMember(dest => dest.Codigo, opt => opt.MapFrom(src => src.Produto.Codigo))
-            .ForMember(dest => dest.AbreviacaoUnidadeMedida, opt => opt.MapFrom(src => src.Produto.UnidadeMedida.Abreviacao))
-            .ReverseMap();
+            .ForMember(dest => dest.CategoriaDTO, opt => opt.MapFrom(src => src.Produto.Categoria))
+            .ForMember(dest => dest.UnidadeMedidaDTO, opt => opt.MapFrom(src => src.Produto.UnidadeMedida));
+
+        CreateMap<FornecedorProduto, GetFornecedoresComDetalhesFornecimentoDTO>()
+            .ForMember(dest => dest.NomeFantasia, opt => opt.MapFrom(src => src.Fornecedor.NomeFantasia))
+            .ForMember(dest => dest.Telefone, opt => opt.MapFrom(src => src.Fornecedor.Telefone))
+            .ForMember(dest => dest.TelefoneExtra, opt => opt.MapFrom(src => src.Fornecedor.TelefoneExtra))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.Fornecedor.Email))
+            .ForMember(dest => dest.Ativo, opt => opt.MapFrom(src => src.Fornecedor.Ativo))
+            .ForMember(dest => dest.CodigoFornecedor, opt => opt.MapFrom(src => src.CodigoFornecedor))
+            .ForMember(dest => dest.Disponibilidade, opt => opt.MapFrom(src => src.Disponibilidade));
     }
  }

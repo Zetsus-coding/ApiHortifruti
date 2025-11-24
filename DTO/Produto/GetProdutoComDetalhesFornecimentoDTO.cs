@@ -13,6 +13,6 @@ public class GetProdutoComDetalhesFornecimentoDTO
     public decimal PrecoAtual { get; set; }
 
     // Detalhes de categoria e unidade de medida
-    public string NomeCategoria { get; set; }
-    public string AbreviacaoUnidadeMedida { get; set; }
+    public GetCategoriaDTO CategoriaDTO { get; set; }
+    public GetUnidadeMedidaDTO UnidadeMedidaDTO { get; set; }
 }

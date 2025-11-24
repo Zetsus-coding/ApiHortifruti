@@ -49,6 +49,14 @@ public class ProdutoService : IProdutoService
         return _mapper.Map<IEnumerable<GetProdutoEstoqueCriticoDTO>>(produtosEstoqueCritico); // Mapeia de entidade para DTO e retorna
     }
 
+    public async Task<ProdutoComListaDeFornecedoresDTO> ObterListaDeFornecedoresQueFornecemCertoProduto(int produtoId)
+    {
+        var produto = await _uow.Produto.ObterProdutoComListaDeFornecedoresAtravesDeProdutoIdAsync(produtoId);
+        if (produto is null) throw new NotFoundException("O 'Produto' informado na requisição não existe");
+
+        return _mapper.Map<ProdutoComListaDeFornecedoresDTO>(produto);
+    }
+
     // Inserção de um novo produto
     public async Task<GetProdutoDTO> CriarProdutoAsync(PostProdutoDTO postProdutoDTO)
     {
