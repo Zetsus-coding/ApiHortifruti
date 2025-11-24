@@ -1,24 +1,29 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.MotivoMovimentacao;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 
 namespace ApiHortifruti.Service;
 
 public class MotivoMovimentacaoService : IMotivoMovimentacaoService
 {
     private readonly IUnityOfWork _uow;
+    private readonly IMapper _mapper;
 
-    public MotivoMovimentacaoService(IUnityOfWork uow)
+    public MotivoMovimentacaoService(IUnityOfWork uow, IMapper mapper)
     {
         _uow = uow;
+        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<MotivoMovimentacao>> ObterTodosOsMotivosMovimentacaoAsync()
+    public async Task<IEnumerable<GetMotivoMovimentacaoDTO>> ObterTodosOsMotivosMovimentacaoAsync()
     {
         try
         {
-            return await _uow.MotivoMovimentacao.ObterTodosAsync();
+            var motivos = await _uow.MotivoMovimentacao.ObterTodosAsync();
+            return _mapper.Map<IEnumerable<GetMotivoMovimentacaoDTO>>(motivos);
         }
         catch (Exception)
         {
@@ -26,13 +31,15 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
         }
     }
 
-    public async Task<MotivoMovimentacao?> ObterMotivoMovimentacaoPorIdAsync(int id)
+    public async Task<GetMotivoMovimentacaoDTO?> ObterMotivoMovimentacaoPorIdAsync(int id)
     {
-        return await _uow.MotivoMovimentacao.ObterPorIdAsync(id);
+        var motivo = await _uow.MotivoMovimentacao.ObterPorIdAsync(id);
+        return _mapper.Map<GetMotivoMovimentacaoDTO?>(motivo);
     }
 
-    public async Task<MotivoMovimentacao> CriarMotivoMovimentacaoAsync(MotivoMovimentacao motivoMovimentacao)
+    public async Task<GetMotivoMovimentacaoDTO> CriarMotivoMovimentacaoAsync(PostMotivoMovimentacaoDTO postMotivoMovimentacaoDTO)
     {
+        var motivoMovimentacao = _mapper.Map<MotivoMovimentacao>(postMotivoMovimentacaoDTO);
         motivoMovimentacao.Ativo = true;
         
         // Adiciona ao contexto
@@ -41,16 +48,17 @@ public class MotivoMovimentacaoService : IMotivoMovimentacaoService
         // Salva no banco de dados (Unit of Work)
         await _uow.SaveChangesAsync(); 
 
-        return criado;
+        return _mapper.Map<GetMotivoMovimentacaoDTO>(criado);
     }
 
-    public async Task AtualizarMotivoMovimentacaoAsync(int id, MotivoMovimentacao motivoMovimentacao)
+    public async Task AtualizarMotivoMovimentacaoAsync(int id, PutMotivoMovimentacaoDTO putMotivoMovimentacaoDTO)
     {
-        // Validação: Lança exceção em vez de retornar silenciosamente
-        if (id != motivoMovimentacao.Id)
+        if (id != putMotivoMovimentacaoDTO.Id)
         {
             throw new ArgumentException("O ID informado na URL não corresponde ao ID do corpo da requisição.");
         }
+
+        var motivoMovimentacao = _mapper.Map<MotivoMovimentacao>(putMotivoMovimentacaoDTO);
 
         // Atualiza no contexto
         await _uow.MotivoMovimentacao.AtualizarAsync(motivoMovimentacao);

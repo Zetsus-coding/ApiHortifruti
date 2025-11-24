@@ -1,12 +1,13 @@
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.MotivoMovimentacao;
 
 namespace ApiHortifruti.Service.Interfaces;
 
 public interface IMotivoMovimentacaoService
 {
-    Task<IEnumerable<MotivoMovimentacao>> ObterTodosOsMotivosMovimentacaoAsync();
-    Task<MotivoMovimentacao?> ObterMotivoMovimentacaoPorIdAsync(int id);
-    Task<MotivoMovimentacao> CriarMotivoMovimentacaoAsync(MotivoMovimentacao motivoMovimentacao);
-    Task AtualizarMotivoMovimentacaoAsync(int id, MotivoMovimentacao motivoMovimentacao);
+    Task<IEnumerable<GetMotivoMovimentacaoDTO>> ObterTodosOsMotivosMovimentacaoAsync();
+    Task<GetMotivoMovimentacaoDTO?> ObterMotivoMovimentacaoPorIdAsync(int id);
+    Task<GetMotivoMovimentacaoDTO> CriarMotivoMovimentacaoAsync(PostMotivoMovimentacaoDTO postMotivoMovimentacaoDTO);
+    Task AtualizarMotivoMovimentacaoAsync(int id, PutMotivoMovimentacaoDTO putMotivoMovimentacaoDTO);
     Task DeletarMotivoMovimentacaoAsync(int id);
 }

@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Saida;
 using ApiHortifruti.Service.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiHortifruti.Controller;
@@ -12,18 +11,16 @@ namespace ApiHortifruti.Controller;
 public class SaidaController : ControllerBase
 {
     private readonly ISaidaService _saidaService;
-    private readonly IMapper _mapper;
 
     // CONSTRUTOR + INJEÇÃO DE DEPENDÊNCIA
-    public SaidaController(ISaidaService saidaService, IMapper mapper)
+    public SaidaController(ISaidaService saidaService)
     {
         _saidaService = saidaService;
-        _mapper = mapper;
     }
 
     // OPERAÇÕES
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Saida>>> ObterTodasAsSaidas() // get all
+    public async Task<ActionResult<IEnumerable<GetSaidaSimplesDTO>>> ObterTodasAsSaidas()
     {
         var saida = await _saidaService.ObterTodasAsSaidasAsync();
         return Ok(saida); 
@@ -31,7 +28,7 @@ public class SaidaController : ControllerBase
 
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{id}")]
-    public async Task<ActionResult<Saida>> ObterSaidaPorId([Range(1, int.MaxValue)] int id) // get por id
+    public async Task<ActionResult<GetSaidaDTO>> ObterSaidaPorId([Range(1, int.MaxValue)] int id)
     {
         var saida = await _saidaService.ObterSaidaPorIdAsync(id);
 
@@ -39,31 +36,12 @@ public class SaidaController : ControllerBase
         return Ok(saida);
     }
 
-    // get produtos associados a saida (aqui [/saida/idsaida/produtos] ou em produtos [/produtos?saida=x])?
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<Saida>> CriarSaida(PostSaidaDTO postSaidaDTO)
+    public async Task<ActionResult<GetSaidaDTO>> CriarSaida(PostSaidaDTO postSaidaDTO)
     {
-        var saida = _mapper.Map<Saida>(postSaidaDTO);
-
-        var saidaCriada = await _saidaService.CriarSaidaAsync(saida);
+        var saidaCriada = await _saidaService.CriarSaidaAsync(postSaidaDTO);
         return CreatedAtAction(nameof(ObterSaidaPorId), new { id = saidaCriada.Id },
             saidaCriada);
     }
-    
-    // [Authorize(Roles = "put")]
-    // [HttpPut("{id}")]
-    // public async Task<IActionResult> AtualizarSaida([Range(1, int.MaxValue)] int id, Saida saida)
-    // {
-    //     if (id != saida.Id) return BadRequest();
-    //     await _saidaService.AtualizarSaidaAsync(id, saida);
-    //     return NoContent();
-    // }
-
-    // [HttpDelete("{id}")]
-    // public async Task<IActionResult> DeletarSaida([Range(1, int.MaxValue)] int id) 
-    // { 
-    //     await _saidaService.DeletarSaidaAsync(id); 
-    //     return NoContent(); 
-    // }
 }
