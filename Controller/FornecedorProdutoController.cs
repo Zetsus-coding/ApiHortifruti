@@ -1,7 +1,6 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.FornecedorProduto;
 using ApiHortifruti.Service.Interfaces;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,18 +12,16 @@ namespace ApiHortifruti.Controllers;
 public class FornecedorProdutoController : ControllerBase
 {
     private readonly IFornecedorProdutoService _fornecedorProdutoService;
-    private readonly IMapper _mapper;
 
-    // Construtor com injeção de dependência do serviço e do mapper
-    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService, IMapper mapper)
+    // Construtor com injeção de dependência do serviço
+    public FornecedorProdutoController(IFornecedorProdutoService fornecedorProdutoService)
     {
         _fornecedorProdutoService = fornecedorProdutoService;
-        _mapper = mapper;
     }
 
     // Operação de consulta de todos os registro da tabela
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<FornecedorProduto>>> ObterTodosOsFornecedorProduto()
+    public async Task<ActionResult<IEnumerable<GetFornecedorProdutoDTO>>> ObterTodosOsFornecedorProduto()
     {
         var fornecedorProduto = await _fornecedorProdutoService.ObterTodosOsFornecedorProdutoAsync();
         return Ok(fornecedorProduto);
@@ -33,7 +30,7 @@ public class FornecedorProdutoController : ControllerBase
     // Operação de consulta por ID
     // [Authorize(Roles = "get(id)")]
     [HttpGet("{fornecedorId}/{produtoId}")]
-    public async Task<ActionResult<FornecedorProduto>> ObterFornecedorProdutoPorId([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
+    public async Task<ActionResult<GetFornecedorProdutoDTO>> ObterFornecedorProdutoPorId([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId)
     {
         var getIdFornecedorProduto = await _fornecedorProdutoService.ObterFornecedorProdutoPorIdAsync(fornecedorId, produtoId);
 
@@ -44,31 +41,27 @@ public class FornecedorProdutoController : ControllerBase
     // Operação de criação do registro na tabela
     // [Authorize(Roles = "post")]
     [HttpPost]
-    public async Task<ActionResult<FornecedorProduto>> CriarFornecedorProduto(PostFornecedorProdutoDTO fornecedorProdutoDTO)
+    public async Task<ActionResult<GetFornecedorProdutoDTO>> CriarFornecedorProduto(PostFornecedorProdutoDTO fornecedorProdutoDTO)
     {
-        var fornecedorProduto = _mapper.Map<FornecedorProduto>(fornecedorProdutoDTO);
+        var fornecedorProdutoCriada = await _fornecedorProdutoService.CriarFornecedorProdutoAsync(fornecedorProdutoDTO);
 
-        var fornecedorProdutoCriada = await _fornecedorProdutoService.CriarFornecedorProdutoAsync(fornecedorProduto);
-
-        return CreatedAtAction(nameof(ObterFornecedorProdutoPorId), new { fornecedorId = fornecedorProduto.FornecedorId, produtoId = fornecedorProduto.ProdutoId },
+        return CreatedAtAction(nameof(ObterFornecedorProdutoPorId), new { fornecedorId = fornecedorProdutoCriada.FornecedorId, produtoId = fornecedorProdutoCriada.ProdutoId },
             fornecedorProdutoCriada);
     }
 
     // Operação de criação de vários registros na tabela
     // [Authorize(Roles = "post(varios)")]
     [HttpPost("batch")]
-    public async Task<IEnumerable<FornecedorProduto>> CriarVariosFornecedorProduto(IEnumerable<PostFornecedorProdutoDTO> fornecedorProdutoDTOs)
+    public async Task<IEnumerable<GetFornecedorProdutoDTO>> CriarVariosFornecedorProduto(IEnumerable<PostFornecedorProdutoDTO> fornecedorProdutoDTOs)
     {
-        var fornecedorProdutos = _mapper.Map<List<FornecedorProduto>>(fornecedorProdutoDTOs);
-
-        var fornecedorProdutosCriadas = await _fornecedorProdutoService.CriarVariosFornecedorProdutosAsync(fornecedorProdutos);
+        var fornecedorProdutosCriadas = await _fornecedorProdutoService.CriarVariosFornecedorProdutosAsync(fornecedorProdutoDTOs);
         return fornecedorProdutosCriadas;
     }
 
     // Operação de alteração de algum registro na tabela
     // [Authorize(Roles = "put")]
     [HttpPut("{fornecedorId}/{produtoId}")]
-    public async Task<IActionResult> AtualizarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId, FornecedorProduto fornecedorProduto)
+    public async Task<IActionResult> AtualizarFornecedorProduto([Range(1, int.MaxValue)] int fornecedorId, [Range(1, int.MaxValue)] int produtoId, PutFornecedorProdutoDTO fornecedorProduto)
     {
         if (fornecedorId != fornecedorProduto.FornecedorId || produtoId != fornecedorProduto.ProdutoId) return BadRequest();
 

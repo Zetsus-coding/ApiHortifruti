@@ -1,13 +1,12 @@
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Entrada;
 
 namespace ApiHortifruti.Service.Interfaces;
 
 public interface IEntradaService
 {
     Task<IEnumerable<GetEntradaSimplesDTO>> ObterTodasAsEntradasAsync();
-    Task<GetEntradaSimplesDTO?> ObterEntradaPorIdAsync(int id);
+    Task<GetEntradaDTO?> ObterEntradaPorIdAsync(int id);
     Task<IEnumerable<GetEntradaSimplesDTO>> ObterEntradasRecentesAsync();
-    Task<Entrada> CriarEntradaAsync(PostEntradaDTO postEntradaDTO);
-    // Task AtualizarEntradaAsync(int id, Entrada entrada);
-    // Task DeletarEntradaAsync(int id);
+    Task<GetEntradaDTO> CriarEntradaAsync(PostEntradaDTO postEntradaDTO);
 }

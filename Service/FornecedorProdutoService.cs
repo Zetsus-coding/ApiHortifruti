@@ -1,7 +1,9 @@
 using ApiHortifruti.Data.Repository.Interfaces;
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.FornecedorProduto;
 using ApiHortifruti.Exceptions;
 using ApiHortifruti.Service.Interfaces;
+using AutoMapper;
 
 namespace ApiHortifruti.Service;
 
@@ -9,25 +11,31 @@ public class FornecedorProdutoService : IFornecedorProdutoService
 {
     private readonly IUnityOfWork _uow;
     private readonly IDateTimeProvider _dateTimeProvider;
+    private readonly IMapper _mapper;
 
-    public FornecedorProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider)
+    public FornecedorProdutoService(IUnityOfWork uow, IDateTimeProvider dateTimeProvider, IMapper mapper)
     {
         _uow = uow;
         _dateTimeProvider = dateTimeProvider;
+        _mapper = mapper;
     }
 
-    public async Task<IEnumerable<FornecedorProduto>> ObterTodosOsFornecedorProdutoAsync()
+    public async Task<IEnumerable<GetFornecedorProdutoDTO>> ObterTodosOsFornecedorProdutoAsync()
     {
-            return await _uow.FornecedorProduto.ObterTodosAsync();
+        var result = await _uow.FornecedorProduto.ObterTodosAsync();
+        return _mapper.Map<IEnumerable<GetFornecedorProdutoDTO>>(result);
     }
 
-    public async Task<FornecedorProduto?> ObterFornecedorProdutoPorIdAsync(int fornecedorId, int produtoId)
+    public async Task<GetFornecedorProdutoDTO?> ObterFornecedorProdutoPorIdAsync(int fornecedorId, int produtoId)
     {
-        return await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorId, produtoId);
+        var result = await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorId, produtoId);
+        return _mapper.Map<GetFornecedorProdutoDTO?>(result);
     }
 
-    public async Task<FornecedorProduto> CriarFornecedorProdutoAsync(FornecedorProduto fornecedorProduto)
+    public async Task<GetFornecedorProdutoDTO> CriarFornecedorProdutoAsync(PostFornecedorProdutoDTO postFornecedorProdutoDTO)
     {
+        var fornecedorProduto = _mapper.Map<FornecedorProduto>(postFornecedorProdutoDTO);
+
         await _uow.BeginTransactionAsync();
 
         try
@@ -39,17 +47,17 @@ public class FornecedorProdutoService : IFornecedorProdutoService
             if (produto == null) throw new KeyNotFoundException("Produto não encontrado.");
             
             var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornecedorProduto.FornecedorId, fornecedorProduto.ProdutoId);
-            if (existente != null) throw new InvalidOperationException("A relação entre o fornecedor e o produto já existe."); // Mudado para InvalidOperationException (mais semântico para conflito)
+            if (existente != null) throw new InvalidOperationException("A relação entre o fornecedor e o produto já existe.");
 
             fornecedorProduto.Disponibilidade = true;
-            fornecedorProduto.DataRegistro = _dateTimeProvider.Today; // Usando provider
+            fornecedorProduto.DataRegistro = _dateTimeProvider.Today;
 
             var novoFornecedorProduto = await _uow.FornecedorProduto.AdicionarAsync(fornecedorProduto);
 
             await _uow.SaveChangesAsync();
             await _uow.CommitAsync();
 
-            return novoFornecedorProduto;
+            return _mapper.Map<GetFornecedorProdutoDTO>(novoFornecedorProduto);
         }
         catch
         {
@@ -58,8 +66,10 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         }
     }
 
-    public async Task<IEnumerable<FornecedorProduto>> CriarVariosFornecedorProdutosAsync(IEnumerable<FornecedorProduto> fornecedorProdutos)
+    public async Task<IEnumerable<GetFornecedorProdutoDTO>> CriarVariosFornecedorProdutosAsync(IEnumerable<PostFornecedorProdutoDTO> postFornecedorProdutoDTOs)
     {
+        var fornecedorProdutos = _mapper.Map<IEnumerable<FornecedorProduto>>(postFornecedorProdutoDTOs).ToList();
+
         if (fornecedorProdutos == null || !fornecedorProdutos.Any())
             throw new ArgumentException("A lista de associações não pode ser nula ou vazia.");
 
@@ -78,7 +88,6 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         {
             foreach (var fornProd in fornecedorProdutos)
             {
-                // Nota: Fazer consultas dentro de loop pode ser lento, mas para manter a lógica original:
                 var fornecedor = await _uow.Fornecedor.ObterPorIdAsync(fornProd.FornecedorId);
                 var produto = await _uow.Produto.ObterPorIdAsync(fornProd.ProdutoId);
                 var existente = await _uow.FornecedorProduto.ObterPorIdAsync(fornProd.FornecedorId, fornProd.ProdutoId);
@@ -88,13 +97,14 @@ public class FornecedorProdutoService : IFornecedorProdutoService
                 if (existente != null) throw new InvalidOperationException($"A relação para o fornecedorId {fornProd.FornecedorId} e produtoId {fornProd.ProdutoId} já existe.");
 
                 fornProd.Disponibilidade = true;
-                fornProd.DataRegistro = _dateTimeProvider.Today; // Usando provider
+                fornProd.DataRegistro = _dateTimeProvider.Today;
             }
 
             await _uow.FornecedorProduto.AdicionarVariosAsync(fornecedorProdutos);
             await _uow.SaveChangesAsync();
             await _uow.CommitAsync();
-            return fornecedorProdutos;
+
+            return _mapper.Map<IEnumerable<GetFornecedorProdutoDTO>>(fornecedorProdutos);
         }
         catch
         {
@@ -103,20 +113,22 @@ public class FornecedorProdutoService : IFornecedorProdutoService
         }
     }
 
-    public async Task AtualizarFornecedorProdutoAsync(int fornecedorId, int produtoId, FornecedorProduto fornecedorProduto)
+    public async Task AtualizarFornecedorProdutoAsync(int fornecedorId, int produtoId, PutFornecedorProdutoDTO putFornecedorProdutoDTO)
     {
-        if (fornecedorId != fornecedorProduto.FornecedorId || produtoId != fornecedorProduto.ProdutoId)
+        if (fornecedorId != putFornecedorProdutoDTO.FornecedorId || produtoId != putFornecedorProdutoDTO.ProdutoId)
         {
             throw new ArgumentException("Os IDs da relação informados na URL não correspondem ao corpo da requisição.");
         }
         
+        var fornecedorProduto = _mapper.Map<FornecedorProduto>(putFornecedorProdutoDTO);
+
         await _uow.FornecedorProduto.AtualizarAsync(fornecedorProduto);
-        await _uow.SaveChangesAsync(); // Adicionado
+        await _uow.SaveChangesAsync();
     }
 
     public async Task DeletarFornecedorProdutoAsync(int fornecedorId, int produtoId)
     {
         await _uow.FornecedorProduto.DeletarAsync(fornecedorId, produtoId);
-        await _uow.SaveChangesAsync(); // Adicionado
+        await _uow.SaveChangesAsync();
     }
 }

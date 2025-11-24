@@ -1,5 +1,8 @@
 using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.Entrada;
 using AutoMapper;
+
+namespace ApiHortifruti.DTO.Profiles;
 
 public class EntradaProfile : Profile
 {
@@ -9,6 +12,12 @@ public class EntradaProfile : Profile
 
         CreateMap<Entrada, GetEntradaSimplesDTO>()
             .ForMember(dest => dest.NomeFantasiaFornecedor, opt => opt.MapFrom(src => src.Fornecedor.NomeFantasia))
+            .ForMember(dest => dest.Motivo, opt => opt.MapFrom(src => src.MotivoMovimentacao.Motivo))
             .ReverseMap();
+
+        CreateMap<Entrada, GetEntradaDTO>()
+            .ForMember(dest => dest.NomeFantasiaFornecedor, opt => opt.MapFrom(src => src.Fornecedor.NomeFantasia))
+            .ForMember(dest => dest.Motivo, opt => opt.MapFrom(src => src.MotivoMovimentacao.Motivo))
+            .ForMember(dest => dest.Itens, opt => opt.MapFrom(src => src.ItemEntrada));
     }
 }
