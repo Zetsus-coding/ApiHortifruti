@@ -45,6 +45,17 @@ public class ProdutoRepository : IProdutoRepository
             .ToListAsync();
     }
 
+    public async Task<Produto> ObterProdutoComListaDeFornecedoresAtravesDeProdutoIdAsync(int produtoId)
+    {
+        var produto = await _context.Produto
+                                .Include(p => p.FornecedorProduto)                  // 1) Inclui a lista de associações (FornecedorProduto)
+                                    .ThenInclude(fp => fp.Fornecedor)               // 2) Para cada associação, inclui o Fornecedor correspondente
+                                .Include(p => p.Categoria)                            // 4) Inclui a Categoria do Produto
+                                .Include(p => p.UnidadeMedida)                       // 5) Inclui a Unidade de Medida do Produto
+                                .FirstOrDefaultAsync(p => p.Id == produtoId);       // 3) Filtra pelo ID do produto
+        return produto;
+    }
+
     // INSERT INTO Produto (...)
     public async Task<Produto> AdicionarAsync(Produto produto)
     {

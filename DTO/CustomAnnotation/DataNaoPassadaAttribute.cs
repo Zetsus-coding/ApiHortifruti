@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiHortifruti.DTO.CustomAnnotation;
-
 public class DataNaoPassadaAttribute : ValidationAttribute
 {
     protected override ValidationResult IsValid(object value, ValidationContext validationContext)

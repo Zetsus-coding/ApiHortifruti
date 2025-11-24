@@ -1,5 +1,3 @@
-namespace ApiHortifruti.Domain;
-
 public class GetCategoriaDTO
 {
     public int Id { get; set; }

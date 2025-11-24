@@ -1,5 +1,3 @@
-namespace ApiHortifruti.Domain;
-
 public class GetUnidadeMedidaDTO
 {
     public int Id { get; set; }

@@ -10,7 +10,7 @@ public interface IProdutoService
     Task<GetProdutoDTO?> ObterProdutoPorIdAsync(int id);    
     Task<GetProdutoDTO?> ObterProdutoPorCodigoAsync(string codigo);
     Task<IEnumerable<GetProdutoEstoqueCriticoDTO>> ObterProdutosEstoqueCriticoAsync();
-    // Task<IEnumerable<FornecedorProduto>> ObterFornecedoresPorProdutoIdAsync(int produtoId); // TODO: Avaliar depois de implementar o obterProdutosPorFornecedorIdAsync
+    Task<ProdutoComListaDeFornecedoresDTO> ObterListaDeFornecedoresQueFornecemCertoProduto(int produtoId);
     Task<GetProdutoDTO> CriarProdutoAsync(PostProdutoDTO postProdutoDTO);
     Task AtualizarProdutoAsync(int id, PutProdutoDTO putProdutoDTO);
     Task DeletarProdutoAsync(int id);

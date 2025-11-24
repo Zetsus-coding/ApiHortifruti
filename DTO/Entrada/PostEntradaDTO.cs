@@ -1,6 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using ApiHortifruti.DTO.CustomAnnotation;
-using ApiHortifruti.DTO.ItemEntrada;
 
 public class PostEntradaDTO
 {

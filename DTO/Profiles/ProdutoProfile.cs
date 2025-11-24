@@ -1,18 +1,20 @@
 using ApiHortifruti.Domain;
 using AutoMapper;
 
-namespace ApiHortifruti.DTO.Profiles;
-
 public class ProdutoProfile : Profile
 {
     public ProdutoProfile()
     {
         CreateMap<PostProdutoDTO, Produto>().ReverseMap();
-        CreateMap<GetProdutoEstoqueCriticoDTO, Produto>().ReverseMap();
-        CreateMap<GetProdutoDTO, Produto>().ReverseMap();
+        CreateMap<GetProdutoEstoqueCriticoDTO, Produto>();
+        CreateMap<GetProdutoDTO, Produto>();
         
         CreateMap<PutProdutoDTO, Produto>()
-        .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.IdProduto))
-        .ReverseMap();
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
+            .ReverseMap();
+
+        CreateMap<Produto, ProdutoComListaDeFornecedoresDTO>()
+            .ForMember(dest => dest.Fornecedores, opt => opt.MapFrom(src => src.FornecedorProduto));
+            
     }
 }

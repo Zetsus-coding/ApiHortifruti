@@ -1,5 +1,3 @@
-namespace ApiHortifruti.DTO.Profiles;
-
 using ApiHortifruti.Domain;
 using AutoMapper;
 

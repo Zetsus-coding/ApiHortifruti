@@ -32,7 +32,7 @@ public class FornecedorRepository : IFornecedorRepository
                                     .ThenInclude(p => p.Categoria)              // 4) A partir do Produto, inclui a 'Categoria'
                             .Include(f => f.FornecedorProduto)                  // 5) Inicia um novo caminho de inclusão a partir do 'Fornecedor'
                                 .ThenInclude(fp => fp.Produto)                  // 6) Inclui novamente a associação e o 'Produto'
-                                    .ThenInclude(p => p.UnidadeMedida)          // 7) A partir do Produto, inclui a 'Unidade de Medida'
+                                    .ThenInclude(p => p.UnidadeMedida)         // 7) A partir do Produto, inclui a 'Unidade de Medida'
                             .FirstOrDefaultAsync(f => f.Id == fornecedorId);    // 8) Filtra pelo ID do fornecedor
 
         return fornecedor;
