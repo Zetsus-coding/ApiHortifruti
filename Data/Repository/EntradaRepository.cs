@@ -36,11 +36,17 @@ public class EntradaRepository : IEntradaRepository
             .Where(e => e.DataCompra >= dataInicio && e.DataCompra <= dataFim)
             .SumAsync(e => e.PrecoTotal);
     }
-    public async Task<IEnumerable<Entrada>> ObterRecentesAsync()
+    public async Task<IEnumerable<Entrada>> ObterRecentesAsync(DateOnly dataInicio)
     {
         return await _context.Entrada
-            .OrderByDescending(e => e.DataCompra)
-            .ToListAsync();
+        .AsNoTracking()
+        .Include(e => e.Fornecedor)
+        
+        // AQUI ESTÁ A MUDANÇA: Filtra tudo que for MAIOR ou IGUAL a data de início
+        .Where(e => e.DataCompra >= dataInicio) 
+        .OrderByDescending(e => e.DataCompra)
+        .ThenByDescending(e => e.Id)
+        .ToListAsync();
     }
 
     public async Task<Entrada?> ObterPorNumeroNotaAsync(string numeroNota, int fornecedorId)

@@ -2,6 +2,7 @@ services:
   #Banco de Dados MySQL
   db:
     image: mysql:8.0
+    build: .
     container_name: hortifruti-db
     restart: always
     environment:
@@ -16,6 +17,7 @@ services:
   #Keycloak
   keycloak:
     image: quay.io/keycloak/keycloak:26.0
+    build: .
     container_name: hortifruti-keycloak
     command: start-dev # Modo dev: HTTP e banco em memória
     environment:
@@ -29,13 +31,15 @@ services:
 
   #API .NET
   api:
-    image: littleanjel/hortifruti:latest
+    image: littleanjel/api-hortifruti:latest
+    build: .
     container_name: hortifruti-api
     restart: on-failure
     ports:
       - "5030:8080" #A documentação da API ficará acessível em http://localhost:5030/scalar
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://0.0.0.0:8080
       - ConnectionStrings__DefaultConnection=Server=db;Database=${DB_NAME};User=root;Password=${DB_PASSWORD};
       # Configuração do Keycloak
       - Keycloak__Authority=${KEYCLOAK_URL}
@@ -45,6 +49,7 @@ services:
   #Angular
   frontend:
     image: littleanjel/angular-hortifruti:latest
+    build: .
     container_name: hortifruti-web
     restart: on-failure
     pull_policy: always

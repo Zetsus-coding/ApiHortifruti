@@ -8,6 +8,7 @@ using ApiHortifruti.Middlewares;
 using Microsoft.AspNetCore.Authentication;
 using ApiHortifruti.Service.Provider;
 using ApiHortifruti.Service.Interfaces;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddSingleton<IDateTimeProvider, SystemDateTimeProvider>();
@@ -20,7 +21,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: PermitirOrigensEspecificas,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:4200") // Substitua pelo(s) domínio(s) permitido(s)
+                          policy.WithOrigins("http://localhost:4200", "http://localhost:5030") // Substitua pelo(s) domínio(s) permitido(s)
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                           // .AllowCredentials(); // Caso seja necessário enviar cookies ou credenciais de autenticação (keycloak?)
@@ -110,10 +111,25 @@ builder.Services.AddAuthentication(options =>
     });
 
 builder.Services.AddScoped<IClaimsTransformation, KeycloakResourceRolesTransformation>();
-builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
+{
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        // Remove qualquer configuração automática que o .NET tenha criado
+        document.Servers.Clear();
+        
+        // FORÇA o Scalar a usar o endereço externo correto
+        document.Servers.Add(new OpenApiServer 
+        { 
+            Url = "http://localhost:5030", 
+            Description = "Servidor Local Docker"
+        });
+        
+        return Task.CompletedTask;
+    });
+});
+
 builder.Services.AddAuthorization();
-builder.Services.AddOpenApi(); // Adiciona o OpenApi
-builder.Services.AddAuthorization(); // Adiciona o serviço de autorização para ser usar o [Authorize]
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 builder.Services.AddControllers()
 
