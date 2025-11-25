@@ -47,7 +47,7 @@ public class FornecedorService : IFornecedorService
         var fornecedor = _mapper.Map<Fornecedor>(postFornecedorDTO); // Mapeia de DTO para entidade
 
         // Define valores padrão necessários
-        fornecedor.DataRegistro = _dateTimeProvider?.Today ?? DateOnly.FromDateTime(DateTime.Now); // Define a data de registro usando o provedor de data ou a data atual
+        fornecedor.DataRegistro = DateOnly.FromDateTime(DateTime.Now); // Define a data de registro usando o provedor de data ou a data atual
         fornecedor.Ativo = true;  // Define o fornecedor como ativo por padrão
 
         await _uow.Fornecedor.AdicionarAsync(fornecedor); // Adiciona o fornecedor ao repositório (context)
