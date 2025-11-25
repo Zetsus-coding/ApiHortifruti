@@ -1,5 +1,4 @@
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.FornecedorProduto;
 
 namespace ApiHortifruti.Service.Interfaces;
 

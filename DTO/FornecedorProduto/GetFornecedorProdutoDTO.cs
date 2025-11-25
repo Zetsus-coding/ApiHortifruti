@@ -1,5 +1,3 @@
-namespace ApiHortifruti.DTO.FornecedorProduto;
-
 public class GetFornecedorProdutoDTO
 {
     public int FornecedorId { get; set; }

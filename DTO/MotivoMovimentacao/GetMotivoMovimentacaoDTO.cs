@@ -1,5 +1,3 @@
-namespace ApiHortifruti.DTO.MotivoMovimentacao;
-
 public class GetMotivoMovimentacaoDTO
 {
     public int Id { get; set; }

@@ -1,5 +1,3 @@
-using ApiHortifruti.DTO.Financeiro;
-
 namespace SuaApi.Services;
 
 public interface IFinanceiroService

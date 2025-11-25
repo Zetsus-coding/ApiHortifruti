@@ -1,5 +1,4 @@
 using ApiHortifruti.Data.Repository.Interfaces;
-using ApiHortifruti.DTO.Entrada;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
@@ -38,23 +37,13 @@ public class EntradaService : IEntradaService
         return _mapper.Map<GetEntradaDTO?>(await _uow.Entrada.ObterPorIdAsync(id));
     }
 
-    public async Task<IEnumerable<GetEntradaDTO>> ObterEntradasRecentesAsync(int dias)
+    public async Task<IEnumerable<GetEntradaDTO>> ObterEntradasRecentesAsync()
     {
-        // Calcula a data limite. Ex: Hoje (24) - 7 dias = Dia 17.
-    // Usamos DateOnly.FromDateTime porque seu banco usa DateOnly
-    var dataLimite = DateOnly.FromDateTime(DateTime.Now.AddDays(-dias));
+        var dataLimite = DateOnly.FromDateTime(DateTime.Now);
 
-    var entradas = await _uow.Entrada.ObterRecentesAsync(dataLimite);
+        var entradas = await _uow.Entrada.ObterRecentesAsync(dataLimite);
 
-    return entradas.Select(e => new GetEntradaDTO
-    {
-        numeroNota = e.NumeroNota,
-        NomeFantasiaFornecedor = e.Fornecedor.NomeFantasia,
-        Motivo = e.MotivoMovimentacao.Motivo,
-        DataCompra = e.DataCompra,
-        PrecoTotal = e.PrecoTotal,
-        item = e.ItemEntrada
-    });
+        return _mapper.Map<IEnumerable<GetEntradaDTO>>(entradas);
     }
 
     public async Task<GetEntradaDTO> CriarEntradaAsync(PostEntradaDTO postEntradaDTO)
@@ -118,7 +107,7 @@ public class EntradaService : IEntradaService
 
     public async Task InserirFornecedorProdutoDuranteCriarEntrada(int fornecedorId, IEnumerable<ItemEntradaDTO> itens)
     {
-        var fpExistentes = await _uow.FornecedorProduto.ObterTodosAsync(); 
+        var fpExistentes = await _uow.FornecedorProduto.ObterTodosAsync();
         var existentesSet = fpExistentes
             .Where(e => e.FornecedorId == fornecedorId)
             .Select(e => e.ProdutoId)

@@ -1,5 +1,3 @@
-namespace ApiHortifruti.DTO.Saida;
-
 public class GetSaidaSimplesDTO
 {
     public int Id { get; set; }

@@ -1,5 +1,4 @@
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.Saida;
 
 namespace ApiHortifruti.Service.Interfaces;
 

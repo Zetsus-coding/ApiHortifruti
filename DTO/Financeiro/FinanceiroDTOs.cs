@@ -1,5 +1,3 @@
-namespace ApiHortifruti.DTO.Financeiro;
-
 public class GetLucroSemanalDTO
 {
     public decimal Valor { get; set; }

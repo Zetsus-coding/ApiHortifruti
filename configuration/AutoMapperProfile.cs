@@ -1,6 +1,5 @@
 using AutoMapper;
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.PutFuncionarioDTO;
 
 namespace ApiHortifruti.Configuration;
 
@@ -51,8 +50,10 @@ public class AutoMapperProfile : Profile
         CreateMap<PutFuncionarioDTO, Funcionario>();
 
         // Mapeamento de Motivo
-        CreateMap<PostMotivoMovimentacaoDTO, MotivoMovimentacao>();
-        CreateMap<PutMotivoMovimentacaoDTO, MotivoMovimentacao>();
+        CreateMap<PostMotivoMovimentacaoDTO, MotivoMovimentacao>()
+            .ForMember(dest => dest.Motivo, opt => opt.MapFrom(src => src.Motivo));
+        CreateMap<PutMotivoMovimentacaoDTO, MotivoMovimentacao>()
+            .ForMember(dest => dest.Motivo, opt => opt.MapFrom(src => src.Motivo));
 
         // --- PRODUTO ---
         CreateMap<PostProdutoDTO, Produto>();

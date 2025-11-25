@@ -1,5 +1,4 @@
 using ApiHortifruti.Domain;
-using ApiHortifruti.DTO.Entrada;
 using AutoMapper;
 
 namespace ApiHortifruti.DTO.Profiles;

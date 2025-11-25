@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiHortifruti.Domain;
-
 public partial class PostFuncionarioDTO
 {
     [Required(ErrorMessage = "Informe o CPF do funcionário")]

@@ -1,5 +1,4 @@
 using ApiHortifruti.Data.Repository.Interfaces;
-using ApiHortifruti.DTO.Saida;
 using ApiHortifruti.Domain;
 using ApiHortifruti.Service.Interfaces;
 using AutoMapper;
@@ -46,10 +45,6 @@ public class SaidaService : ISaidaService
 
         var saida = _mapper.Map<Saida>(postSaidaDTO);
 
-        // Replicating EntradaService logic (EF Tracking, no explicit transaction if not needed or handled by SaveChanges, but EntradaService still used SaveChanges which implies Transaction scope usually? EntradaService removed Commit/Rollback/BeginTransaction calls in favor of single SaveChanges if I recall correctly from the file I read).
-        // Let's check EntradaService content again. It removed BeginTransaction/Commit/Rollback blocks and just used _uow.SaveChangesAsync();
-        // So I will do the same here.
-
         try
         {
             var motivo = await _uow.MotivoMovimentacao.ObterPorIdAsync(saida.MotivoMovimentacaoId);
@@ -69,22 +64,16 @@ public class SaidaService : ISaidaService
                     throw new InvalidOperationException($"O produto com ID {item.ProdutoId} não existe.");
 
                 if (produto.QuantidadeAtual < item.Quantidade)
-                    throw new InvalidOperationException($"Estoque insuficiente para o produto ID {item.ProdutoId}. Disponível: {produto.QuantidadeAtual}, solicitado: {item.Quantidade}.");
+                    throw new InvalidOperationException($"Estoque insuficiente para o produto ID {item.ProdutoId}...");
 
-                // Update stock
+                // Exemplo: item.ValorUnitario = produto.PrecoVenda; 
+                item.Valor = produto.Preco * item.Quantidade;
+                // ---------------------------
+
+                // Atualiza estoque
                 produto.QuantidadeAtual -= item.Quantidade;
 
-                // Calculate item value if not provided or just trust input?
-                // EntradaService calculates PrecoTotal. Saida has ValorTotal.
-                // Assuming ItemSaida has Valor (unit price * quantity or just unit price?).
-                // Domain ItemSaida has "Valor". Usually this is total for the item line or unit price?
-                // Looking at EntradaService: `precoTotal += item.Quantidade * item.PrecoUnitario;`
-                // Looking at SaidaService (old): it didn't calculate total, it used `saida.ValorTotal`.
-
-                // But we should probably recalculate `ValorTotal` based on items to be safe, or validate it.
-                // However, Saida might have different pricing rules (discounts per item?).
-                // I'll stick to updating stock and letting EF handle the graph.
-
+                // Agora a soma funcionará
                 valorTotal += item.Valor;
             }
 
@@ -112,14 +101,6 @@ public class SaidaService : ISaidaService
             }
 
             await _uow.Saida.AdicionarAsync(saida);
-
-            // EF will track items in `saida.ItemSaida` and insert them.
-            // And since we loaded `Produto` entities above and modified them, EF should track updates to Products too?
-            // Wait, we loaded `Produto` into `produto` var, but we didn't attach it to `item.Produto`.
-            // However, `_uow.Produto.ObterPorIdAsync` likely returns a tracked entity.
-            // Modifying `produto.QuantidadeAtual` on a tracked entity will cause an update.
-            // So yes, stock update happens.
-
             await _uow.SaveChangesAsync();
             return _mapper.Map<GetSaidaDTO>(saida);
         }

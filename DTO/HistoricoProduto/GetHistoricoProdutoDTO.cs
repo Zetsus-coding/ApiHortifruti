@@ -1,5 +1,3 @@
-namespace ApiHortifruti.DTO.HistoricoProduto;
-
 public class GetHistoricoProdutoDTO
 {
     public int Id { get; set; }

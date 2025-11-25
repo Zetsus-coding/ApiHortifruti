@@ -1,7 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace ApiHortifruti.DTO.FornecedorProduto;
-
 public class PutFornecedorProdutoDTO
 {
     [Required]
