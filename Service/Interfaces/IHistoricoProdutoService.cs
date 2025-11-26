@@ -1,4 +1,4 @@
-using ApiHortifruti.Domain;
+using ApiHortifruti.DTO.HistoricoProduto;
 
 namespace ApiHortifruti.Service.Interfaces;
 
