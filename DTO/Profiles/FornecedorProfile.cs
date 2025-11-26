@@ -6,7 +6,8 @@ public class FornecedorProfile : Profile
     public FornecedorProfile()
     {
         CreateMap<PostFornecedorDTO, Fornecedor>().ReverseMap();
-        CreateMap<Fornecedor, GetFornecedorDTO>().ReverseMap();
+        CreateMap<Fornecedor, GetFornecedorDTO>()
+            .ForMember(dest => dest.Nome, opt => opt.MapFrom(src => src.NomeFantasia));
         CreateMap<PutFornecedorDTO, Fornecedor>().ReverseMap();
 
         CreateMap<Fornecedor, FornecedorComListaProdutosDTO>()

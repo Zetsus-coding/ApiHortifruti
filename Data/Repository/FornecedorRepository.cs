@@ -13,10 +13,12 @@ public class FornecedorRepository : IFornecedorRepository
         _context = context;
     }
 
-
     public async Task<IEnumerable<Fornecedor>> ObterTodosAsync()
     {
-        return await _context.Fornecedor.ToListAsync();
+        return await _context.Fornecedor
+            .Include(f => f.FornecedorProduto)
+                .ThenInclude(fp => fp.Produto)
+            .ToListAsync();
     }
 
     public async Task<Fornecedor?> ObterPorIdAsync(int id)
