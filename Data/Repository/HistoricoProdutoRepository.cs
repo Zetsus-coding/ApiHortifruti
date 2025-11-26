@@ -15,17 +15,22 @@ public class HistoricoProdutoRepository : IHistoricoProdutoRepository
     
     public async Task<IEnumerable<HistoricoProduto>> ObterTodosAsync()
     {
-        return await _context.HistoricoProduto.ToListAsync();
+        return await _context.HistoricoProduto
+            .Include(p => p.Produto)
+            .ToListAsync();
     }
 
     public async Task<HistoricoProduto?> ObterPorIdAsync(int id)
     {
-        return await _context.HistoricoProduto.FindAsync(id);
+        return await _context.HistoricoProduto
+            .Include(p => p.Produto)
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task<IEnumerable<HistoricoProduto>> ObterPorProdutoIdAsync(int produtoId)
     {
         return await _context.HistoricoProduto
+            .Include(p => p.Produto)
             .Where(hp => hp.ProdutoId == produtoId)
             .ToListAsync();
     }
